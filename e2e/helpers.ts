@@ -17,7 +17,7 @@ export async function open(page: Page, hash: string) {
 
 export const VIEWS: [string, string][] = [
   ['landing', ''], ['atlas', 'track=atlas'], ['jukebox', 'track=jukebox&story=gistemp'], ['about', 'track=about'],
-  ['frames', 'track=frames'], ['monsoon', 'track=monsoon'], ['pulse', 'track=pulse'],
+  ['quest', 'track=quest'], ['frames', 'track=frames'], ['monsoon', 'track=monsoon'], ['pulse', 'track=pulse'],
 ];
 
 export const noHorizontalScroll = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);

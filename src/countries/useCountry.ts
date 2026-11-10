@@ -2,11 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { countryById, loadCountries, representativePoint, type Country } from './countries';
 
 /** Selected-country state. `initial` is the alpha-3 from the share hash (`c=BGD`); the list loads lazily and the id is dropped if it is not in it. */
-export function useCountry(initial?: string) {
+export function useCountry(initial?: string, enabled = true) {
   const [list, setList] = useState<Country[]>([]);
   const [id, setId] = useState<string | null>(initial ?? null);
   const [pt, setPt] = useState<{ id: string; lat: number; lon: number } | null>(null);
-  useEffect(() => { let on = true; loadCountries('110m').then((l) => on && setList(l)); return () => { on = false; }; }, []);
+  useEffect(() => { if (!enabled) return; let on = true; loadCountries('110m').then((l) => on && setList(l)); return () => { on = false; }; }, [enabled]); // the landing page does not need the borders
   const country = useMemo(() => countryById(list, id), [list, id]);
   useEffect(() => {
     if (!country) return;

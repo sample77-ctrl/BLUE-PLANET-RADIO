@@ -9,7 +9,7 @@ test('WebGL off: the Atlas falls back to the 2D map with the country picker', as
   await page.setViewportSize({ width: 1400, height: 900 });
   await open(page, 'track=atlas');
   await expect(page.getByRole('combobox').first()).toBeVisible();
-  await expect(page.locator('main canvas')).toHaveCount(0);
+  await expect(page.locator('main canvas:not(.live-wave)')).toHaveCount(0); // the Now hearing waveform is a flat 2D canvas, not the globe
   expect(errors).toEqual([]);
 });
 

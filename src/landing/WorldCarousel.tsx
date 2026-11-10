@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDown, ChevronLeft, ChevronRight, Compass, Globe2, Headphones, Play, Square } from 'lucide-react';
+import { ArrowDown, ChevronLeft, ChevronRight, Globe2, Headphones, Play, Square } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 import type { Track } from '../lib/nav';
 import { gibsUrl } from '../lib/gibs';
@@ -8,6 +8,7 @@ import type { Dot } from './dotLayer';
 import { SCROLL_SPAN, WORLDS, clampLevel, levelAt, levelScroll, parseLandingQuery, ringOffset, scrollProgress, worldKey, type Level, type Stage, type World, type WorldId } from './worlds';
 import { playPreview } from './preview';
 import { hasWebGL } from '../components/GlobeBoundary';
+import { SoundRibbons } from './SoundRibbons';
 
 const WorldScene = lazy(() => import('./WorldScene').then((m) => ({ default: m.WorldScene })));
 
@@ -46,14 +47,15 @@ const Still: React.FC<{ world: World }> = ({ world }) => {
  * (with WebGL the planet's position and size follow the scroll continuously); then the Earth pulls back to a backdrop pose (stage 4)
  * while `children` (the sections below) scroll in over it. The buttons and Esc scroll to a level.
  */
-export const WorldCarousel: React.FC<Props> = ({ data, onOpen, onTour, onListen, onSilent, onDown, onOpenHarmonium, children }) => {
-  const { t, lang, reduceMotion } = usePrefs();
-  const isBn = lang === 'bn';
+export const WorldCarousel: React.FC<Props> = ({ data, onOpen, onTour, onListen, onDown, children }) => {
+  const { t, reduceMotion } = usePrefs();
   const [start] = useState(() => parseLandingQuery(window.location.search));
   const [index, setIndex] = useState(start.index);
   const [level, setLevel] = useState<Stage>(start.level);
   const [playing, setPlaying] = useState(false);
   const [glFailed, setGlFailed] = useState(false);
+  const [sceneReady, setSceneReady] = useState(false);
+  const onSceneReady = useCallback(() => setSceneReady(true), []);
   const [dir, setDir] = useState<1 | -1>(1); // last move: planets that leave go out on the side opposite to it
   const gl = !glFailed && hasWebGL(); // 3D planets; CSS discs only when WebGL is missing or fails
   const stopRef = useRef<(() => void) | null>(null);
@@ -125,18 +127,19 @@ export const WorldCarousel: React.FC<Props> = ({ data, onOpen, onTour, onListen,
 
   return (
     <div ref={track} className="world-track">
-    <section ref={root} id="world-carousel" className="world-stage" data-level={level} data-gl={gl} aria-roledescription="carousel" aria-label={t('carouselLabel')} onKeyDown={onKey}
+    <section ref={root} id="world-carousel" className="world-stage" data-level={level} data-gl={gl} data-ready={!gl || sceneReady} aria-roledescription="carousel" aria-label={t('carouselLabel')} onKeyDown={onKey}
       onPointerDown={(e) => { swipe.current = level < 3 && e.pointerType !== 'mouse' ? e.clientX : null; }}
       onPointerUp={(e) => { const x0 = swipe.current; swipe.current = null; if (x0 !== null && Math.abs(e.clientX - x0) > 40) go(e.clientX < x0 ? 1 : -1); }}>
       <h1 className="sr-only">{t('heroHeadline')}</h1>
 
-      {gl && <Suspense fallback={null}><WorldScene stage={root} dots={sceneDots} onFail={onGlFail} /></Suspense>}
+      {gl && <Suspense fallback={null}><WorldScene stage={root} dots={sceneDots} onFail={onGlFail} onReady={onSceneReady} /></Suspense>}
       {/* Planet anchors: CSS places them for each level (the active one centred, its neighbours peeking in at the edges); the 3D planets follow them. Without WebGL they draw a CSS Earth themselves. */}
       {WORLDS.map((w, i) => {
         const off = ringOffset(i, index, len);
         return (
           <div key={w.id} className="world-sphere" data-world={w.id} data-pos={off === 0 ? 'active' : off === -1 ? 'prev' : off === 1 ? 'next' : dir > 0 ? 'far-prev' : 'far-next'}>
-            {!gl && <EarthSphere world={w} spin={off === 0} dots={dotsOf(w)} dotColor={w.dotColor} />}
+            {(!gl || off === 0) && <EarthSphere world={w} spin={off === 0} dots={dotsOf(w)} dotColor={w.dotColor} small={gl} />}
+            {off === 0 && <SoundRibbons />}
           </div>
         );
       })}
@@ -150,41 +153,35 @@ export const WorldCarousel: React.FC<Props> = ({ data, onOpen, onTour, onListen,
 
       {/* team identity, level 1 only */}
       <div className="world-id lv" {...lv(1)}>
-        <img src="/images/space-apps-logo.png" alt={t('spaceAppsLogoAlt')} width={440} height={172} className="h-8 sm:h-14 w-auto" />
+        <img src="/images/space-apps-logo.png" alt={t('spaceAppsLogoAlt')} width={440} height={172} className="h-8 sm:h-12 w-auto" />
         <p className="text-xs sm:text-sm text-[var(--ink-3)] max-w-[60ch]">{t('heroKicker')}</p>
       </div>
 
-      {/* level 1 */}
+      {/* level 1: one headline, one primary action (press play), real numbers */}
       <div className="world-copy lv lv1" {...lv(1)} key={`l1-${world.id}`}>
-        <p className="world-kicker">{label('Kicker')}</p>
-        <h2 ref={(el) => { heads.current[0] = el; }} tabIndex={-1} className="world-name font-serif outline-none">{label('Name')}</h2>
-        <p className="mt-3 text-base sm:text-lg text-[var(--ink-2)] max-w-[44ch] mx-auto">{label('Line')}</p>
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
-          <button
-            onClick={() => onOpen('quest')}
-            className="btn btn-brass world-pill text-sm sm:text-base font-semibold px-6 py-2.5 sm:py-3 flex items-center gap-2 shadow-xl hover:scale-105 transition cursor-pointer border-2 border-amber-300/40"
-            aria-label={isBn ? 'গেম শুরু করুন (Start Game)' : 'Start Game (Sonic Earth Adventure)'}
-          >
-            <span className="text-lg" aria-hidden="true">🎮</span>
-            <span>{isBn ? 'গেম শুরু করুন (Start Game)' : 'Start Game'}</span>
+        <p className="world-kicker hero-eyebrow">{label('Kicker')}</p>
+        <h2 ref={(el) => { heads.current[0] = el; }} tabIndex={-1} className="hero-title font-display outline-none">{t('heroTitle')}</h2>
+        <p className="hero-lead">{label('Line')}</p>
+        <div className="hero-actions">
+          <button onClick={togglePreview} aria-pressed={playing} className="btn btn-brass hero-cta">
+            <span className="hero-cta-icon" aria-hidden="true">{playing ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}</span>
+            <span>{playing ? t('ctaStopPreview') : t('heroPlay', { name: name(world) })}</span>
           </button>
-          {onOpenHarmonium && (
-            <button
-              onClick={onOpenHarmonium}
-              className="btn world-pill bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white text-sm sm:text-base font-semibold px-6 py-2.5 sm:py-3 flex items-center gap-2 shadow-xl hover:scale-105 transition cursor-pointer border-2 border-red-400"
-              aria-label={isBn ? 'হারমোনিয়াম চ্যাট (Harmonium Chat)' : 'Harmonium Chat'}
-            >
-              <span className="text-lg" aria-hidden="true">🪗</span>
-              <span>{isBn ? 'হারমোনিয়াম চ্যাট' : 'Harmonium Chat'}</span>
-            </button>
-          )}
-          <button onClick={() => to(2)} className="btn btn-ghost world-pill">{t('ctaStart')}</button>
+          <button onClick={() => onOpen('atlas')} className="btn hero-secondary"><Globe2 className="w-4 h-4" />{t('heroExplore')}</button>
         </div>
-        <div className="mt-2.5 flex flex-wrap justify-center gap-x-1 gap-y-1">
-          <button onClick={onTour} className="btn btn-ghost"><Compass className="w-4 h-4" />{t('startTour')}</button>
-          <button onClick={onListen} className="btn btn-ghost"><Play className="w-4 h-4" />{t('ctaStory')}</button>
-          <button onClick={onSilent} className="btn btn-ghost">{t('exploreSilently')}</button>
+        <div className="hero-links">
+          <button onClick={onTour}>{t('startTour')}</button>
+          <button onClick={onListen}>{t('ctaStory')}</button>
+          <button onClick={() => onOpen('quest')}>{t('heroQuestKids')}</button>
+          <button onClick={() => to(2)}>{t('ctaStart')}</button>
         </div>
+        {!!data.metrics[world.id]?.length && (
+          <dl className="hero-tele hud-frame" aria-label={t('heroTeleLabel')}>
+            {data.metrics[world.id]!.map((m) => <div key={m.label}><dd className="tnum">{m.value}</dd><dt>{m.label}</dt></div>)}
+            <div className="hero-tele-note"><dt>{t('heroSnapshot')}</dt></div>
+          </dl>
+        )}
+        {melody.length > 0 && <p className="sr-only" role="status">{playing ? t('previewNote') : ''}</p>}
       </div>
 
       {/* level 2 */}

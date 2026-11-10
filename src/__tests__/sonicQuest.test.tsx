@@ -61,6 +61,18 @@ describe('SonicQuest component', () => {
     expect(screen.getByText(/NASA Orbital Space Station/i)).toBeDefined();
   });
 
+  it('opens on the mission hub: four missions, no Update Plan guide', () => {
+    render(
+      <PrefsProvider>
+        <SonicQuest onExplore={vi.fn()} audioReady={true} />
+      </PrefsProvider>
+    );
+    expect(screen.queryByText(/Update Plan|Roadmap/i)).toBeNull();
+    expect(screen.getByText(/More ways to play/i)).toBeDefined();
+    expect(screen.getAllByRole('button', { name: /Deploy|Replay/i }).length).toBe(4);
+    expect(screen.queryByText(/Earn stars first/i)).toBeNull();
+  });
+
   it('can enter Free Roam walking mode with controls and HUD', () => {
     const onExplore = vi.fn();
     render(
@@ -167,7 +179,7 @@ describe('SonicQuest component', () => {
     const onExplore = vi.fn();
     render(
       <PrefsProvider>
-        <SonicQuest onExplore={onExplore} audioReady={true} />
+        <SonicQuest onExplore={onExplore} audioReady={true} initialScreen="stepMaster" />
       </PrefsProvider>
     );
 

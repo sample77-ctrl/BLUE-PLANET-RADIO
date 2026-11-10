@@ -3,6 +3,7 @@ export class AudioContextManager {
   private static masterGain: GainNode | null = null;
   private static limiter: DynamicsCompressorNode | null = null;
   private static isInitialized = false;
+  private static analyser: AnalyserNode | null = null;
 
   public static getContext(): AudioContext | null {
     return this.ctx;
@@ -60,6 +61,11 @@ export class AudioContextManager {
       // Routing: Sources -> Limiter -> MasterGain -> Destination
       this.limiter.connect(this.masterGain);
       this.masterGain.connect(this.ctx.destination);
+      // A read-only tap for the on-screen waveform and spectrum: it listens to the real output and is not connected onward
+      this.analyser = this.ctx.createAnalyser();
+      this.analyser.fftSize = 1024;
+      this.analyser.smoothingTimeConstant = 0.8;
+      this.masterGain.connect(this.analyser);
 
       this.isInitialized = true;
 
@@ -85,6 +91,10 @@ export class AudioContextManager {
         console.warn('[AudioContextManager] Suspend notice:', err);
       }
     }
+  }
+
+  public static getAnalyser(): AnalyserNode | null {
+    return this.analyser;
   }
 
   public static getMasterNode(): AudioNode | null {

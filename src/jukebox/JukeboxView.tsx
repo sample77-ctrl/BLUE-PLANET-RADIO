@@ -25,6 +25,8 @@ import { useSeriesPlayer } from './useSeriesPlayer';
 import { SoundOptions, Transport } from './PlayerControls';
 import { DEFAULT_SOUND, type SoundSettings } from './soundSettings';
 import { MappingLegend } from './MappingLegend';
+import { VinylHero } from './VinylHero';
+import { NoteScale } from './NoteScale';
 import { specFor } from '../sonification/series/specs';
 import { mapSeries } from '../sonification/series/mapping';
 import { pointsInYears } from '../sonification/series/compare';
@@ -172,8 +174,14 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
             <h1 className="font-display text-2xl sm:text-3xl font-bold">{t('navJukebox')}</h1>
             <p className="text-sm text-[var(--ink-2)] max-w-[70ch]">{t('jbLead')}</p>
           </div>
-          <button ref={drawerBtn} type="button" className="btn hidden md:inline-flex lg:hidden" aria-expanded={drawer} aria-controls="jb-filters" onClick={() => setDrawer(true)}><SlidersHorizontal className="w-4 h-4" aria-hidden="true" />{t('jbFilters')}</button>
+          <button ref={drawerBtn} type="button" className="btn hidden md:inline-flex" aria-expanded={drawer} aria-controls="jb-filters" onClick={() => setDrawer(true)}><SlidersHorizontal className="w-4 h-4" aria-hidden="true" />{t('jbFilters')}</button>
         </header>
+
+        {story && !isPicture && series && cur.status === 'ready' && (
+          <VinylHero title={lang === 'bn' ? story.titleBn : story.title} unit={series.unit} point={ci >= 0 ? points[points.findIndex((p) => p.t === s.cursor)] ?? null : null}
+            mapped={s.cursor ? mapped[points.findIndex((p) => p.t === s.cursor)] ?? null : null} playing={pstate === 'playing'}
+            onToggle={() => { if (pstate === 'playing') player.pause(); else void play(); }} position={`${Math.max(1, shown.findIndex((x) => x.id === story.id) + 1)} / ${shown.length}`} />
+        )}
 
         <StoryRow stories={shown} activeId={s.storyId} onSelect={selectStory} sparks={sparks} />
 
@@ -183,15 +191,15 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
         </div>
 
         <div className="jb-grid" data-tab={tab} data-drawer={drawer}>
-          {drawer && <button type="button" className="jb-backdrop hidden md:block lg:hidden" aria-label={t('close')} onClick={() => setDrawer(false)} />}
+          {drawer && <button type="button" className="jb-backdrop hidden md:block" aria-label={t('close')} onClick={() => setDrawer(false)} />}
           <div data-col="filters" id="jb-filters" ref={drawerBox} className="min-w-0 space-y-4">
-            {drawer && <div className="hidden md:flex lg:hidden justify-end"><button type="button" className="btn btn-ghost btn-icon" onClick={() => { setDrawer(false); drawerBtn.current?.focus(); }} aria-label={t('close')}><X className="w-5 h-5" /></button></div>}
+            {drawer && <div className="hidden md:flex justify-end"><button type="button" className="btn btn-ghost btn-icon" onClick={() => { setDrawer(false); drawerBtn.current?.focus(); }} aria-label={t('close')}><X className="w-5 h-5" /></button></div>}
             <TimelineFilters filters={filters} years={years} onFilter={(patch) => dispatch({ type: 'setFilter', patch })} onReset={() => dispatch({ type: 'resetFilters' })} countries={countries} />
             <section className="panel p-3 space-y-2 md:hidden" aria-labelledby="jb-coll"> {/* the header row lists the collections from tablet width up */}
               <h2 id="jb-coll" className="font-display text-base font-bold">{t('collections')}</h2>
               <p className="text-xs text-[var(--ink-3)]">{t('jbCollectionsNote')}</p>
               <ul className="grid gap-1.5">
-                {JUKEBOX_TRACKS.map((tr) => <li key={tr.id}><button type="button" className="btn w-full justify-start" onClick={() => onOpenCollection(tr.id)}><span className="tnum text-2xs font-semibold text-[var(--brass)]">{tr.code}</span>{t(tr.key)}</button></li>)}
+                {JUKEBOX_TRACKS.map((tr) => <li key={tr.id}><button type="button" className="btn w-full justify-start" onClick={() => onOpenCollection(tr.id)}>{t(tr.key)}</button></li>)}
               </ul>
             </section>
           </div>
@@ -208,6 +216,7 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
           <div data-col="story" className="min-w-0 space-y-3">
             {story ? <StoryPanel story={story} load={isPicture ? { status: 'ready', series: null } : cur} points={points} cursor={s.cursor}
               onCursor={(tm) => onCursor(tm, 'user')} onRetry={() => setAttempt((a) => a + 1)} onOpenCollection={open}
+              noteScale={series && spec ? <NoteScale current={s.cursor ? mapped[points.findIndex((p) => p.t === s.cursor)] ?? null : null} /> : undefined}
               sound={series && spec && <>
                 <MappingLegend spec={spec} unit={series.unit} points={points} mapped={mapped} cursor={s.cursor} caption={captionFor(series.variable, series.unit, points, s.cursor, lang, t)} playing={pstate === 'playing'} />
                 <SoundOptions value={snd} years={years} periodA={`${s.filters.from ?? years[0] ?? ''}–${s.filters.to ?? years[years.length - 1] ?? ''}`} onChange={(p) => setSnd((o) => ({ ...o, ...p }))} />

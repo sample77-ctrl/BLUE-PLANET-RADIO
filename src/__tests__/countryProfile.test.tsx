@@ -39,8 +39,16 @@ describe('CountryProfile', () => {
     expect(fire.textContent).toContain('Snapshot 2026-10-08');
     expect(fire.textContent).toContain('NASA FIRMS VIIRS');
     expect(screen.getByRole('img', { name: /Annual mean temperature/ })).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: /Explore its sound/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Listen to this place/ }));
     expect(onExplore).toHaveBeenCalledWith('PNG');
+  });
+  it('puts the listen action first and shows big numbers, each with its source card', async () => {
+    await setup('PNG', 'ok');
+    await screen.findByText(/Fire detections/);
+    const section = screen.getByRole('region', { name: /Country profile|profile/i });
+    expect(section.querySelector('button')?.textContent).toMatch(/Listen to this place/);
+    expect(section.querySelectorAll('.cc-big').length).toBeGreaterThan(0);
+    await waitFor(() => expect(section.querySelectorAll('.cc-metric').length).toBeGreaterThan(1));
   });
   it('lists nothing from gridded layers for Luxembourg and says so, with the global records only as context', async () => {
     await setup('LUX', 'ok');

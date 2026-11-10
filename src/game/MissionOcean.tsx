@@ -406,9 +406,9 @@ export const MissionOcean: React.FC<Props> = ({ onComplete, onExit, audioReady: 
                 <Award className="w-8 h-8" />
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
               {isBn ? 'সাগরের সাবমেরিন মিশন সম্পন্ন! ⭐⭐⭐' : 'Ocean Submarine Mission Complete! ⭐⭐⭐'}
-            </h3>
+            </h2>
             <p className="text-xs sm:text-sm text-[var(--ink-2)] max-w-md">
               {isBn
                 ? 'নাসার PO.DAAC ডেটা দিয়ে তুমি গভীর সাগরের তাপমাত্রা রেকর্ড করেছ এবং তিমি পরিবারকে নিরাপদে সাহায্য করেছ!'
@@ -482,7 +482,7 @@ export const MissionOcean: React.FC<Props> = ({ onComplete, onExit, audioReady: 
           <button
             onTouchStart={() => (keysRef.current.sonar = true)}
             onMouseDown={() => (keysRef.current.sonar = true)}
-            className="h-14 px-6 rounded-2xl bg-teal-600 active:bg-teal-400 text-white flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer"
+            className="h-14 px-6 rounded-2xl bg-teal-700 active:bg-teal-500 text-white flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer"
             aria-label="Sonar Ping"
           >
             <Waves className="w-5 h-5" />

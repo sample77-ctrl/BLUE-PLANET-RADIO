@@ -1,3 +1,4 @@
+import { MARKER_SHAPE } from '../atlas/markerShape';
 import { RotateCcw } from 'lucide-react';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -59,6 +60,7 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
   const geoContainsRef = useRef<Parameters<typeof findCountrySync>[0] | null>(null);
   const hoverIdRef = useRef<string | null>(null);
   const lastHoverRef = useRef(0);
+  const [texReady, setTexReady] = useState(false);
   const [hoverCountry, setHoverCountry] = useState<{ c: Country; x: number; y: number } | null>(null);
   const earthMeshRef = useRef<THREE.Mesh | null>(null);
   const downPosRef = useRef({ x: 0, y: 0 });
@@ -180,6 +182,7 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       return t;
     };
     const earthTexture = load(`earth_atmos_${texSize}.jpg`, true);
+    earthTexture.onUpdate = () => setTexReady(true); // first textured frame: the poster can fade out
     const earthMaterial = new THREE.MeshPhongMaterial({
       map: earthTexture,
       normalScale: new THREE.Vector2(0.85, 0.85),
@@ -474,7 +477,10 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       else if (obs.phenomenon === 'sst') colorHex = obs.value >= 0 ? 0xf25c8a : 0x5b8cff;
 
       const markerRadius = 0.022 + obs.normalizedValue * 0.04;
-      const markerGeo = new THREE.SphereGeometry(markerRadius, 16, 16);
+      // Shape per layer (colour is never the only cue): fire = sphere, rain = drop (a cone pointing out of the globe), ocean heat = diamond
+      const shape = MARKER_SHAPE[obs.phenomenon];
+      const markerGeo: THREE.BufferGeometry = shape === 'drop' ? new THREE.ConeGeometry(markerRadius * 0.95, markerRadius * 2.6, 14).rotateX(Math.PI / 2)
+        : shape === 'diamond' ? new THREE.OctahedronGeometry(markerRadius * 1.35, 0) : new THREE.SphereGeometry(markerRadius, 16, 16);
       const markerMat = new THREE.MeshBasicMaterial({
         color: colorHex,
       });
@@ -482,6 +488,7 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       const isSelected = selectedObservation?.id === obs.id;
       const markerMesh = new THREE.Mesh(markerGeo, markerMat);
       markerMesh.position.set(x * 1.025, y * 1.025, z * 1.025);
+      if (shape !== 'circle') markerMesh.lookAt(x * 2, y * 2, z * 2); // the drop's tip and the diamond's axis point away from the surface
       if (isSelected) {
         markerMesh.scale.set(1.8, 1.8, 1.8);
       }
@@ -636,8 +643,9 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       onClick={handleClick}
       onWheel={handleWheel}
     >
+      <div className="globe-poster" data-ready={texReady} aria-hidden="true" />
       {onSelectCountry && (
-        <button type="button" data-ctl="reset" aria-label={t('resetView')} className="btn panel absolute z-20 left-3 top-[calc(var(--header-h)+3.5rem)] lg:left-1/2 lg:-translate-x-1/2 lg:top-[calc(var(--header-h)+.75rem)] min-h-[40px]" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); flyRef.current = { lat: 0, lon: 0, until: performance.now() + 12000 }; frameRef.current = framingTarget(framingRef.current, (containerRef.current?.clientWidth ?? 1) / (containerRef.current?.clientHeight || 1)); }}>
+        <button type="button" data-ctl="reset" aria-label={t('resetView')} className="btn panel absolute z-20 left-3 top-[calc(var(--header-h)+3.5rem)] lg:left-1/2 lg:-translate-x-1/2 lg:top-[calc(var(--header-h)+4rem)] min-h-[40px]" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); flyRef.current = { lat: 0, lon: 0, until: performance.now() + 12000 }; frameRef.current = framingTarget(framingRef.current, (containerRef.current?.clientWidth ?? 1) / (containerRef.current?.clientHeight || 1)); }}>
           <RotateCcw className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline">{t('resetView')}</span>
         </button>
       )}

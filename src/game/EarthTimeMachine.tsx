@@ -159,6 +159,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
               </span>
               <select
                 value={yearA}
+                aria-label={isBn ? 'বেসলাইন বছর' : 'Baseline year'}
                 onChange={(e) => setYearA(Number(e.target.value))}
                 className="bg-black/50 border border-[var(--line)] rounded-xl px-2.5 py-1 text-xs font-mono text-white cursor-pointer"
               >
@@ -206,6 +207,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
               </span>
               <select
                 value={yearB}
+                aria-label={isBn ? 'পর্যবেক্ষিত বছর' : 'Observed year'}
                 onChange={(e) => setYearB(Number(e.target.value))}
                 className="bg-black/50 border border-[var(--line)] rounded-xl px-2.5 py-1 text-xs font-mono text-white cursor-pointer"
               >

@@ -14,6 +14,7 @@ interface Props {
   onTrack: (t: Track) => void;
   lastJukebox: Track;
   audioReady: boolean;
+  soundState?: 'off' | 'starting' | 'on' | 'blocked';
   onToggleAudio: () => void;
   onHome: () => void;
   onListen: () => void;
@@ -24,7 +25,7 @@ interface Props {
   onOpenHarmonium?: () => void;
 }
 
-export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox, audioReady, onToggleAudio, onHome, onListen, onTour, onData, onSettings, settingsOpen, onOpenHarmonium }) => {
+export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox, audioReady, soundState = audioReady ? 'on' : 'off', onToggleAudio, onHome, onListen, onTour, onData, onSettings, settingsOpen, onOpenHarmonium }) => {
   const { t } = usePrefs();
   const { active, pause } = usePlayback();
   const [menu, setMenu] = useState(false);
@@ -40,7 +41,7 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
-    const set = () => document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`);
+    const set = () => document.documentElement.style.setProperty('--header-h', `${el.offsetHeight + 10}px`);
     set();
     const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(set) : null;
     ro?.observe(el);
@@ -110,10 +111,10 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
               <span className="truncate">{t('playingNow', { label: active.label })}</span>
             </button>
           )}
-          {!active && <button className="btn btn-brass hidden md:inline-flex" onClick={onListen}><Play className="w-4 h-4" />{t('listenNow')}</button>}
+          {!active && !onLanding && <button className="btn hidden md:inline-flex" onClick={onListen}><Play className="w-4 h-4" />{t('listenNow')}</button>}
           {onOpenHarmonium && (
             <button
-              className="btn btn-ghost hidden md:inline-flex items-center gap-1.5 border border-red-500/40 text-amber-300 hover:bg-red-950/30 px-2.5"
+              className="btn btn-ghost hidden md:inline-flex items-center gap-1.5 border border-[var(--line)] px-2.5"
               onClick={onOpenHarmonium}
               aria-label="Harmonium Chat"
               title="3D Harmonium & AI Climate Chat"
@@ -122,13 +123,14 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
               <span className="hidden xl:inline font-semibold">Harmonium</span>
             </button>
           )}
-          <button className="btn btn-ghost hidden md:inline-flex" onClick={onTour} aria-label={t('tour')}><Compass className="w-4 h-4" /><span className="hidden 2xl:inline">{t('tour')}</span></button>
+          <button className="btn btn-ghost hidden md:inline-flex" onClick={onTour} aria-label={t('tour')} title={t('tour')}><Compass className="w-4 h-4" /><span className="hidden 2xl:inline">{t('tour')}</span></button>
           <button className="btn btn-ghost btn-icon" onClick={() => { setMenu(false); onData(); }} aria-haspopup="dialog" aria-label={t('data')} title={t('data')}><Database className="w-4 h-4" /></button>
-          <button className="btn btn-ghost btn-icon" onClick={() => { setMenu(false); onSettings(); }} aria-haspopup="dialog" aria-expanded={!!settingsOpen} aria-label={t('settings')}><Settings className="w-4.5 h-4.5" /></button>
-          <button className="btn" onClick={onToggleAudio} aria-pressed={audioReady} title={`${audioReady ? t('soundOn') : t('soundOff')} (S)`} aria-label={audioReady ? t('soundOn') : t('soundOff')}>
+          <button className="btn btn-ghost btn-icon" onClick={() => { setMenu(false); onSettings(); }} aria-haspopup="dialog" aria-expanded={!!settingsOpen} aria-label={t('settings')} title={t('settings')}><Settings className="w-4.5 h-4.5" /></button>
+          {(() => { const label = t(soundState === 'on' ? 'soundOn' : soundState === 'starting' ? 'soundStarting' : soundState === 'blocked' ? 'soundBlocked' : 'soundOff'); return (
+          <button className="btn sound-btn" data-state={soundState} onClick={onToggleAudio} aria-pressed={audioReady} title={`${label} (S)`} aria-label={label}>
             {audioReady ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-            <span className="hidden xl:inline">{audioReady ? t('soundOn') : t('soundOff')}</span>
-          </button>
+            <span className="hidden xl:inline">{label}</span>
+          </button>); })()}
         </div>
       </div>
 
@@ -137,7 +139,7 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
         <nav className="flex gap-1 px-2 sm:px-4 pb-2 pe-7 overflow-x-auto scroll-snap-x fade-x" aria-label={t('collections')}>
           {COLLECTIONS.map((tr) => (
             <button key={tr.id} onClick={() => go(tr.id)} aria-current={track === tr.id ? 'page' : undefined} className="nav-link shrink-0">
-              <span className="tnum text-2xs font-semibold">{tr.code}</span>{t(tr.key)}
+              {t(tr.key)}
             </button>
           ))}
         </nav>
@@ -152,7 +154,7 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
                 <button className="nav-link w-full min-h-[44px]" onClick={() => go(lastJukebox)} aria-current={section === 'jukebox' ? 'page' : undefined}>{t('navJukebox')}</button>
                 <ul className="ml-4 mt-1 flex flex-col gap-1 border-l border-[var(--line)] pl-2" aria-label={t('collections')}>
                   {COLLECTIONS.map((tr) => (
-                    <li key={tr.id}><button className="nav-link w-full min-h-[44px]" onClick={() => go(tr.id)} aria-current={track === tr.id && !onLanding ? 'page' : undefined}><span className="tnum text-2xs font-semibold">{tr.code}</span>{t(tr.key)}</button></li>
+                    <li key={tr.id}><button className="nav-link w-full min-h-[44px]" onClick={() => go(tr.id)} aria-current={track === tr.id && !onLanding ? 'page' : undefined}>{t(tr.key)}</button></li>
                   ))}
                 </ul>
               </li>
@@ -163,14 +165,14 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
           <div className="mt-3 pt-3 border-t border-[var(--line)] flex flex-wrap gap-2">
             {onOpenHarmonium && (
               <button
-                className="btn bg-gradient-to-r from-red-600 to-amber-600 text-white font-semibold flex items-center gap-2"
+                className="btn flex items-center gap-2"
                 onClick={() => { setMenu(false); onOpenHarmonium(); }}
               >
                 <span aria-hidden="true">🪗</span>
                 <span>Harmonium Chat</span>
               </button>
             )}
-            <button className="btn btn-brass" onClick={() => { setMenu(false); onListen(); }}><Play className="w-4 h-4" />{t('listenNow')}</button>
+            <button className="btn" onClick={() => { setMenu(false); onListen(); }}><Play className="w-4 h-4" />{t('listenNow')}</button>
             <button className="btn" onClick={() => { setMenu(false); onTour(); }}><Compass className="w-4 h-4" />{t('tour')}</button>
             <button className="btn" onClick={() => { setMenu(false); onData(); }}><Database className="w-4 h-4" />{t('data')}</button>
           </div>

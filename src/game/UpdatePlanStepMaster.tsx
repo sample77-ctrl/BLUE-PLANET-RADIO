@@ -212,7 +212,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <p className="text-sm text-[var(--ink-2)] mt-1.5 leading-relaxed max-w-3xl">
                 {isBn
                   ? 'সনিক আর্থ অ্যাডভেঞ্চার কোনো কাল্পনিক খেলা নয়। এটি নাসার লাইভ স্যাটেলাইট এবং ঐতিহাসিক ক্লাইমেট মডেলের বাস্তব ডেটা ব্যবহার করে তৈরি। কোনো মনগড়া বা কৃত্রিম মান তৈরি করা হয় না—প্রতিটি সুরের পেছনে রয়েছে সুনির্দিষ্ট গাণিতিক সূত্র।'
-                  : 'Sonic Earth Adventure is not a fictional simulator. It directly transforms genuine NASA satellite observations and historical climate models into sound using mathematical mappings with zero synthetic hallucinations.'}
+                  : 'Sonic Earth Adventure is not a fictional simulator. It directly transforms genuine NASA satellite observations and historical climate models into sound using published mathematical mappings. Every sound is calculated from a real measurement; nothing is invented.'}
               </p>
             </div>
           </div>
@@ -226,7 +226,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <p className="text-2xs text-[var(--ink-2)]">
                 {isBn ? '৩৭৫ মিটার রেজোলিউশনের ফায়ার রেডিয়েটিভ পাওয়ার (FRP)। আগুনের তেজ বাড়লে সাউন্ডের পিচ ও স্পার্ক বাড়ে।' : '375m active fire detection with Fire Radiative Power (MW). Panning matches geographic longitude.'}
               </p>
-              <span className="chip border-amber-500/30 text-amber-400 text-3xs font-mono w-fit">[LIVE / NRT]</span>
+              <span className="chip border-amber-500/30 text-amber-400 text-3xs font-mono w-fit">[SNAPSHOT · 2–7 OCT 2026]</span>
             </div>
 
             <div className="p-4 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-2">
@@ -964,7 +964,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                 <p className="text-2xs text-[var(--ink-2)]">
                   {isBn
                     ? 'নাসার ডেটা পড়ে শোনানোর বাংলা ও ইংরেজি ভয়েস টেস্ট:'
-                    : 'Hear authentic spoken data summaries without synthetic hallucinations:'}
+                    : 'Hear spoken summaries of the real data:'}
                 </p>
               </div>
               <button

@@ -597,9 +597,9 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
                 <Award className="w-8 h-8" />
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
               {isBn ? 'দাবানল সফলভাবে নিভানো হয়েছে! ⭐⭐⭐' : 'Wildfires Neutralized! ⭐⭐⭐'}
-            </h3>
+            </h2>
             <p className="text-xs sm:text-sm text-[var(--ink-2)] max-w-md">
               {isBn
                 ? 'নাসার FIRMS স্যাটেলাইট ডেটা দিয়ে তুমি ৩টি দাবানল শনাক্ত করে নিভিয়ে দিয়েছ এবং বন রক্ষা করেছ!'
@@ -654,7 +654,7 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
               onTouchEnd={() => (keysRef.current.spray = false)}
               onMouseDown={() => (keysRef.current.spray = true)}
               onMouseUp={() => (keysRef.current.spray = false)}
-              className="h-14 px-5 rounded-2xl bg-sky-600 active:bg-sky-400 text-white flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer"
+              className="h-14 px-5 rounded-2xl bg-sky-700 active:bg-sky-500 text-white flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer"
               aria-label="Spray Water"
             >
               <Droplets className="w-5 h-5" />

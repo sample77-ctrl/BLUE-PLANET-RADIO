@@ -5,6 +5,7 @@ import type { LayerLoadStatus } from '../datasets/adapter';
 import { SonificationEngine } from '../audio/sonificationEngine';
 import { usePrefs } from '../lib/prefs';
 import { LAYER_META } from './layerMeta';
+import { ShapeGlyph } from './ShapeGlyph';
 
 interface Props {
   enabled: Record<PhenomenonType, boolean>;
@@ -31,7 +32,7 @@ export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, status
         const m = LAYER_META[p], on = enabled[p], st = statuses?.[p];
         const available = isFallback || st?.loaded !== false;
         return (
-          <div key={p} className={`rounded-xl border p-2.5 transition ${on ? 'bg-[var(--panel-2)]' : 'bg-transparent'}`} style={{ borderColor: on ? m.color : 'var(--line)' }}>
+          <div key={p} className={`rounded-xl border p-2.5 transition ${on ? 'bg-[var(--panel-2)]' : 'bg-transparent'}`} style={{ borderColor: on ? m.color : 'var(--line)', boxShadow: on ? `0 0 0 1px ${m.color}55, 0 0 30px -8px ${m.color}` : undefined }}>
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-3 flex-1 min-w-0 cursor-pointer">
                 <input type="checkbox" className="sr-only peer" checked={on} disabled={!available} onChange={() => onToggle(p)} />
@@ -39,7 +40,7 @@ export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, status
                   <m.Icon className="w-4.5 h-4.5" style={{ color: on ? '#0b1620' : m.color }} />
                 </span>
                 <span className="min-w-0">
-                  <span className="block font-semibold leading-tight">{t(m.name)} <span className="text-[var(--ink-3)] font-normal tnum text-sm">· {counts[p]}</span></span>
+                  <span className="block font-semibold leading-tight">{t(m.name)} <ShapeGlyph phenomenon={p} color={m.color} /> <span className="text-[var(--ink-3)] font-normal tnum text-sm">· {counts[p]}</span></span>
                   <span className="block text-xs text-[var(--ink-3)] truncate">{t(m.unit)} → {t(m.sound)}</span>
                 </span>
               </label>

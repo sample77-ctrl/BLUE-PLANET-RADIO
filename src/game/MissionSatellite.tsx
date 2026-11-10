@@ -178,9 +178,9 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <h4 className="font-display font-bold text-sm text-[var(--ink)]">
+                    <h2 className="font-display font-bold text-sm text-[var(--ink)]">
                       {isBn ? b.nameBn : b.nameEn}
-                    </h4>
+                    </h2>
                     {b.aligned && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
                   </div>
                   <span className="text-2xs font-mono text-[var(--ink-3)]">{b.dataset}</span>
@@ -214,9 +214,9 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
                 <Award className="w-10 h-10" />
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
               {isBn ? 'পৃথিবীর মহাশিবির সিম্ফনি সফল! ⭐⭐⭐' : 'Earth Symphony Harmonized! ⭐⭐⭐'}
-            </h3>
+            </h2>
             <p className="text-xs sm:text-sm text-[var(--ink-2)] max-w-md">
               {isBn
                 ? 'তুমি নাসার ৪টি স্যাটেলাইটকে সফলভাবে টিউন করেছ! পৃথিবী এখন মহাকাশ জুড়ে তার নিজস্ব প্রাকৃতিক সুর ছড়িয়ে দিচ্ছে।'

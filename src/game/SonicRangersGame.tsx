@@ -9,7 +9,7 @@ import { EarthDJStudio } from './EarthDJStudio';
 import { LevelLab } from './LevelLab';
 import { QuestBadgeModal } from './QuestBadgeModal';
 import { UpdatePlanStepMaster } from './UpdatePlanStepMaster';
-import { GameHome } from './GameHome';
+import { QuestHub } from './QuestHub';
 import { KidsLearningZone } from './KidsLearningZone';
 import { TacticalWildfireMission } from './TacticalWildfireMission';
 import { EarthTimeMachine } from './EarthTimeMachine';
@@ -22,19 +22,10 @@ import {
   CloudRain,
   Waves,
   Radio,
-  Map,
-  Sparkles,
-  Music,
   Award,
   Compass,
-  Sliders,
   Plane,
   Home,
-  Clock,
-  EyeOff,
-  Smile,
-  Settings,
-  Users,
 } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 
@@ -67,7 +58,7 @@ export const SonicRangersGame: React.FC<Props> = ({
   onExplore,
   onSoundOn,
   audioReady = false,
-  initialScreen = 'stepMaster',
+  initialScreen = 'home',
 }) => {
   const { lang } = usePrefs();
   const isBn = lang === 'bn';
@@ -99,7 +90,7 @@ export const SonicRangersGame: React.FC<Props> = ({
       const updated = { ...prev, [missionId]: Math.max(prev[missionId] || 0, starsEarned) };
       return updated;
     });
-    setScreen('map');
+    setScreen('home');
     if (missionId === 4 || totalStars + starsEarned >= 12) {
       setShowBadgeModal(true);
     }
@@ -134,7 +125,7 @@ export const SonicRangersGame: React.FC<Props> = ({
       bgGradient: 'bg-gradient-to-br from-sky-950/30 to-[var(--panel)]',
       borderColor: 'border-[var(--rain)]/50',
       accentColor: 'var(--rain)',
-      unlocked: (missionStars[1] || 0) > 0 || totalStars > 0,
+      unlocked: true, // all four missions are open: anyone can preview any of them
       stars: missionStars[2] || 0,
       nasaData: 'NASA POWER Daily PRECTOTCORR',
     },
@@ -150,7 +141,7 @@ export const SonicRangersGame: React.FC<Props> = ({
       bgGradient: 'bg-gradient-to-br from-teal-950/30 to-[var(--panel)]',
       borderColor: 'border-[var(--teal)]/50',
       accentColor: 'var(--teal)',
-      unlocked: (missionStars[2] || 0) > 0 || totalStars >= 3,
+      unlocked: true,
       stars: missionStars[3] || 0,
       nasaData: 'JPL PO.DAAC MUR SST Anomaly',
     },
@@ -166,7 +157,7 @@ export const SonicRangersGame: React.FC<Props> = ({
       bgGradient: 'bg-gradient-to-br from-violet-950/30 to-[var(--panel)]',
       borderColor: 'border-violet-500/50',
       accentColor: '#a855f7',
-      unlocked: (missionStars[3] || 0) > 0 || totalStars >= 6,
+      unlocked: true,
       stars: missionStars[4] || 0,
       nasaData: 'NASA GISTEMP 1880–2026 Vital Signs',
     },
@@ -174,195 +165,34 @@ export const SonicRangersGame: React.FC<Props> = ({
 
   return (
     <div className="w-full h-full overflow-y-auto pt-[calc(var(--header-h)+0.75rem)] pb-16 px-3 sm:px-6">
-      <div className="max-w-5xl mx-auto flex flex-col gap-5">
-        {/* Top Master Switcher Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-3">
-          <div className="flex items-center gap-2.5">
-            <span className="text-2xl">🌍</span>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-display font-bold text-[var(--ink)] tracking-tight">
+      <div className="max-w-[90rem] mx-auto flex flex-col gap-5">
+        {/* Compact bar on the sub-screens; the hub has its own heading */}
+        {screen !== 'home' && (
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] pb-3">
+            <div className="flex items-center gap-3">
+              <button onClick={() => setScreen('home')} className="btn" aria-label={isBn ? 'কোয়েস্ট হোমে ফিরে যাও' : 'Back to Quest home'}>
+                <Home className="w-4 h-4" /><span>{isBn ? 'কোয়েস্ট হোম' : 'Quest home'}</span>
+              </button>
+              <h1 className="text-lg sm:text-xl font-display font-bold text-[var(--ink)] tracking-tight">
                 {isBn ? 'সাউন্ড কোয়েস্ট: নাসা আর্থ রেঞ্জার্স' : 'Sonic Quest: NASA Earth Rangers'}
               </h1>
-              <p className="text-xs sm:text-sm text-[var(--ink-2)]">
-                {isBn
-                  ? 'খেলার ছলে আবিষ্কার করো পৃথিবীর আসল আগুন, বৃষ্টি, সাগর ও জলবায়ুর সুর!'
-                  : 'Play detailed missions and discover real NASA soundscapes by ear!'}
-              </p>
             </div>
-          </div>
-
-          {/* Quick View Navigation for all 10 sections */}
-          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[var(--panel)] border border-[var(--line)] overflow-x-auto scroll-thin">
-            <button
-              onClick={() => setScreen('home')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'home'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Home className="w-3.5 h-3.5" />
-              <span>{isBn ? 'হোম' : 'Home'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('stepMaster')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'stepMaster'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Sparkles className="w-4 h-4" />
-              <span>{isBn ? '🌟 আপডেট প্ল্যান (ধাপে ধাপে)' : '🌟 Step-by-Step (Update Plan)'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('map')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'map'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Map className="w-4 h-4" />
-              <span>{isBn ? 'মিশন ম্যাপ' : 'Overworld Map'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('kids')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'kids'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Smile className="w-3.5 h-3.5 text-emerald-400" />
-              <span>{isBn ? 'কিডস জোন' : 'Kids Zone'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('blind')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'blind'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <EyeOff className="w-3.5 h-3.5 text-rose-400" />
-              <span>{isBn ? 'ব্লাইন্ড মোড' : 'Blind Mode'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('timemachine')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'timemachine'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Clock className="w-3.5 h-3.5 text-indigo-400" />
-              <span>{isBn ? 'টাইম মেশিন' : 'Time Machine'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('freeRoam')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'freeRoam'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Compass className="w-4 h-4" />
-              <span>{isBn ? 'মুক্ত ভ্রমণ' : 'Free Roam'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('dj')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'dj'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Music className="w-4 h-4" />
-              <span>{isBn ? 'ডিজে স্টুডিও' : 'DJ Studio'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('coop')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'coop'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Users className="w-3.5 h-3.5 text-cyan-400" />
-              <span>{isBn ? 'কো-অপ' : 'Co-Op'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('lab')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'lab'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Sliders className="w-4 h-4" />
-              <span>{isBn ? 'বিজ্ঞান ল্যাব' : 'Science Lab'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('passport')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'passport'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Award className="w-4 h-4 text-[var(--brass)]" />
-              <span>{isBn ? 'পাসপোর্ট' : 'Passport'}</span>
-            </button>
-
-            <button
-              onClick={() => setScreen('settings')}
-              className={`nav-link text-xs font-semibold py-1.5 px-3 rounded-xl flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap ${
-                screen === 'settings'
-                  ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-md'
-                  : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
-              }`}
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span>{isBn ? 'সেটিংস' : 'Settings'}</span>
-            </button>
-
-            <button
-              onClick={() => setShowBadgeModal(true)}
-              className="btn btn-ghost text-xs border border-[var(--line)] py-1.5 px-3 rounded-xl flex items-center gap-1 whitespace-nowrap"
-            >
+            <button onClick={() => setShowBadgeModal(true)} className="btn btn-ghost text-xs border border-[var(--line)] py-1.5 px-3 rounded-xl flex items-center gap-1 whitespace-nowrap">
               <Award className="w-4 h-4 text-[var(--brass)]" />
               <span className="hidden sm:inline">{isBn ? 'সার্টিফিকেট' : 'Badges'}</span>
             </button>
           </div>
-        </div>
+        )}
 
         {/* ================= ACTIVE SCREEN DISPLAY ================= */}
         {screen === 'home' && (
-          <GameHome
-            onStartAdventure={() => setScreen('stepMaster')}
-            onOpenHub={() => setScreen('map')}
-            onOpenMissions={() => setScreen('map')}
-            onOpenExplorer={onExplore}
-            onOpenBlindMode={() => setScreen('blind')}
-            onOpenKidsZone={() => setScreen('kids')}
-            onOpenDJ={() => setScreen('dj')}
-            onOpenTimeMachine={() => setScreen('timemachine')}
-            onOpenPassport={() => setScreen('passport')}
-            onOpenSettings={() => setScreen('settings')}
-            onOpenCoop={() => setScreen('coop')}
-            onOpenStepGuide={() => setScreen('stepMaster')}
+          <QuestHub
+            missions={missions}
             totalStars={totalStars}
+            onSelectMission={(id) => setScreen(`mission${id}` as ScreenMode)}
+            onOpenScreen={setScreen}
+            onExplore={onExplore}
+            onOpenBadges={() => setShowBadgeModal(true)}
           />
         )}
 
@@ -433,7 +263,7 @@ export const SonicRangersGame: React.FC<Props> = ({
           useTacticalMission ? (
             <TacticalWildfireMission
               onComplete={(s) => handleMissionComplete(1, s)}
-              onExit={() => setScreen('map')}
+              onExit={() => setScreen('home')}
               audioReady={audioReady}
               onSoundOn={onSoundOn ?? (() => {})}
               onSwitchToPlatformer={() => setUseTacticalMission(false)}
@@ -451,7 +281,7 @@ export const SonicRangersGame: React.FC<Props> = ({
               </div>
               <MissionFire
                 onComplete={(s) => handleMissionComplete(1, s)}
-                onExit={() => setScreen('map')}
+                onExit={() => setScreen('home')}
                 audioReady={audioReady}
                 onSoundOn={onSoundOn ?? (() => {})}
               />
@@ -462,7 +292,7 @@ export const SonicRangersGame: React.FC<Props> = ({
         {screen === 'mission2' && (
           <MissionMonsoon
             onComplete={(s) => handleMissionComplete(2, s)}
-            onExit={() => setScreen('map')}
+            onExit={() => setScreen('home')}
             audioReady={audioReady}
             onSoundOn={onSoundOn ?? (() => {})}
           />
@@ -471,7 +301,7 @@ export const SonicRangersGame: React.FC<Props> = ({
         {screen === 'mission3' && (
           <MissionOcean
             onComplete={(s) => handleMissionComplete(3, s)}
-            onExit={() => setScreen('map')}
+            onExit={() => setScreen('home')}
             audioReady={audioReady}
             onSoundOn={onSoundOn ?? (() => {})}
           />
@@ -480,7 +310,7 @@ export const SonicRangersGame: React.FC<Props> = ({
         {screen === 'mission4' && (
           <MissionSatellite
             onComplete={(s) => handleMissionComplete(4, s)}
-            onExit={() => setScreen('map')}
+            onExit={() => setScreen('home')}
             audioReady={audioReady}
             onSoundOn={onSoundOn ?? (() => {})}
           />
@@ -496,21 +326,21 @@ export const SonicRangersGame: React.FC<Props> = ({
         )}
 
         {screen === 'dj' && (
-          <EarthDJStudio onBackToMissions={() => setScreen('map')} />
+          <EarthDJStudio onBackToMissions={() => setScreen('home')} />
         )}
 
         {screen === 'lab' && (
-          <LevelLab onComplete={() => setScreen('map')} />
+          <LevelLab onComplete={() => setScreen('home')} />
         )}
 
-        {/* Live 3D Globe Direct Portal */}
-        <div className="p-5 rounded-3xl bg-gradient-to-r from-cyan-950/20 via-[var(--panel)] to-amber-950/20 border border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
+        {/* Live 3D Globe Direct Portal (the hub has its own button) */}
+        {screen !== 'home' && <div className="p-5 rounded-3xl bg-gradient-to-r from-cyan-950/20 via-[var(--panel)] to-amber-950/20 border border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
           <div className="flex items-center gap-3">
             <Compass className="w-7 h-7 text-[var(--brass)] shrink-0" />
             <div>
-              <h3 className="font-display font-bold text-sm sm:text-base text-[var(--ink)]">
+              <h2 className="font-display font-bold text-sm sm:text-base text-[var(--ink)]">
                 {isBn ? 'আসল স্যাটেলাইটের লাইভ ৩ডি গ্লোবে শব্দ শুনতে চাও?' : 'Ready to hear real NASA satellite observations on the 3D globe?'}
-              </h3>
+              </h2>
               <p className="text-2xs sm:text-xs text-[var(--ink-2)] mt-0.5">
                 {isBn
                   ? 'গেম থেকে যা শিখলে, তা দিয়ে এবার আসল পৃথিবীর ৩ডি গ্লোবে আগুন, বৃষ্টি ও সাগরের তথ্য শোনো।'
@@ -524,7 +354,7 @@ export const SonicRangersGame: React.FC<Props> = ({
           >
             <span>{isBn ? 'লাইভ ৩ডি গ্লোবে যাও' : 'Launch 3D Globe'}</span>
           </button>
-        </div>
+        </div>}
 
         {/* Cadet Badge & Graduation Certificate Modal */}
         {showBadgeModal && (

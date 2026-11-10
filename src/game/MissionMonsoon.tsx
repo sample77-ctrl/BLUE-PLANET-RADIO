@@ -365,9 +365,9 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
                 <Award className="w-8 h-8" />
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
               {isBn ? 'বর্ষার প্লাবন উদ্ধার সম্পন্ন! ⭐⭐⭐' : 'Monsoon Rescue Complete! ⭐⭐⭐'}
-            </h3>
+            </h2>
             <p className="text-xs sm:text-sm text-[var(--ink-2)] max-w-md">
               {isBn
                 ? 'নাসার POWER ডেটা দিয়ে তুমি ১০০ মিমি বৃষ্টি রেকর্ড করেছ এবং বন্যপ্রাণীদের নিরাপদে পৌঁছে দিয়েছ!'
@@ -422,7 +422,7 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
               onTouchEnd={() => (keysRef.current.catchRain = false)}
               onMouseDown={() => (keysRef.current.catchRain = true)}
               onMouseUp={() => (keysRef.current.catchRain = false)}
-              className="h-14 px-5 rounded-2xl bg-sky-600 active:bg-sky-400 text-white flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer"
+              className="h-14 px-5 rounded-2xl bg-sky-700 active:bg-sky-500 text-white flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer"
               aria-label="Catch Rain"
             >
               <CloudRain className="w-5 h-5" />

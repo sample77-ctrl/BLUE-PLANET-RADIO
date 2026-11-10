@@ -6,6 +6,8 @@ import type { PhenomenonType } from '../types/dataset';
 import { Footer } from '../components/Footer';
 import { REPO_URL } from '../lib/nav';
 import { SPECS } from '../sonification/series/specs';
+import { NORMALIZATION_SPECS } from '../sonification/normalizer';
+import { MappingLab } from './MappingLab';
 
 const LAYERS: { id: PhenomenonType; name: StringKey; color: string }[] = [
   { id: 'fire', name: 'fire', color: 'var(--fire)' },
@@ -29,25 +31,46 @@ const H2: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children 
 
 /** "About the Science": method, mapping tables (from DATASET_CATALOG), sources, limits, a11y and credits. */
 export const AboutPage: React.FC<{ onOpenMethod: () => void }> = ({ onOpenMethod }) => {
-  const { t, lang } = usePrefs();
+  const { t, lang, reduceMotion } = usePrefs();
+  const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  const toc: [string, StringKey][] = [['a-how', 'aboutTocHow'], ['a-lab', 'aboutTocLab'], ['a-map', 'aboutTocMap'], ['a-src', 'aboutTocSrc'], ['a-lim', 'aboutTocLim']];
   return (
     <div className="h-full overflow-y-auto pt-[var(--header-h)]">
-      <article className="prose-sea max-w-5xl mx-auto px-5 sm:px-10 py-10" aria-labelledby="about-title">
+      <article className="prose-sea about-surface max-w-5xl mx-auto px-5 sm:px-10 py-10 my-4" aria-labelledby="about-title">
         <h1 id="about-title" className="font-display font-extrabold text-4xl leading-tight">{t('aboutTitle')}</h1>
         <p className="mt-3 text-lg">{t('aboutLead')}</p>
+
+        <nav className="about-toc" aria-label={t('aboutToc')}>
+          <span>{t('aboutToc')}</span>
+          {toc.map(([id, k]) => <button key={id} type="button" onClick={() => jump(id)}>{t(k)}</button>)}
+        </nav>
+
+        <aside className="about-limits" aria-labelledby="a-first">
+          <h2 id="a-first" className="font-display font-bold text-base">{t('aboutReadFirst')}</h2>
+          <ul>{(['limit1', 'limit2'] as const).map((k) => <li key={k}>{t(k)}</li>)}</ul>
+          <button type="button" onClick={() => jump('a-lim')}>{t('aboutAllLimits')}</button>
+        </aside>
 
         <section aria-labelledby="a-how">
           <H2 id="a-how">{t('aboutHowTitle')}</H2>
           <p>{t('aboutHowP1')}</p>
           <p className="mt-3">{t('aboutHowP2')}</p>
-          <ol className="mt-5 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-            {([['how1', 'how1d'], ['how2', 'how2d'], ['how3', 'how3d'], ['how4', 'how4d']] as const).map(([h, d], k) => (
-              <li key={h} className="border-t-2 border-[var(--brass)] pt-2">
-                <div className="font-semibold"><span className="tnum text-[var(--brass)] mr-1.5">{k + 1}</span>{t(h)}</div>
-                <p className="mt-1 leading-snug">{t(d)}</p>
+          <ol className="pipeline">
+            {([['how1', 'pipeData', DATASET_CATALOG.fire.provider], ['how2', 'pipeScale', NORMALIZATION_SPECS.fire.formulaString], ['how3', 'pipeSound', DATASET_CATALOG.fire.audioFormula], ['how4', 'pipeSee', '']] as const).map(([h, d, ex], k) => (
+              <li key={h}>
+                <span className="pipe-n tnum" aria-hidden="true">{k + 1}</span>
+                <div className="pipe-t"><span className="sr-only">{k + 1}. </span>{t(h)}</div>
+                <p>{t(d)}</p>
+                {ex && <code className="pipe-ex">{ex}</code>}
               </li>
             ))}
           </ol>
+        </section>
+
+        <section aria-labelledby="a-lab">
+          <H2 id="a-lab">{t('aboutLabTitle')}</H2>
+          <p>{t('aboutLabLead')}</p>
+          <MappingLab />
         </section>
 
         <section aria-labelledby="a-map">
@@ -94,9 +117,9 @@ export const AboutPage: React.FC<{ onOpenMethod: () => void }> = ({ onOpenMethod
           </div>
           <h3 className="font-display text-lg font-semibold mt-6">{t('aboutTracksTitle')}</h3>
           <dl className="mt-2 grid gap-3 text-sm">
-            {([['A2', 'track2', 'aboutTrackFrames'], ['B1', 'track3', 'aboutTrackMonsoon'], ['B2', 'track4', 'aboutTrackPulse']] as const).map(([code, name, rule]) => (
-              <div key={code} className="grid sm:grid-cols-[220px_1fr] gap-1 sm:gap-4 py-2 border-t border-[var(--line)]">
-                <dt className="font-semibold"><span className="tnum text-[var(--brass)] mr-1.5">{code}</span>{t(name)}</dt>
+            {([['track2', 'aboutTrackFrames'], ['track3', 'aboutTrackMonsoon'], ['track4', 'aboutTrackPulse']] as const).map(([name, rule]) => (
+              <div key={name} className="grid sm:grid-cols-[220px_1fr] gap-1 sm:gap-4 py-2 border-t border-[var(--line)]">
+                <dt className="font-semibold">{t(name)}</dt>
                 <dd className="text-[var(--ink-2)] leading-relaxed">{t(rule)}</dd>
               </div>
             ))}

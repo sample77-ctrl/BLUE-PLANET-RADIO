@@ -836,9 +836,9 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
                 <Award className="w-10 h-10" />
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
               {isBn ? 'অভিনন্দন! তুমি পৃথিবীর সব সুর চিনে ফেলেছ!' : 'Hooray! You Mastered All Earth Sounds!'}
-            </h3>
+            </h2>
             <p className="text-sm text-[var(--ink-2)] max-w-md">
               {isBn
                 ? 'তুমি হাঁটতে হাঁটতেই শিখে ফেলেছ কীভাবে নাসার স্যাটেলাইটগুলো শব্দ দিয়ে আগুন, বৃষ্টি ও সাগরের তাপমাত্রা প্রকাশ করে!'

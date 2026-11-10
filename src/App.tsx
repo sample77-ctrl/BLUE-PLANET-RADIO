@@ -49,6 +49,7 @@ export function App() {
   const [globeFailed, setGlobeFailed] = useState(false);
   const [view, setView] = useState<View>('3d-globe');
   const [audioReady, setAudioReady] = useState(false);
+  const [soundState, setSoundState] = useState<'off' | 'starting' | 'on' | 'blocked'>('off'); // blocked = the browser kept the audio context suspended
   const [volume, setVolume] = useState(0.7);
   const [spatialMode, setSpatialMode] = useState<'spatial-hrtf' | 'stereo-panning'>('stereo-panning');
   const [autoRotate, setAutoRotate] = useState(false);
@@ -68,7 +69,7 @@ export function App() {
   const [diagnostics, setDiagnostics] = useState(false);
   const [sheet, setSheet] = useState<'layers' | 'hearing' | 'country' | null>(null);
   const [harmoniumOpen, setHarmoniumOpen] = useState(false);
-  const cty = useCountry(initialShare?.c);
+  const cty = useCountry(initialShare?.c, !showHero);
 
   useEffect(() => { if (initialShare?.lang && initialShare.lang !== lang) set({ lang: initialShare.lang }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -100,7 +101,8 @@ export function App() {
         const nextHash = encodeLegacyShare({ ...curShare, track, c: cty.id ?? undefined });
         if (window.location.hash !== nextHash) history.replaceState(null, '', nextHash);
       } else {
-        const nextUrl = buildUrl({ ...curShare, track, c: cty.id ?? undefined });
+        const own = track === 'jukebox' ? {} : { story: undefined, t: undefined };
+        const nextUrl = buildUrl({ ...curShare, ...own, track, c: cty.id ?? undefined });
         if (window.location.pathname + window.location.search + window.location.hash !== nextUrl) {
           history.replaceState(null, '', nextUrl);
         }
@@ -123,12 +125,15 @@ export function App() {
   }, [audioReady, observations, enabled, track, showHero]);
 
   const soundOn = useCallback(async () => {
-    await AudioContextManager.init();
+    setSoundState('starting');
+    try { await AudioContextManager.init(); } catch { /* reported as blocked below */ }
+    if (!AudioContextManager.isReady()) { setAudioReady(false); setSoundState('blocked'); return; } // autoplay policy, silent mode or no audio device
     SonificationEngine.getInstance().setAudioUnlocked(true);
     AudioContextManager.setMasterVolume(volume);
     setAudioReady(true);
+    setSoundState('on');
   }, [volume]);
-  const soundOff = useCallback(() => { SonificationEngine.getInstance().setAudioUnlocked(false); setAudioReady(false); }, []);
+  const soundOff = useCallback(() => { SonificationEngine.getInstance().setAudioUnlocked(false); setAudioReady(false); setSoundState('off'); }, []);
 
   const toggleSpatial = () => {
     const next = spatialMode === 'spatial-hrtf' ? 'stereo-panning' : 'spatial-hrtf';
@@ -209,9 +214,16 @@ export function App() {
         onTour={startTour} onListen={listenNow} onSilent={() => { setShowHero(false); setTrack('atlas'); }} onAbout={goAbout} onTopic={openJukebox} onOpenHarmonium={() => setHarmoniumOpen(true)} />}
 
       <Header track={track} onLanding={showHero} onTrack={(tr) => { navigate(tr); setShowHero(false); setTourOpen(false); }} lastJukebox={lastJukebox}
-        audioReady={audioReady} onToggleAudio={() => (audioReady ? soundOff() : soundOn())} onListen={listenNow}
+        audioReady={audioReady} soundState={soundState} onToggleAudio={() => (audioReady ? soundOff() : soundOn())} onListen={listenNow}
         onHome={() => { setShowHero(true); setTourOpen(false); }} onTour={startTour} onData={() => setDataOpen(true)} onSettings={() => setSettingsOpen(true)} settingsOpen={settingsOpen} onOpenHarmonium={() => setHarmoniumOpen(true)} />
 
+      <p className="sr-only" role="status" aria-live="polite">{soundState === 'on' ? t('soundOn') : soundState === 'starting' ? t('soundStarting') : soundState === 'blocked' ? t('audioBlocked') : ''}</p>
+      {soundState === 'blocked' && (
+        <div role="alert" className="sound-alert glass-pop">
+          <p>{t('audioBlocked')}</p>
+          <div className="flex gap-2"><button className="btn btn-brass" onClick={() => soundOn()}>{t('soundRetry')}</button><button className="btn btn-ghost" onClick={() => setSoundState('off')}>{t('soundDismiss')}</button></div>
+        </div>
+      )}
       <main id="main" className="flex-1 relative w-full overflow-hidden">
         {/* First child = the visual canvas (the landing hero shows the globe from here). */}
         <div className="absolute inset-0">
@@ -260,11 +272,16 @@ export function App() {
             <div className="hidden lg:flex flex-col gap-3 absolute left-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-4">
               {view !== 'audio-first' && countryPanel}
               {layersPanel}
-              {hearingPanel}
             </div>
 
+            {/* Desktop right rail: what you are hearing (live waveform, spectrum, stereo position) */}
+            <div className="hidden lg:flex flex-col gap-3 absolute right-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-4" data-ctl="hearing">
+              {hearingPanel}
+            </div>
+            {view === '3d-globe' && <div className="globe-hud hud-frame hidden lg:block" aria-hidden="true"><i /></div>}
+
             {/* View switch and globe options */}
-            <div data-ctl="views" className="absolute right-3 top-[calc(var(--header-h)+3.5rem)] lg:top-[calc(var(--header-h)+.75rem)] z-20 flex flex-row lg:flex-col items-start lg:items-end gap-2">
+            <div data-ctl="views" className="absolute right-3 top-[calc(var(--header-h)+3.5rem)] lg:top-[calc(var(--header-h)+.75rem)] lg:right-auto lg:left-1/2 lg:-translate-x-1/2 z-20 flex flex-row items-start lg:items-center gap-2">
               <div className="panel p-1 flex gap-1" role="group" aria-label={t('viewGroup')}>
                 {([['3d-globe', Globe, 'globe'], ['2d-map', MapIcon, 'map'], ['audio-first', List, 'list']] as const).map(([v, Icon, key]) => (
                   <button key={v} className="btn btn-ghost min-h-[36px] pointer-coarse:min-h-[44px] px-2.5" aria-pressed={view === v} aria-label={t(key)} onClick={() => setView(v)}>
@@ -273,7 +290,7 @@ export function App() {
                 ))}
               </div>
               {view === '3d-globe' && (
-                <div className="panel p-1 flex flex-row lg:flex-col gap-1">
+                <div className="panel p-1 flex flex-row gap-1">
                   <button className="btn btn-ghost min-h-[36px] px-2.5 justify-start" aria-pressed={imagery} onClick={() => setImagery(!imagery)} title={t('imageryHint')}><Satellite className="w-4 h-4" /><span className="hidden sm:inline">{t('imagery')}</span></button>
                   <button className="btn btn-ghost min-h-[36px] px-2.5 justify-start" aria-pressed={autoRotate} onClick={() => setAutoRotate(!autoRotate)} aria-label={t('spinHint')}><RotateCw className="w-4 h-4" /><span className="hidden sm:inline">{t('spin')}</span></button>
                 </div>

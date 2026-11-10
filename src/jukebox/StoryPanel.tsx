@@ -12,10 +12,10 @@ import { captionFor } from './caption';
 
 export type StoryLoad = { status: 'loading'; message?: string } | { status: 'error'; message: string } | { status: 'ready'; series: DataSeries | null };
 
-interface Props { story: Story; load: StoryLoad; points: SeriesPoint[]; cursor: string | null; sound?: ReactNode; onCursor: (t: string) => void; onRetry: () => void; onOpenCollection: (s: Story) => void }
+interface Props { story: Story; load: StoryLoad; points: SeriesPoint[]; cursor: string | null; sound?: ReactNode; noteScale?: ReactNode; onCursor: (t: string) => void; onRetry: () => void; onOpenCollection: (s: Story) => void }
 
 /** Right column: title, explanation, the visual (EIC picture or chart with the cursor), a text caption, the sound legend and options, provenance, and the full collection player. */
-export function StoryPanel({ story, load, points, cursor, sound, onCursor, onRetry, onOpenCollection }: Props) {
+export function StoryPanel({ story, load, points, cursor, sound, noteScale, onCursor, onRetry, onOpenCollection }: Props) {
   const { t, lang } = usePrefs();
   const frame = story.frameId ? EIC_FRAMES.find((f) => f.id === story.frameId) : null;
   const series = load.status === 'ready' ? load.series : null;
@@ -39,7 +39,10 @@ export function StoryPanel({ story, load, points, cursor, sound, onCursor, onRet
         : load.status === 'error' ? <DataState status={typeof navigator !== 'undefined' && navigator.onLine === false ? 'offline' : 'error'} message={`${t('dsError')} ${load.message}`} onRetry={onRetry} />
         : series && (
           <>
-            <SeriesChart points={points} cursor={cursor} unit={series.unit} label={series.variable} onCursor={onCursor} />
+            <div className={noteScale ? 'jb-chartrow' : undefined}>
+              <SeriesChart points={points} cursor={cursor} unit={series.unit} label={series.variable} onCursor={onCursor} />
+              {noteScale}
+            </div>
             <p className="text-sm text-[var(--ink)] min-h-[2.5rem]" data-caption>{cap}</p>
             {sound}
             <ProvenanceCard series={series} />

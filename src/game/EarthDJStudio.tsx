@@ -161,7 +161,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
                 setFireIntensity(val);
                 if (fireActive) audio.playFire(val, -0.6, 12000);
               }}
-              className="accent-[var(--fire)]"
+              className="accent-[var(--fire)]" aria-label={isBn ? 'আগুনের তীব্রতা' : 'Fire intensity'}
             />
           </div>
 
@@ -206,7 +206,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
                 setRainIntensity(val);
                 if (rainActive) audio.playRain(val, 0.6, 12000);
               }}
-              className="accent-[var(--rain)]"
+              className="accent-[var(--rain)]" aria-label={isBn ? 'বৃষ্টির তীব্রতা' : 'Rain intensity'}
             />
           </div>
 
@@ -251,7 +251,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
                 setOceanAnomaly(val);
                 if (oceanActive) audio.playOcean(val, 0.0, 15000);
               }}
-              className="accent-[var(--teal)]"
+              className="accent-[var(--teal)]" aria-label={isBn ? 'সমুদ্রের তাপমাত্রার অসামঞ্জস্য' : 'Ocean heat anomaly'}
             />
           </div>
 

@@ -6,6 +6,7 @@ import { describeVoice } from '../audio/voiceParams';
 import { usePrefs, speak } from '../lib/prefs';
 import { LAYER_META } from './layerMeta';
 import { placeLabel } from '../lib/placesBn';
+import { LiveWaveform } from './LiveWaveform';
 
 interface Props {
   observations: EarthObservation[];
@@ -47,13 +48,17 @@ export const HearingPanel: React.FC<Props> = ({ observations, enabled, audioRead
   };
 
   return (
-    <section className="panel p-3" aria-labelledby="hearing-title">
+    <section className="panel p-3 hearing-panel" aria-labelledby="hearing-title">
       <button className="w-full flex items-center justify-between gap-2 cursor-pointer" onClick={() => setOpen(!open)} aria-expanded={open}>
         <h2 id="hearing-title" className="font-display font-semibold text-lg">{t('nowHearing')}</h2>
-        {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        <span className="flex items-center gap-2">
+          <span className={`hearing-live ${audioReady ? 'on' : ''}`}>{audioReady ? t('hearingLive') : t('hearingOff')}</span>
+          {open ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </span>
       </button>
       {open && (
         <>
+          <LiveWaveform active={audioReady} />
           {!audioReady && <p className="text-sm text-[var(--ink-2)] mt-1">{t('nothingPlaying')}</p>}
           <ol className="mt-2 space-y-1.5" aria-live="off">
             {rows.map((o) => {
@@ -75,6 +80,12 @@ export const HearingPanel: React.FC<Props> = ({ observations, enabled, audioRead
               );
             })}
           </ol>
+          {top && (() => { const pan = describeVoice(top).pan; return (
+            <div className="stereo-meter" role="img" aria-label={`${t('stereoPos')}: ${where(pan)}`}>
+              <div className="flex justify-between text-2xs text-[var(--ink-3)]"><span>{t('left')}</span><span>{t('stereoPos')}</span><span>{t('right')}</span></div>
+              <div className="meter"><i style={{ left: `${(pan + 1) * 50}%` }} /></div>
+            </div>
+          ); })()}
           <p className="text-2xs text-[var(--ink-3)] mt-2 leading-snug">
             {lang === 'bn'
               ? 'অবস্থান = দ্রাঘিমাংশ। মান বাড়লে আগুন দ্রুত ও উজ্জ্বল চটচট করে, বৃষ্টির ফোঁটা ঘন ও উঁচু হয়, গরম সমুদ্রের গুঞ্জন উঁচু সুরে বাজে।'

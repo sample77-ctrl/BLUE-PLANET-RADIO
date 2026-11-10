@@ -45,7 +45,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
       <div className="glass panel p-5 rounded-3xl border border-[var(--line)] flex flex-wrap items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-3.5">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--brass)] flex items-center justify-center overflow-hidden shrink-0">
-            <img src="/images/ninja_cadet_avatar.png" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
+            <img src="/images/ninja_cadet_avatar_sm.jpg" decoding="async" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
           </div>
           <div>
             <div className="flex items-center gap-2">

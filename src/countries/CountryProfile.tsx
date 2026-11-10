@@ -68,15 +68,21 @@ export function CountryProfile({ country, point }: { country: Country; point: { 
   const lab = (l: { en: string; bn: string }) => (lang === 'bn' ? l.bn : l.en);
 
   return (
-    <section className="panel p-3 space-y-3" aria-label={t('profileTitle')} aria-busy={!settled}>
-      <h2 className="font-display text-base font-bold">{t('profileTitle')}: {name} <span className="text-[var(--ink-3)] font-normal">· {country.id}</span></h2>
+    <section className="panel country-card p-3 space-y-3" aria-label={t('profileTitle')} aria-busy={!settled}>
+      <h2 className="font-display text-lg font-bold leading-tight">{t('profileTitle')}: {name} <span className="text-[var(--ink-3)] font-normal tnum">· {country.id}</span></h2>
+      {data?.onExplore && (
+        <div>
+          <button type="button" className="btn btn-brass w-full cc-listen" onClick={() => data.onExplore!(country.id)}><Headphones className="w-4 h-4" aria-hidden="true" />{t('profileExplore')}</button>
+          <p className="text-2xs text-[var(--ink-3)] mt-1">{t('profileExploreNote')}</p>
+        </div>)}
 
       <div className="space-y-2">
         <h3 className="label">{t('profileHave')}</h3>
         {data?.isFallback ? <DataState status="stale" message={t('profileSample')} />
           : !data || data.loading || !rows ? <DataState status="loading" />
           : have.map((r) => (
-            <div key={r.dataset} className="space-y-1.5">
+            <div key={r.dataset} className="cc-metric space-y-1.5" data-layer={r.dataset}>
+              {r.stat && <p className="cc-big tnum" aria-hidden="true">{r.stat.value}<span>{r.stat.unit}</span></p>}
               <p className="text-sm"><strong>{lab(LAYER[r.dataset])}</strong>: <span className="tnum">{t('profileCells', { n: r.count })}</span>
                 {r.stat && <>, <span className="tnum">{r.stat.kind === 'max' ? t('profileMax', { v: r.stat.value, u: r.stat.unit }) : t('profileMean', { n: r.stat.of, v: r.stat.value, u: r.stat.unit })}</span></>}
                 {r.series.points.length > 1 && <>, <span className="tnum">{t('profileDays', { n: r.series.points.length })}</span></>}</p>
@@ -98,13 +104,14 @@ export function CountryProfile({ country, point }: { country: Country; point: { 
             : 'err' in cur ? <DataState status={typeof navigator !== 'undefined' && navigator.onLine === false ? 'offline' : 'error'} message={`${t('dsError')} ${cur.err}`} onRetry={retry} />
             : <>
               <p className="text-xs text-[var(--ink-2)]">{t('profilePointOnly', { pt: `${Math.abs(point.lat).toFixed(2)}°${point.lat >= 0 ? 'N' : 'S'}, ${Math.abs(point.lon).toFixed(2)}°${point.lon >= 0 ? 'E' : 'W'}` })}</p>
+              {cur.v.annual.temp.length > 0 && <div className="cc-metric"><p className="cc-big tnum">{(lang === 'bn' ? (v: string) => v.replace(/\d/g, (d) => BN[+d]) : (v: string) => v)(cur.v.annual.temp[cur.v.annual.temp.length - 1].toFixed(1))}<span>°C</span></p><p className="text-xs text-[var(--ink-3)] tnum">{t('profileLatest', { y: String(cur.v.annual.years[cur.v.annual.years.length - 1]) })}</p></div>}
               <Spark years={cur.v.annual.years} temp={cur.v.annual.temp} />
               <ProvenanceCard series={cur.v.temp} />
               <ProvenanceCard series={cur.v.rain} />
             </>}
         </div>)}
 
-      {bgd && <p className="text-sm">{lang === 'bn' ? bgd.entry.titleBn : bgd.entry.title}</p>}
+      {bgd && <p className="cc-metric text-sm">{lang === 'bn' ? bgd.entry.titleBn : bgd.entry.title}</p>}
 
       {settled && !anything && <DataState status="empty" message={t('profileEmpty', { name })} />}
 
@@ -114,11 +121,7 @@ export function CountryProfile({ country, point }: { country: Country; point: { 
           <ul className="text-xs text-[var(--ink-2)] list-disc pl-4">{context.map((c) => <li key={c.entry.id}>{lang === 'bn' ? c.entry.titleBn : c.entry.title} <span className="chip">{t('provContext')}</span></li>)}</ul>
         </div>)}
 
-      {data?.onExplore && (
-        <div>
-          <button type="button" className="btn btn-brass w-full" onClick={() => data.onExplore!(country.id)}><Headphones className="w-4 h-4" aria-hidden="true" />{t('profileExplore')}</button>
-          <p className="text-2xs text-[var(--ink-3)] mt-1">{t('profileExploreNote')}</p>
-        </div>)}
+
     </section>
   );
 }

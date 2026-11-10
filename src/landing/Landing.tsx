@@ -12,6 +12,20 @@ import type { WorldId } from './worlds';
 
 const TopicCarousel = lazy(() => import('../stories/TopicCarousel').then((m) => ({ default: m.TopicCarousel })));
 
+/** Renders its children only once the placeholder is within `margin` of the viewport (or immediately without IntersectionObserver): the topic carousel is several screens down and loads its code and data from there. */
+const WhenNear: React.FC<{ children: React.ReactNode; margin?: string; minH?: string }> = ({ children, margin = '900px', minH = '24rem' }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(typeof IntersectionObserver === 'undefined');
+  useEffect(() => {
+    const el = ref.current;
+    if (near || !el) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setNear(true); io.disconnect(); } }, { rootMargin: `${margin} 0px` });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near, margin]);
+  return near ? <>{children}</> : <div ref={ref} style={{ minHeight: minH }} aria-hidden="true" />;
+};
+
 interface Props {
   fireObs: EarthObservation[];
   onPick: (t: Track) => void;
@@ -74,7 +88,7 @@ export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, on
       <WorldCarousel data={data} onOpen={onPick} onTour={onTour} onListen={onListen} onSilent={onSilent} onDown={scrollDown} onOpenHarmonium={onOpenHarmonium}>
       <div id="landing-more" data-cover className="landing-more">
         {/* Topic carousel (Feature D), then how data becomes sound */}
-        <Suspense fallback={<div className="min-h-[24rem]" />}><TopicCarousel onListen={onTopic} /></Suspense>
+        <WhenNear><Suspense fallback={<div className="min-h-[24rem]" />}><TopicCarousel onListen={onTopic} /></Suspense></WhenNear>
         <section className="reveal max-w-6xl mx-auto px-5 sm:px-10 py-20" aria-labelledby="how-title">
           <h2 id="how-title" className="land-title">{t('howTitle')}</h2>
           <hr className="world-rule land-rule" />
@@ -95,7 +109,7 @@ export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, on
           <div className="glass-flat p-6 sm:p-8 rounded-2xl border border-[var(--brass)]/50 bg-gradient-to-r from-amber-950/20 via-[var(--panel)] to-cyan-950/20 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--brass)] shrink-0 overflow-hidden">
-                <img src="/images/ninja_cadet_avatar.png" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
+                <img src="/images/ninja_cadet_avatar_sm.jpg" width={96} height={96} loading="lazy" decoding="async" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
               </div>
               <div className="flex flex-col gap-2">
                 <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-[var(--brass)] font-semibold font-mono mx-auto sm:mx-0">

@@ -1,3 +1,4 @@
+import { MARKER_SHAPE, markerPath } from '../atlas/markerShape';
 import React, { useState, useRef, useCallback, useMemo } from 'react';
 import type { EarthObservation, PhenomenonType } from '../types/dataset';
 import { SonificationEngine } from '../audio/sonificationEngine';
@@ -179,7 +180,7 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
       role="application"
     >
       {/* Zoom / Pan Navigation Toolbar */}
-      <div className="absolute top-16 right-3 z-20 flex flex-col gap-1.5 panel p-1.5">
+      <div className="absolute top-16 right-3 lg:right-[364px] lg:top-[calc(var(--header-h)+4rem)] z-20 flex flex-col gap-1.5 panel p-1.5">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -217,7 +218,7 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
       </div>
 
       {/* Coordinate & Audio Focus Crosshair Status HUD */}
-      <div className="hidden md:block absolute top-16 right-16 z-20 glass-pop px-3.5 py-2.5 text-xs max-w-[260px]">
+      <div className="hidden md:block absolute top-16 right-16 lg:right-[420px] lg:top-[calc(var(--header-h)+4rem)] z-20 glass-pop px-3.5 py-2.5 text-xs max-w-[260px]">
         <div className="text-[var(--ink-3)] flex items-center gap-1.5 mb-1 font-sans text-xs font-semibold">
           <Navigation className="w-3.5 h-3.5 text-[var(--rain)]" />
           <span>Keyboard focus point · arrows move, Enter listens{onSelectCountry ? ', C selects the country' : ''}</span>
@@ -329,10 +330,8 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
                 />}
 
                 {/* Core observation beacon */}
-                <circle
-                  cx={cx}
-                  cy={cy}
-                  r={baseRadius}
+                <path
+                  d={markerPath(MARKER_SHAPE[obs.phenomenon], cx, cy, baseRadius)}
                   fill={color}
                   stroke={isSelected ? '#e9c46a' : 'rgba(255,255,255,0.7)'}
                   strokeWidth={isSelected ? '2.5' : '0.6'}

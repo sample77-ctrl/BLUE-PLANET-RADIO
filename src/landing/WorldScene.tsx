@@ -10,6 +10,8 @@ interface Props {
   stage: RefObject<HTMLElement | null>;
   dots: Partial<Record<WorldId, readonly Dot[]>>;
   onFail: () => void;
+  /** Called once, when the first Earth texture has reached the GPU (until then the page shows a poster). */
+  onReady?: () => void;
 }
 
 const FOV = 22, CAM_Z = 12, MAX_R = 9;
@@ -22,12 +24,14 @@ const ATMOS_FS = 'uniform float uDim; varying vec3 vN; void main() { float i = p
  * (`.world-sphere`, moved by the level / carousel transitions), so the 3D scene and the text can never drift apart. Level 3's anchor grows past
  * the screen, so the camera ends up skimming the surface: a real dive into the planet.
  */
-export function WorldScene({ stage, dots, onFail }: Props) {
+export function WorldScene({ stage, dots, onFail, onReady }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const overlays = useRef<Map<WorldId, THREE.Mesh>>(new Map());
   const dirty = useRef(true); // something changed that the next frame must draw, even when nothing moves
   const failRef = useRef(onFail);
   useEffect(() => { failRef.current = onFail; }, [onFail]);
+  const readyRef = useRef(onReady);
+  useEffect(() => { readyRef.current = onReady; }, [onReady]);
 
   useEffect(() => {
     const el = host.current, root = stage.current, ov = overlays.current;
@@ -117,7 +121,9 @@ export function WorldScene({ stage, dots, onFail }: Props) {
     window.addEventListener('pointermove', onPointer, { passive: true });
     const still = () => document.documentElement.classList.contains('rm') || document.documentElement.classList.contains('calm');
     let raf = 0, last = 0;
-    map.onUpdate = clouds.onUpdate = () => { dirty.current = true; }; // redraw once the textures arrive
+    let announced = false;
+    clouds.onUpdate = () => { dirty.current = true; };
+    map.onUpdate = () => { dirty.current = true; if (!announced) { announced = true; readyRef.current?.(); } }; // redraw once the textures arrive; the first one ends the poster
     const frame = () => {
       raf = requestAnimationFrame(frame);
       const now = performance.now();
