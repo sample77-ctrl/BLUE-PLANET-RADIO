@@ -14,7 +14,8 @@
     "fetch:firms": "node scripts/fetch-firms.mjs",
     "fetch:precip": "node scripts/fetch-precip.mjs",
     "fetch:sst": "node scripts/fetch-sst.mjs",
-    "build:data": "node scripts/build-snapshots.mjs"
+    "build:data": "node scripts/build-snapshots.mjs",
+    "check:size": "node scripts/check-size.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

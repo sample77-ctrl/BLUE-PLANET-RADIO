@@ -1,0 +1,70 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Mockup v2: jukebox</title><link rel="stylesheet" href="/mockups/shared.css">
+<style>
+.bg{background:radial-gradient(ellipse 40% 55% at 20% 45%,#1a2f63 0%,#0b1630 45%,#050c14 85%),#050c14}
+.neb{position:absolute;inset:0;background:radial-gradient(ellipse 35% 40% at 85% 30%,rgba(140,80,220,.22),transparent 70%),radial-gradient(ellipse 30% 30% at 60% 95%,rgba(242,92,138,.14),transparent 70%)}
+.vinyl{position:absolute;left:44px;top:118px;width:560px;height:560px;border-radius:50%;background:repeating-radial-gradient(circle,#0b0d12 0 2px,#16181f 2px 4px);box-shadow:0 0 0 2px rgba(255,255,255,.06),0 30px 80px -10px rgba(0,0,0,.8),0 0 80px -10px rgba(63,209,181,.35)}
+.vinyl:after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 200deg,transparent 0 10%,rgba(255,255,255,.09) 14%,transparent 20% 60%,rgba(255,255,255,.07) 64%,transparent 70%)}
+#g{position:absolute;left:174px;top:248px;width:300px;height:300px;border-radius:50%;z-index:2}
+.play{position:absolute;left:276px;top:350px;width:96px;height:96px;border-radius:50%;background:var(--brass);display:grid;place-items:center;z-index:4;box-shadow:0 0 0 10px rgba(233,196,106,.18),0 0 60px rgba(233,196,106,.7)}
+.ring{position:absolute;left:44px;top:118px;width:560px;height:560px;z-index:3}
+.right{position:absolute;left:650px;right:32px;top:116px}
+h1{font-family:'Bricolage Grotesque';font-weight:800;font-size:52px;letter-spacing:-.015em;line-height:1}
+.read{display:flex;align-items:flex-end;gap:26px;margin-top:14px}
+.big{font-family:'IBM Plex Mono';font-weight:500;font-size:62px;line-height:1;color:var(--brass);text-shadow:0 0 30px rgba(233,196,106,.5)}
+.kv{font-size:13px;color:var(--ink3);letter-spacing:.1em;font-family:'IBM Plex Mono'}.kv b{display:block;font-size:24px;color:var(--ink);letter-spacing:0;font-weight:500;margin-top:4px}
+.cards{position:absolute;left:44px;right:32px;top:700px;display:flex;gap:16px}
+.tc{flex:1;height:100px;padding:14px 18px;display:flex;align-items:center;gap:18px}
+.tc .t{font-size:13px;color:var(--ink3);font-family:'IBM Plex Mono';letter-spacing:.08em}.tc .v{font-size:26px;font-weight:600;margin-top:4px}
+.bar{position:absolute;left:44px;right:32px;bottom:20px;height:64px;display:flex;align-items:center;gap:16px;padding:0 18px}
+.cb{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink2)}
+.chip{padding:9px 15px;border-radius:12px;border:1px solid var(--line);font-size:14px;color:var(--ink2)}
+.arm{position:absolute;left:470px;top:96px;z-index:5}
+</style></head><body>
+<div class="bg"></div><div class="neb"></div><canvas class="stars" id="st"></canvas>
+<div class="hdr"><div class="logo"><i></i>Sonic Earth Atlas</div>
+<div class="nav"><a>Home</a><a>Explore Earth</a><a class="on">Data Jukebox</a><a>Sonic Quest</a><a>Science</a></div><div class="sp"></div>
+<span class="pill on">● Sound on</span><span class="pill">EN · বাংলা</span><span class="pill">17 stories · Filters</span></div>
+<div class="vinyl"></div>
+<canvas id="g" width="300" height="300"></canvas>
+<svg class="ring" viewBox="0 0 560 560"><defs><path id="c" d="M280,280 m-176,0 a176,176 0 1,1 352,0 a176,176 0 1,1 -352,0"/></defs>
+<circle cx="280" cy="280" r="160" fill="none" stroke="rgba(63,209,181,.55)" stroke-width="2"/><circle cx="280" cy="280" r="192" fill="none" stroke="rgba(63,209,181,.18)" stroke-width="22"/>
+<text font-family="IBM Plex Mono" font-size="14" letter-spacing="5" fill="#9fe9da"><textPath href="#c">DATA JUKEBOX · GISTEMP v4 · 1880–2025 · NOW PLAYING · G PENTATONIC ·</textPath></text></svg>
+<span class="play"><svg width="40" height="40" viewBox="0 0 24 24" fill="#1b1405"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg></span>
+<svg class="arm" width="150" height="330" viewBox="0 0 150 330"><circle cx="110" cy="40" r="34" fill="#20242c" stroke="#3a404b" stroke-width="3"/><circle cx="110" cy="40" r="12" fill="#5b6370"/><path d="M110 40 L100 230 L60 300" stroke="#c9ced6" stroke-width="7" fill="none" stroke-linecap="round"/><rect x="40" y="290" width="34" height="22" rx="4" transform="rotate(30 57 301)" fill="#e9c46a"/></svg>
+
+<div class="right">
+ <div class="eyebrow">Now playing · Story 1 of 17 · Temperature · Global</div>
+ <h1 style="margin-top:12px">Global temperature since 1880</h1>
+ <div style="font-size:18px;color:var(--ink2);margin-top:8px">How much warmer or cooler the whole planet was than the 1951–1980 average, one value per year.</div>
+ <div class="read"><div class="big">2025</div><div class="kv">ANOMALY<b>+1.19 °C</b></div><div class="kv">NOTE<b style="color:var(--warm)">E5 · 659 Hz</b></div><div class="kv">TIMBRE<b>Warm triangle</b></div><div class="kv">PULSES<b>3 of 6</b></div></div>
+ <div class="glass" style="margin-top:16px;padding:12px 18px 6px"><div id="ch"></div></div>
+ <div class="glass" style="margin-top:12px;padding:10px 18px 6px"><div style="display:flex;justify-content:space-between;font-size:13px;color:var(--ink3);font-family:'IBM Plex Mono';letter-spacing:.08em"><span>LAST 14 YEARS AS NOTES · G-MAJOR PENTATONIC</span><span>G3 196 Hz → G5 784 Hz</span></div><div id="nt"></div></div>
+</div>
+<div class="cards" id="cards"></div>
+<div class="glass bar"><span class="cb">⏮</span><span class="cb" style="background:var(--brass);color:#1b1405;border:0">❚❚</span><span class="cb">⏭</span>
+ <div style="flex:1;position:relative;height:6px;border-radius:3px;background:rgba(255,255,255,.1)"><div style="position:absolute;inset:0;border-radius:3px;background:linear-gradient(90deg,#4cc3ff,#7fb2ff 55%,#e9c46a 82%,#f25c8a);box-shadow:0 0 18px rgba(242,92,138,.5)"></div><div style="position:absolute;right:-9px;top:-6px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 0 16px #f25c8a"></div></div>
+ <span class="mono" style="font-size:14px;color:var(--ink2)">1880 ─ <b style="color:#fff">2025</b> · 146 / 146</span><span class="chip">1×</span><span class="chip">Even steps</span><span class="chip">Table of values</span><span class="chip">Method and limits</span></div>
+<script type="module">
+import {initGlobe,drawStars} from '/mockups/globe.js';
+drawStars(document.getElementById('st'),500,13);
+const [gt,vs]=await Promise.all([fetch('/data/gistemp_global.json').then(r=>r.json()),fetch('/data/vital_signs.json').then(r=>r.json())]);
+const ser=gt.series,last=ser.length-1,W=900,H=182,x0=36,pw=W-x0-10,ph=H-30,mn=-.6,mx=1.4;
+const X=i=>x0+i/last*pw,Y=v=>6+(mx-v)/(mx-mn)*ph;
+const line=ser.map((s,i)=>X(i).toFixed(1)+','+Y(s.anomaly).toFixed(1)).join(' ');
+document.getElementById('ch').innerHTML=`<svg width="${W}" height="${H+14}"><defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#4cc3ff"/><stop offset=".55" stop-color="#7fb2ff"/><stop offset=".82" stop-color="#e9c46a"/><stop offset="1" stop-color="#f25c8a"/></linearGradient><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f25c8a" stop-opacity=".35"/><stop offset="1" stop-color="#4cc3ff" stop-opacity="0"/></linearGradient><filter id="gl"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+${[-.5,0,.5,1].map(v=>`<line x1="${x0}" x2="${W-10}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(255,255,255,${v===0?.3:.07})" ${v===0?'stroke-dasharray="5 5"':''}/><text x="0" y="${Y(v)+4}" fill="#8ba3b0" font-size="12" font-family="IBM Plex Mono">${v>0?'+':''}${v}</text>`).join('')}
+<text x="${x0+8}" y="${Y(0)-8}" fill="#8ba3b0" font-size="12">1951–1980 average</text>
+<polygon points="${X(0)},${Y(0)} ${line} ${X(last)},${Y(0)}" fill="url(#ag)"/><polyline fill="none" stroke="url(#lg)" stroke-width="3" stroke-linejoin="round" points="${line}" filter="url(#gl)"/>
+<circle cx="${X(last)}" cy="${Y(ser[last].anomaly)}" r="8" fill="#fff" filter="url(#gl)"/>
+${[1880,1920,1960,2000,2025].map(y=>`<text x="${X(y-1880)-(y===2025?34:14)}" y="${H+10}" fill="#8ba3b0" font-size="12" font-family="IBM Plex Mono">${y}</text>`).join('')}</svg>`;
+const NOTES=['G3','A3','B3','D4','E4','G4','A4','B4','D5','E5','G5'],COL=['#4cc3ff','#4cc3ff','#5fb8ff','#7fb2ff','#7fb2ff','#a7b8f0','#e9c46a','#e9c46a','#f59a7a','#f25c8a','#f25c8a'];
+const tail=ser.slice(-14),nw=900,nh=74;
+const pts=tail.map((s,i)=>{const k=Math.max(0,Math.min(10,Math.round((s.anomaly-mn)/(mx-mn)*10)));return {x:24+i*(nw-48)/13,y:nh-14-k*5.2,k,yr:s.year}});
+document.getElementById('nt').innerHTML=`<svg width="${nw}" height="${nh+4}"><polyline fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.5" points="${pts.map(p=>p.x+','+p.y).join(' ')}"/>${pts.map((p,i)=>`<circle cx="${p.x}" cy="${p.y}" r="${i===13?15:12}" fill="${COL[p.k]}" opacity="${i===13?1:.85}" ${i===13?'style="filter:drop-shadow(0 0 10px #f25c8a)"':''}/><text x="${p.x}" y="${p.y+4}" text-anchor="middle" font-size="11" font-family="IBM Plex Mono" font-weight="500" fill="#06101a">${NOTES[p.k]}</text><text x="${p.x}" y="${nh+2}" text-anchor="middle" font-size="10" font-family="IBM Plex Mono" fill="#8ba3b0">${String(p.yr).slice(2)}</text>`).join('')}</svg>`;
+const spark=(pts,w,h,c)=>{const v=pts.map(p=>p.value),a=Math.min(...v),b=Math.max(...v);return `<svg width="${w}" height="${h}" style="filter:drop-shadow(0 0 6px ${c})"><polyline fill="none" stroke="${c}" stroke-width="2.2" points="${v.map((y,i)=>(i/(v.length-1)*w).toFixed(1)+','+(h-(y-a)/(b-a)*(h-6)-3).toFixed(1)).join(' ')}"/></svg>`};
+const S=Object.fromEntries(vs.series.map(s=>[s.id,s]));const L=s=>s.points[s.points.length-1];
+const cs=[['TEMPERATURE · 2025',`+${L(S.temp).value} °C`,'#f25c8a',S.temp,1],['CO₂ · MAUNA LOA · 2025',`${L(S.co2).value} ppm`,'#3fd1b5',S.co2,0],['ARCTIC SEA ICE · SEP 2026',`${L(S.ice).value} M km²`,'#4cc3ff',S.ice,0]];
+document.getElementById('cards').innerHTML=cs.map(c=>`<div class="glass tc" style="${c[4]?'border-color:'+c[2]+';box-shadow:0 0 0 1px '+c[2]+'55,0 0 30px -6px '+c[2]:''}"><div style="flex:1"><div class="t">${c[0]}</div><div class="v" style="color:${c[4]?c[2]:'#fff'}">${c[1]}</div></div>${spark(c[3].points,170,56,c[2])}</div>`).join('')+`<div class="glass tc" style="flex:.55;justify-content:center;color:var(--ink2);font-size:16px">+ 14 more stories</div>`;
+await initGlobe(document.getElementById('g'),{lat:15,lon:20,px:300});
+window.__ready=true;
+</script></body></html>

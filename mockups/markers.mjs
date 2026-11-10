@@ -1,0 +1,12 @@
+import { chromium } from '@playwright/test';
+const b = await chromium.launch({ executablePath: process.env.HOME + '/Library/Caches/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-mac-arm64/chrome-headless-shell', args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const pg = await b.newPage({ viewport: { width: 1500, height: 900 } });
+await pg.goto('http://localhost:4173/#v1&track=atlas');
+await pg.waitForTimeout(9000);
+await pg.keyboard.press('2'); await pg.keyboard.press('3');
+await pg.waitForTimeout(1500);
+await pg.screenshot({ path: 'mockups/out/markers-globe.png' });
+await pg.getByRole('button', { name: 'Map', exact: true }).click();
+await pg.waitForTimeout(1500);
+await pg.screenshot({ path: 'mockups/out/markers-map.png' });
+await b.close();

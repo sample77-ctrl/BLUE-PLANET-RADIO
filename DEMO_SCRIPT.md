@@ -1,3 +1,29 @@
+# Live judging demo (60 seconds) and offline fallback
+
+## If the live site is down (it can be paused on Vercel)
+
+Run the production build on the demo laptop. It needs no internet except for the NASA GIBS pictures and the NASA POWER "hear any place" lookup, which fall back to bundled images.
+
+```bash
+npm ci
+npm run build
+npm run preview
+```
+
+Open the address `vite preview` prints (usually http://localhost:4173). Do this once before the session and check that sound plays.
+
+## The 60-second path
+
+| Time | Do | Say |
+|---|---|---|
+| 0:00–0:10 | Landing: press **Press play · hear Fire** | "Real NASA fire detections, played as sound. Hotter fire is higher; where it burns decides which ear." |
+| 0:10–0:25 | **Explore the globe**, switch on Rain and Ocean heat, read the **Now hearing** panel | "Each layer has its own sound, and this panel says how the data became sound." |
+| 0:25–0:40 | **Data Jukebox**, press the vinyl to play global temperature since 1880 | "140 years of warming as pitch. The readout shows the value, the note and why." |
+| 0:40–0:50 | **About the Science** | "Every formula, unit and limit is written down. These are snapshots, not live data." |
+| 0:50–1:00 | **Sonic Quest**, open a mission, then switch to বাংলা | "Missions for kids and beginners, and the whole site works in Bangla and by keyboard." |
+
+---
+
 # Video script (about 3 min 45 s) and submission checklist
 
 Record at 1920×1080 with system audio. Wear headphones while recording and say so on screen. Add captions.

@@ -22,6 +22,7 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      - run: npm run check:size
 
   # Browser smoke + axe checks (roadmap Phase 7). Allowed to fail while it settles in; make it required once it is green on main.
   e2e:

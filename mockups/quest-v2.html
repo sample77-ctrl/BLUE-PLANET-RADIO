@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Mockup v2: quest</title><link rel="stylesheet" href="/mockups/shared.css">
+<style>
+.bg{background:radial-gradient(ellipse 50% 60% at 22% 70%,#0f4c78 0%,#0a2647 40%,#061325 80%)}
+.room{position:absolute;inset:0;background-image:linear-gradient(rgba(76,195,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(76,195,255,.06) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,transparent,#000 40%,#000 70%,transparent)}
+.hdr{border-color:rgba(76,195,255,.3)}
+.stars2{display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:999px;background:rgba(233,196,106,.12);border:1px solid rgba(233,196,106,.5);color:var(--brass);font-family:'IBM Plex Mono';font-size:14px}
+.mas{position:absolute;left:70px;top:250px;width:330px;height:330px;border-radius:50%;object-fit:cover;border:4px solid rgba(63,209,181,.9);box-shadow:0 0 0 12px rgba(63,209,181,.12),0 0 80px rgba(63,209,181,.55);z-index:3}
+.plat{position:absolute;left:30px;top:530px;width:410px;height:110px;border-radius:50%;border:2px solid rgba(63,209,181,.7);box-shadow:0 0 40px rgba(63,209,181,.6),inset 0 0 40px rgba(63,209,181,.35)}
+.plat2{position:absolute;left:-10px;top:515px;width:490px;height:140px;border-radius:50%;border:1px solid rgba(63,209,181,.3)}
+.bub{position:absolute;left:60px;top:120px;width:380px;padding:16px 20px;font-size:19px;line-height:1.35;font-weight:500;z-index:4}
+.title{position:absolute;left:480px;top:118px}
+.title h1{font-family:'Bricolage Grotesque';font-weight:800;font-size:46px;letter-spacing:-.01em}
+.cards{position:absolute;left:480px;right:32px;top:212px;height:470px;display:flex;gap:18px}
+.mc{flex:1;border-radius:22px;overflow:hidden;position:relative;background:#0b1a2c;border:2px solid;display:flex;flex-direction:column}
+.art{height:230px;position:relative;overflow:hidden}
+.art img{width:100%;height:100%;object-fit:cover}
+.art:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,#0b1a2c)}
+.bd{padding:6px 18px 18px;flex:1;display:flex;flex-direction:column}
+.st{font-size:22px;letter-spacing:2px}.bd h3{font-family:'Bricolage Grotesque';font-weight:800;font-size:23px;line-height:1.1;margin-top:6px;text-transform:uppercase}
+.bd p{font-size:14px;color:var(--ink2);margin-top:8px;line-height:1.4}.bd small{font-family:'IBM Plex Mono';font-size:11px;color:var(--ink3);margin-top:8px;letter-spacing:.06em}
+.go{margin-top:auto;align-self:stretch;text-align:center;padding:11px;border-radius:12px;font-weight:600;font-size:16px}
+.more{position:absolute;left:480px;right:32px;top:706px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.more span{padding:10px 16px;border-radius:12px;font-size:15px;color:var(--ink);background:rgba(13,27,39,.7);border:1px solid rgba(76,195,255,.3)}
+.launch{position:absolute;left:84px;top:720px;padding:16px 28px;border-radius:18px;font-family:'Bricolage Grotesque';font-weight:800;font-size:22px;letter-spacing:.04em;color:#06101a;background:linear-gradient(90deg,#3fd1b5,#4cc3ff);box-shadow:0 0 40px -4px rgba(63,209,181,.8)}
+.note{position:absolute;right:36px;bottom:22px;font-size:12px;color:var(--ink3)}
+</style></head><body>
+<div class="bg"></div><div class="room"></div><canvas class="stars" id="st"></canvas>
+<div class="hdr"><div class="logo"><i></i>Sonic Quest · Earth Rangers</div>
+<div class="nav"><a>Home</a><a>Explore Earth</a><a>Data Jukebox</a><a class="on">Sonic Quest</a><a>Science</a></div><div class="sp"></div>
+<span class="stars2">★ 6 / 12 stars</span><span class="pill">Badge: Eco-Ninja cadet</span></div>
+<div class="glass bub" style="border-color:rgba(63,209,181,.5)">Hi, ranger! Each mission plays real NASA data. Listen closely and you'll find what the satellites found.</div>
+<div class="plat2"></div><div class="plat"></div>
+<img class="mas" src="/images/ninja_cadet_avatar.png" alt="">
+<div class="title"><div class="eyebrow">Choose your mission</div><h1>Four NASA sound missions</h1></div>
+<div class="cards">
+ <div class="mc" style="border-color:#ff7a3d;box-shadow:0 0 34px -6px rgba(255,122,61,.75)"><div class="art"><img src="/images/game/wildfire_tactical_command.jpg" alt=""></div><div class="bd"><div class="st" style="color:#ffcf5c">★★★</div><h3>Amazon wildfire extinguisher</h3><p>Follow the crackle to each hotspot and put it out.</p><small>NASA FIRMS VIIRS · FIRE POWER</small><span class="go" style="background:#ff7a3d;color:#1b0a02;margin-top:14px">Replay</span></div></div>
+ <div class="mc" style="border-color:#4cc3ff;box-shadow:0 0 34px -6px rgba(76,195,255,.7)"><div class="art" style="background:radial-gradient(ellipse at 50% 120%,#1f6a5a,#0d2a44 60%,#08182a);"><svg width="100%" height="100%" viewBox="0 0 260 230" preserveAspectRatio="none"><g stroke="#9fdcff" stroke-width="2" opacity=".7"><path d="M20 10l-12 40M60 0l-12 40M100 20l-12 40M140 0l-12 40M180 15l-12 40M220 0l-12 40M250 25l-12 40M40 80l-12 40M90 70l-12 40M150 85l-12 40M200 70l-12 40M240 90l-12 40"/></g><path d="M0 170 Q40 150 80 168 T160 166 T260 160 V230 H0z" fill="#1e6f8f" opacity=".85"/><path d="M0 190 Q50 175 100 190 T200 188 T260 186 V230 H0z" fill="#2b8fb3"/><rect x="110" y="150" width="46" height="16" rx="6" fill="#ff8a3d"/></svg></div><div class="bd"><div class="st" style="color:#ffcf5c">★<span style="opacity:.3">★★</span></div><h3>Bengal monsoon flood rescue</h3><p>Steer through the rain sound to reach stranded wildlife.</p><small>NASA POWER · DAILY RAIN</small><span class="go" style="background:#4cc3ff;color:#031826;margin-top:14px">Deploy</span></div></div>
+ <div class="mc" style="border-color:#3fd1b5;box-shadow:0 0 34px -6px rgba(63,209,181,.7)"><div class="art" style="background:linear-gradient(180deg,#0a3a5c,#05213a)"><svg width="100%" height="100%" viewBox="0 0 260 230" preserveAspectRatio="none"><g fill="none" stroke="#3fd1b5" stroke-width="2"><path d="M0 60 Q32 40 65 60 T130 60 T195 60 T260 60" opacity=".5"/><path d="M0 110 Q32 90 65 110 T130 110 T195 110 T260 110" opacity=".7"/></g><ellipse cx="130" cy="160" rx="50" ry="18" fill="#e9c46a"/><rect x="118" y="132" width="22" height="14" rx="4" fill="#e9c46a"/><circle cx="110" cy="160" r="5" fill="#0a3a5c"/><circle cx="130" cy="160" r="5" fill="#0a3a5c"/><circle cx="150" cy="160" r="5" fill="#0a3a5c"/><g fill="none" stroke="#f25c8a" stroke-width="2"><circle cx="200" cy="190" r="10"/><circle cx="200" cy="190" r="20" opacity=".6"/><circle cx="200" cy="190" r="30" opacity=".3"/></g></svg></div><div class="bd"><div class="st" style="color:#ffcf5c">★★<span style="opacity:.3">★</span></div><h3>Pacific ocean submarine dive</h3><p>Hear the drone rise over warm water and drop SST buoys.</p><small>JPL MUR · SST ANOMALY</small><span class="go" style="background:#3fd1b5;color:#03231c;margin-top:14px">Replay</span></div></div>
+ <div class="mc" style="border-color:#a77bff;box-shadow:0 0 34px -6px rgba(167,123,255,.7)"><div class="art"><img src="/images/game/nasa_satellite_drone_mesh.jpg" alt=""></div><div class="bd"><div class="st" style="color:#ffcf5c"><span style="opacity:.3">★★★</span></div><h3>Orbital vital-signs station</h3><p>Tune three sensors until temperature, CO₂ and ice play as one chord.</p><small>GISTEMP · NOAA CO₂ · NSIDC ICE</small><span class="go" style="background:#a77bff;color:#140733;margin-top:14px">Deploy</span></div></div>
+</div>
+<div class="more"><span style="border:0;background:none;color:var(--teal);font-family:'IBM Plex Mono';font-size:13px;letter-spacing:.12em">MORE WAYS TO PLAY</span><span>Earth DJ studio</span><span>Blind explorer</span><span>Kids zone</span><span>Time machine</span><span>Free roam</span><span>Co-op</span><span>Earth passport</span></div>
+<span class="launch">LAUNCH 3D GLOBE →</span>
+<div class="note">Mockup · stars and badge are sample progress</div>
+<script type="module">import {drawStars} from '/mockups/globe.js';drawStars(document.getElementById('st'),300,4);window.__ready=true;</script></body></html>
