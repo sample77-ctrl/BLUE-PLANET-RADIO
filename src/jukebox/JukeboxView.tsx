@@ -30,6 +30,7 @@ import { DEFAULT_SOUND, type SoundSettings } from './soundSettings';
 import { MappingLegend } from './MappingLegend';
 import { VinylHero } from './VinylHero';
 import { NoteScale } from './NoteScale';
+import { localizeSeries } from '../datasets/seriesBn';
 import { specFor } from '../sonification/series/specs';
 import { mapSeries } from '../sonification/series/mapping';
 import { pointsInYears } from '../sonification/series/compare';
@@ -83,7 +84,8 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
     return () => ac.abort();
   }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
   const cur: StoryLoad = load && load.key === key ? load.v : { status: 'loading', message: needsPoint ? t('profileLoadingPower') : undefined };
-  const series = cur.status === 'ready' ? cur.series : null;
+  const rawSeries = cur.status === 'ready' ? cur.series : null;
+  const series = useMemo(() => (rawSeries ? localizeSeries(rawSeries, lang) : null), [rawSeries, lang]); // variable and source names in Bangla where we have them
   const visible = useMemo(() => new Set(visibleTimes({ times: s.times, filters: s.filters })), [s.times, s.filters]);
   const points: SeriesPoint[] = useMemo(() => (series ? series.points.filter((p) => visible.has(p.t)) : []), [series, visible]);
   const years = useMemo(() => [...new Set(s.times.map((x) => x.slice(0, 4)))], [s.times]);

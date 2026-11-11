@@ -11,7 +11,14 @@ export interface LayerLoadStatus {
   dateRange: string;
   sourceName: string;
   infoText: string;
+  sourceNameBn?: string; // the same two lines in Bangla
+  infoTextBn?: string;
 }
+
+const bnDigits = (s: string) => s.replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[+d]);
+const BN_MONTH: Record<string, string> = { January: 'জানুয়ারি', February: 'ফেব্রুয়ারি', March: 'মার্চ', April: 'এপ্রিল', May: 'মে', June: 'জুন', July: 'জুলাই', August: 'আগস্ট', September: 'সেপ্টেম্বর', October: 'অক্টোবর', November: 'নভেম্বর', December: 'ডিসেম্বর' };
+const bnRange = (r: string) => bnDigits(r).replace(' to ', ' থেকে ');
+const bnMonthLabel = (l: string) => bnDigits(l.replace(/^[A-Za-z]+/, (m) => BN_MONTH[m] ?? m));
 
 export interface AdapterResult {
   slices: DatasetTimeSlice[];
@@ -41,9 +48,9 @@ export class DatasetAdapter {
     }
 
     const status: Record<PhenomenonType, LayerLoadStatus> = {
-      fire: { loaded: false, dateRange: '', sourceName: FIRMS_INFO.source, infoText: 'Not loaded' },
-      precipitation: { loaded: false, dateRange: '', sourceName: 'NASA POWER PRECTOTCORR (MERRA-2 based)', infoText: 'Not loaded' },
-      sst: { loaded: false, dateRange: '', sourceName: 'NASA JPL MUR SST anomaly via NOAA CoastWatch ERDDAP', infoText: 'Not loaded' },
+      fire: { loaded: false, dateRange: '', sourceName: FIRMS_INFO.source, infoText: 'Not loaded', sourceNameBn: 'নাসা FIRMS VIIRS S-NPP (প্রায়-রিয়েল-টাইম)', infoTextBn: 'লোড হয়নি' },
+      precipitation: { loaded: false, dateRange: '', sourceName: 'NASA POWER PRECTOTCORR (MERRA-2 based)', infoText: 'Not loaded', sourceNameBn: 'নাসা POWER PRECTOTCORR (MERRA-2 ভিত্তিক)', infoTextBn: 'লোড হয়নি' },
+      sst: { loaded: false, dateRange: '', sourceName: 'NASA JPL MUR SST anomaly via NOAA CoastWatch ERDDAP', infoText: 'Not loaded', sourceNameBn: 'নাসা JPL MUR SST বিচ্যুতি, NOAA CoastWatch ERDDAP-এর মাধ্যমে', infoTextBn: 'লোড হয়নি' },
     };
 
     const [fire, precip, sst] = await Promise.allSettled([
@@ -61,9 +68,9 @@ export class DatasetAdapter {
     }
 
     const range = (m: Map<string, unknown>) => { const k = [...m.keys()].sort(); return `${k[0]} to ${k[k.length - 1]}`; };
-    if (fireByDate) status.fire = { ...status.fire, loaded: true, dateRange: range(fireByDate), infoText: `Daily max fire radiative power in 2° cells, ${range(fireByDate)}` };
-    if (precipByDate) status.precipitation = { ...status.precipitation, loaded: true, dateRange: range(precipByDate), infoText: `Daily rain at 48 wettest points of a 10° global grid, ${range(precipByDate)}` };
-    if (sstJson) status.sst = { ...status.sst, loaded: true, dateRange: sstJson.monthLabel, infoText: `Monthly anomaly, ${sstJson.monthLabel}: 40 most anomalous open-ocean cells` };
+    if (fireByDate) status.fire = { ...status.fire, loaded: true, dateRange: range(fireByDate), infoText: `Daily max fire radiative power in 2° cells, ${range(fireByDate)}`, infoTextBn: `২° ঘরে দৈনিক সর্বোচ্চ আগুনের বিকিরণ ক্ষমতা, ${bnRange(range(fireByDate))}` };
+    if (precipByDate) status.precipitation = { ...status.precipitation, loaded: true, dateRange: range(precipByDate), infoText: `Daily rain at 48 wettest points of a 10° global grid, ${range(precipByDate)}`, infoTextBn: `১০° বৈশ্বিক গ্রিডের সবচেয়ে ভেজা ৪৮টি বিন্দুতে দৈনিক বৃষ্টি, ${bnRange(range(precipByDate))}` };
+    if (sstJson) status.sst = { ...status.sst, loaded: true, dateRange: sstJson.monthLabel, infoText: `Monthly anomaly, ${sstJson.monthLabel}: 40 most anomalous open-ocean cells`, infoTextBn: `মাসিক বিচ্যুতি, ${bnMonthLabel(sstJson.monthLabel)}: খোলা সাগরের সবচেয়ে অস্বাভাবিক ৪০টি ঘর` };
 
     // Timeline = dates present in every loaded daily layer.
     const sets = [fireByDate, precipByDate].filter(Boolean).map((m) => new Set(m!.keys()));

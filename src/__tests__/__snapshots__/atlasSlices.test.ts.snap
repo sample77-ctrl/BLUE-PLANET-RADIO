@@ -5,20 +5,26 @@ exports[`DatasetAdapter.loadDatasets (live snapshots) > builds the same slices f
   "fire": {
     "dateRange": "2026-10-02 to 2026-10-07",
     "infoText": "Daily max fire radiative power in 2° cells, 2026-10-02 to 2026-10-07",
+    "infoTextBn": "২° ঘরে দৈনিক সর্বোচ্চ আগুনের বিকিরণ ক্ষমতা, ২০২৬-১০-০২ থেকে ২০২৬-১০-০৭",
     "loaded": true,
     "sourceName": "NASA FIRMS VIIRS S-NPP NRT",
+    "sourceNameBn": "নাসা FIRMS VIIRS S-NPP (প্রায়-রিয়েল-টাইম)",
   },
   "precipitation": {
     "dateRange": "2026-10-02 to 2026-10-05",
     "infoText": "Daily rain at 48 wettest points of a 10° global grid, 2026-10-02 to 2026-10-05",
+    "infoTextBn": "১০° বৈশ্বিক গ্রিডের সবচেয়ে ভেজা ৪৮টি বিন্দুতে দৈনিক বৃষ্টি, ২০২৬-১০-০২ থেকে ২০২৬-১০-০৫",
     "loaded": true,
     "sourceName": "NASA POWER PRECTOTCORR (MERRA-2 based)",
+    "sourceNameBn": "নাসা POWER PRECTOTCORR (MERRA-2 ভিত্তিক)",
   },
   "sst": {
     "dateRange": "September 2026",
     "infoText": "Monthly anomaly, September 2026: 40 most anomalous open-ocean cells",
+    "infoTextBn": "মাসিক বিচ্যুতি, সেপ্টেম্বর ২০২৬: খোলা সাগরের সবচেয়ে অস্বাভাবিক ৪০টি ঘর",
     "loaded": true,
     "sourceName": "NASA JPL MUR SST anomaly via NOAA CoastWatch ERDDAP",
+    "sourceNameBn": "নাসা JPL MUR SST বিচ্যুতি, NOAA CoastWatch ERDDAP-এর মাধ্যমে",
   },
 }
 `;

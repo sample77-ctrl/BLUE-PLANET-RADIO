@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, statuses, isFallback, statusMessage, audioReady, onOpenData, muted, onMute, onSolo }) => {
-  const { t } = usePrefs();
+  const { t, lang } = usePrefs();
   return (
     <div className="glass p-3 space-y-2" role="group" aria-label={t('layers')}>
       <div className="flex items-center justify-between px-1">
@@ -58,7 +58,7 @@ export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, status
               </button>
             </div>
             {offWhy && (onSolo || onMute) && <span id={`off-${p}`} className="sr-only group-has-[.btn[aria-disabled=true]:focus-visible]/card:not-sr-only group-has-[.btn[aria-disabled=true]:focus-visible]/card:block text-2xs leading-snug text-[var(--ink-2)] mt-1.5">{offWhy}</span>}
-            {st?.loaded && <p className="text-2xs leading-snug text-[var(--ink-3)] mt-1.5 pl-12">{st.sourceName}. {st.infoText}.</p>}
+            {st?.loaded && <p className="text-2xs leading-snug text-[var(--ink-3)] mt-1.5 pl-12">{lang === 'bn' ? (st.sourceNameBn ?? st.sourceName) : st.sourceName}. {lang === 'bn' ? (st.infoTextBn ?? st.infoText) : st.infoText}.</p>}
           </div>
         );
       })}
