@@ -285,9 +285,10 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
   return (
     <Overlay><div className="fixed inset-0 z-[70] scrim backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fade-in" onClick={closeModal}>
       <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="harmonium-title" onClick={(e) => e.stopPropagation()} className="q-dialog relative max-w-4xl w-full p-4 sm:p-6 flex flex-col gap-4 my-4 max-h-[92vh] overflow-y-auto scroll-thin">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
+        {/* Header. DOM order is title, tabs, close (CSS order puts close beside the title): the first focusable is a tab, not Close,
+            so a Space press meant to pump the bellows can never activate Close. */}
+        <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-4">
+          <div className="min-w-0 flex-1 order-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="q-label">{ht('eyebrow')}</span>
               <span role="status" className="chip">{statusIcon}{statusText}</span>
@@ -296,15 +297,13 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
               {isBn ? 'হারমোনিয়াম চ্যাট: সুর ও নাসার জলবায়ু ডেটা' : 'Harmonium Chat: pitch and NASA climate data'}
             </h2>
           </div>
-          <button type="button" onClick={closeModal} className="btn btn-icon shrink-0" aria-label={ht('closeHarmonium')} title={ht('closeHarmonium')}>
+          <div role="tablist" aria-label={ht('tabsLabel')} className="order-3 w-full flex border-b border-[var(--hair)] -mx-1">
+            <button type="button" role="tab" id="hm-tab-explorer" aria-selected={activeTab === 'explorer'} aria-controls="hm-panel-explorer" tabIndex={activeTab === 'explorer' ? 0 : -1} onClick={() => setActiveTab('explorer')} className="q-tab">{ht('tabExplorer')}</button>
+            <button type="button" role="tab" id="hm-tab-chat" aria-selected={activeTab === 'chat'} aria-controls="hm-panel-chat" tabIndex={activeTab === 'chat' ? 0 : -1} onClick={() => setActiveTab('chat')} className="q-tab"><Brain className="w-4 h-4" aria-hidden="true" />{ht('tabChat')}</button>
+          </div>
+          <button type="button" onClick={closeModal} className="btn btn-icon shrink-0 order-2" aria-label={ht('closeHarmonium')} title={ht('closeHarmonium')}>
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
-        </div>
-
-        {/* Views */}
-        <div role="tablist" aria-label={ht('tabsLabel')} className="flex border-b border-[var(--hair)] -mx-1">
-          <button type="button" role="tab" id="hm-tab-explorer" aria-selected={activeTab === 'explorer'} aria-controls="hm-panel-explorer" tabIndex={activeTab === 'explorer' ? 0 : -1} onClick={() => setActiveTab('explorer')} className="q-tab">{ht('tabExplorer')}</button>
-          <button type="button" role="tab" id="hm-tab-chat" aria-selected={activeTab === 'chat'} aria-controls="hm-panel-chat" tabIndex={activeTab === 'chat' ? 0 : -1} onClick={() => setActiveTab('chat')} className="q-tab"><Brain className="w-4 h-4" aria-hidden="true" />{ht('tabChat')}</button>
         </div>
 
         {/* ================= EXPLORER ================= */}
@@ -492,7 +491,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
               <span className="text-xs font-mono text-[var(--ink-2)]">{isBn ? 'সুর' : 'Pitch'}: {lastPlayedNote ? `${lastPlayedNote.swara} (${Math.round(lastPlayedNote.freq)} Hz)` : '262 Hz (Sa)'}</span>
             </div>
 
-            <div ref={chatScrollRef} role="log" aria-live="polite" aria-label={isBn ? 'চ্যাট' : 'Chat'} className="flex-1 overflow-y-auto max-h-[380px] p-3 bg-[var(--ground)] border border-[var(--hair)] rounded-lg flex flex-col gap-3 scroll-thin">
+            <div ref={chatScrollRef} role="log" tabIndex={0} aria-live="polite" aria-label={isBn ? 'চ্যাট' : 'Chat'} className="flex-1 overflow-y-auto max-h-[380px] p-3 bg-[var(--ground)] border border-[var(--hair)] rounded-lg flex flex-col gap-3 scroll-thin">
               {chatMessages.map((msg) => (
                 <div key={msg.id} className={`flex flex-col max-w-[88%] rounded-lg p-3 text-sm leading-relaxed ${msg.role === 'user' ? 'ml-auto bg-[var(--signal)] text-[var(--on-signal)] font-medium' : 'mr-auto bg-[var(--panel-2)] text-[var(--ink)] border border-[var(--hair)]'}`}>
                   <p className="whitespace-pre-wrap">{msg.content}</p>

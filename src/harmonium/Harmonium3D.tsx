@@ -216,7 +216,7 @@ export const Harmonium3D: React.FC<Props> = ({ onNotePlayed, isBn = false }) => 
           <div className="hm-keys" role="group" aria-label={isBn ? 'হারমোনিয়ামের চাবি' : 'Harmonium keys'}>
             {whiteKeys.map((k) => (
               <button key={k.key} {...keyProps(k, activeKeys.has(k.key))} className="hm-white">
-                <span className="hm-note">{isBn ? k.swaraBn : k.swara}</span>
+                <span className="hm-note">{isBn ? k.swaraBn.split(' ')[0] : k.swara}</span>
                 <span className="hm-sub">{k.keyboardShortcut}</span>
                 <span className="hm-sub">{Math.round(k.freq)}</span>
               </button>

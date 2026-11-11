@@ -178,7 +178,7 @@ export const SonicRangersGame: React.FC<Props> = ({
                 {isBn ? 'সাউন্ড কোয়েস্ট: নাসা আর্থ রেঞ্জার্স' : 'Sonic Quest: NASA Earth Rangers'}
               </h1>
             </div>
-            <button onClick={() => setShowBadgeModal(true)} className="btn btn-ghost text-xs border border-[var(--line)] py-1.5 px-3 rounded-lg flex items-center gap-1 whitespace-nowrap">
+            <button onClick={() => setShowBadgeModal(true)} aria-label={isBn ? 'সার্টিফিকেট ও ব্যাজ' : 'Badges'} className="btn btn-ghost text-xs border border-[var(--line)] py-1.5 px-3 rounded-lg flex items-center gap-1 whitespace-nowrap">
               <Award className="w-4 h-4 text-[var(--signal)]" />
               <span className="hidden sm:inline">{isBn ? 'সার্টিফিকেট' : 'Badges'}</span>
             </button>
