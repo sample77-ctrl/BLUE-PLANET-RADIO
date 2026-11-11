@@ -2,13 +2,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { PrefsProvider } from '../lib/prefs';
-import { GameHome } from '../game/GameHome';
 import { KidsLearningZone } from '../game/KidsLearningZone';
 import { BlindExplorerMode } from '../game/BlindExplorerMode';
 import { EarthTimeMachine } from '../game/EarthTimeMachine';
 import { MyEarthPassport } from '../game/MyEarthPassport';
 import { InclusiveCoopMode } from '../game/InclusiveCoopMode';
-import { GameSettingsView } from '../game/GameSettingsView';
 import { TacticalWildfireMission } from '../game/TacticalWildfireMission';
 import { GameAudioEngine } from '../game/gameAudio';
 
@@ -89,43 +87,6 @@ beforeEach(() => {
 });
 
 describe('Sonic Earth Adventure: Master Game Sections', () => {
-  it('Section 01 – GameHome renders brand identity, CTA buttons and 10 section launcher cards', () => {
-    const onStart = vi.fn();
-    const onBlind = vi.fn();
-    const onSettings = vi.fn();
-    render(
-      <PrefsProvider>
-        <GameHome
-          onStartAdventure={onStart}
-          onOpenHub={vi.fn()}
-          onOpenMissions={vi.fn()}
-          onOpenExplorer={vi.fn()}
-          onOpenBlindMode={onBlind}
-          onOpenKidsZone={vi.fn()}
-          onOpenDJ={vi.fn()}
-          onOpenTimeMachine={vi.fn()}
-          onOpenPassport={vi.fn()}
-          onOpenSettings={onSettings}
-          onOpenCoop={vi.fn()}
-          onOpenStepGuide={vi.fn()}
-          totalStars={12}
-        />
-      </PrefsProvider>
-    );
-
-    expect(screen.getByRole('heading', { level: 1 })).toBeDefined();
-    expect(screen.getAllByText(/ADVENTURE/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/Legendary Earth Guardian/i)).toBeDefined();
-
-    const startBtn = screen.getByRole('button', { name: /Start Adventure/i });
-    fireEvent.click(startBtn);
-    expect(onStart).toHaveBeenCalled();
-
-    const blindBtn = screen.getByRole('button', { name: /Blind Mode/i });
-    fireEvent.click(blindBtn);
-    expect(onBlind).toHaveBeenCalled();
-  });
-
   it('Section 05 – BlindExplorerMode handles keyboard navigation, sonar ping, and visual spectrum', () => {
     const onBack = vi.fn();
     render(
@@ -230,27 +191,6 @@ describe('Sonic Earth Adventure: Master Game Sections', () => {
     // Tune acoustic frequency
     const tuneUpBtn = screen.getByRole('button', { name: /\+20 Hz/i });
     fireEvent.click(tuneUpBtn);
-    expect(GameAudioEngine.prototype.playTone).toHaveBeenCalled();
-  });
-
-  it('Section 10 – GameSettingsView toggles language, accessibility, and high contrast', () => {
-    const onBack = vi.fn();
-    render(
-      <PrefsProvider>
-        <GameSettingsView onBack={onBack} />
-      </PrefsProvider>
-    );
-
-    expect(screen.getByText(/SETTINGS & ACCESSIBILITY/i)).toBeDefined();
-    expect(screen.getByText(/Language & Audio Engine/i)).toBeDefined();
-
-    // Switch to Bengali
-    const bnBtn = screen.getByRole('button', { name: /বাংলা/i });
-    fireEvent.click(bnBtn);
-
-    // Test audio tone
-    const testAudioBtn = screen.getByRole('button', { name: /সাউন্ড টেস্ট করুন|Test Audio Tone/i });
-    fireEvent.click(testAudioBtn);
     expect(GameAudioEngine.prototype.playTone).toHaveBeenCalled();
   });
 

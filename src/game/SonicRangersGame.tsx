@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { WorldMapHub, type MissionInfo } from './WorldMapHub';
+import type { MissionInfo } from './types';
 import { MissionFire } from './MissionFire';
 import { MissionMonsoon } from './MissionMonsoon';
 import { MissionOcean } from './MissionOcean';
@@ -8,7 +8,6 @@ import { CartoonGameCanvas } from './CartoonGameCanvas';
 import { EarthDJStudio } from './EarthDJStudio';
 import { LevelLab } from './LevelLab';
 import { QuestBadgeModal } from './QuestBadgeModal';
-import { UpdatePlanStepMaster } from './UpdatePlanStepMaster';
 import { QuestHub } from './QuestHub';
 import { KidsLearningZone } from './KidsLearningZone';
 import { TacticalWildfireMission } from './TacticalWildfireMission';
@@ -16,7 +15,6 @@ import { EarthTimeMachine } from './EarthTimeMachine';
 import { BlindExplorerMode } from './BlindExplorerMode';
 import { MyEarthPassport } from './MyEarthPassport';
 import { InclusiveCoopMode } from './InclusiveCoopMode';
-import { GameSettingsView } from './GameSettingsView';
 import {
   Flame,
   CloudRain,
@@ -32,8 +30,6 @@ import './quest.css';
 
 export type ScreenMode =
   | 'home'
-  | 'stepMaster'
-  | 'map'
   | 'mission1'
   | 'mission2'
   | 'mission3'
@@ -44,7 +40,6 @@ export type ScreenMode =
   | 'dj'
   | 'timemachine'
   | 'passport'
-  | 'settings'
   | 'coop'
   | 'lab';
 
@@ -197,28 +192,6 @@ export const SonicRangersGame: React.FC<Props> = ({
           />
         )}
 
-        {screen === 'stepMaster' && (
-          <UpdatePlanStepMaster
-            onSelectMission={(id) => setScreen(`mission${id}` as ScreenMode)}
-            onOpenFreeRoam={() => setScreen('freeRoam')}
-            onOpenDJ={() => setScreen('dj')}
-            onOpenLab={() => setScreen('lab')}
-            onOpenBadgeModal={() => setShowBadgeModal(true)}
-            onExploreGlobe={onExplore}
-            audioReady={audioReady}
-            onSoundOn={onSoundOn}
-          />
-        )}
-
-        {screen === 'map' && (
-          <WorldMapHub
-            missions={missions}
-            onSelectMission={(id) => setScreen(`mission${id}` as ScreenMode)}
-            onOpenBadgeModal={() => setShowBadgeModal(true)}
-            totalStars={totalStars}
-          />
-        )}
-
         {screen === 'kids' && (
           <KidsLearningZone
             onBack={() => setScreen('home')}
@@ -244,12 +217,6 @@ export const SonicRangersGame: React.FC<Props> = ({
           <MyEarthPassport
             onBack={() => setScreen('home')}
             totalStars={totalStars}
-          />
-        )}
-
-        {screen === 'settings' && (
-          <GameSettingsView
-            onBack={() => setScreen('home')}
           />
         )}
 
