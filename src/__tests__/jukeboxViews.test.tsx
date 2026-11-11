@@ -116,7 +116,7 @@ describe('JukeboxView', () => {
     const open = vi.fn();
     wrap(<JukeboxView countries={countries} onOpenCollection={open} />);
     const row = await screen.findByRole('list', { name: 'Data stories' });
-    fireEvent.click(within(row).getByRole('button', { name: /Arctic sea ice/ }));
+    fireEvent.click(within(row).getByRole('button', { name: /Arctic sea ice/, pressed: false }) /* the card, not its queue buttons */);
     await waitFor(() => expect(document.querySelector('[data-caption]')?.textContent).toContain('Arctic sea ice extent'));
     fireEvent.click(within(row).getByRole('button', { name: /Ocean heat content/ }));
     expect(await screen.findByText(/one picture, so it has no timeline/)).toBeTruthy();

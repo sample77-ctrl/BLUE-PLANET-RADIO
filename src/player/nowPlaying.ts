@@ -10,11 +10,14 @@ export interface NowPlaying {
   index: number; count: number; // count 0 = no position to show
   label: string; valueText: string; // current position, e.g. "1998" / "+0.61 °C"
   spark: number[]; // the series, for the scrubber backdrop
+  /** Shown in the full player. */
+  details?: { narration: string; mapping: string[] };
+  upNext?: { id: string; title: string }[];
   pauses?: boolean; // false: the player can only start/stop (shown as Stop, not Pause)
   volume?: number; muted?: boolean; speed?: number;
   /** Only what the player really supports: the bar hides the rest. */
   controls: {
-    toggle: () => void; stop: () => void; step?: (by: 1 | -1) => void; seek?: (i: number) => void;
+    toggle: () => void; stop: () => void; nextStory?: () => void; dequeue?: (id: string) => void; clearQueue?: () => void; step?: (by: 1 | -1) => void; seek?: (i: number) => void;
     setVolume?: (v: number) => void; setMuted?: (m: boolean) => void; setSpeed?: (s: number) => void;
   };
 }
@@ -29,8 +32,9 @@ export function publishNowPlaying(np: NowPlaying | null, id?: string) {
   current = np; emit();
 }
 export const getNowPlaying = () => current;
+export function subscribeNowPlaying(f: () => void) { subs.add(f); return () => { subs.delete(f); }; }
 export function useNowPlaying(): NowPlaying | null {
-  return useSyncExternalStore((f) => { subs.add(f); return () => { subs.delete(f); }; }, getNowPlaying, () => null);
+  return useSyncExternalStore(subscribeNowPlaying, getNowPlaying, () => null);
 }
 
 /** Spoken form of a position for aria-valuetext: words, never clock-style "1:00". */

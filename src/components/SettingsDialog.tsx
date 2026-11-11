@@ -58,6 +58,7 @@ export const SettingsDialog: React.FC<Props> = ({ open, onClose, volume, onVolum
         <div className="mt-5 divide-y divide-[var(--line)]">
           <Toggle label={p.t('narration')} on={p.narration} onClick={() => p.set({ narration: !p.narration })} />
           <Toggle label={p.t('reduceMotion')} on={p.reduceMotion} onClick={() => p.set({ reduceMotion: !p.reduceMotion })} />
+          <Toggle label={p.t('autoplayNext')} on={p.autoplayNext} note={p.t('autoplayNextNote')} onClick={() => p.set({ autoplayNext: !p.autoplayNext })} />
           <Toggle label={p.t('calmBackground')} on={p.calmBackground} note={p.t('calmBackgroundNote')} onClick={() => p.set({ calmBackground: !p.calmBackground })} />
           <Toggle label={p.t('highContrast')} on={p.highContrast} onClick={() => p.set({ highContrast: !p.highContrast })} />
           <Toggle label={`${p.t('spatial')}: ${spatialMode === 'spatial-hrtf' ? p.t('hrtf') : p.t('stereo')}`} on={spatialMode === 'spatial-hrtf'} onClick={onToggleSpatial} />

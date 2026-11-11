@@ -227,3 +227,10 @@ html.hc .np-bar { background: #000; backdrop-filter: none; }
 
 .np-scrub::before { content: ''; position: absolute; inset: calc(50% - 1px) 0 auto 0; height: 2px; background: var(--line); border-radius: 1px; }
 .np-scrub::after { content: ''; position: absolute; inset: calc(50% - 1px) calc(100% - var(--np-pct, 0%)) auto 0; height: 2px; background: var(--accent, var(--brass)); border-radius: 1px; }
+
+.np-expand { position: absolute; top: .25rem; right: .5rem; }
+.np-full { position: absolute; left: 0; right: 0; bottom: 100%; padding: .75rem 1rem; border-radius: 0; border-inline: 0; display: grid; gap: .5rem; max-height: 45vh; animation: np-rise var(--dur-med, .3s) var(--ease-out, ease-out); }
+.np-panel { overflow-y: auto; max-height: calc(45vh - 4rem); }
+@keyframes np-rise { from { opacity: 0; transform: translateY(1rem); } }
+@media (prefers-reduced-motion: reduce) { .np-full { animation: none; } }
+html.rm .np-full { animation: none; }

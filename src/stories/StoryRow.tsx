@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef } from 'react';
 import { ImgOr } from '../components/ImgOr';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ListPlus, SkipForward } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 import { EIC_FRAMES } from '../lib/eicFrames';
 import type { SeriesPoint } from '../datasets/series';
@@ -21,7 +21,7 @@ export function Spark({ points, className = 'w-full h-10' }: { points?: SeriesPo
  * between cards, the active card scrolled to the centre. Neighbours stay partly visible on wide screens.
  */
 /** Memoised: the cards (with sparklines) do not re-render on every playback cursor tick. */
-export const StoryRow = memo(function StoryRow({ stories, activeId, onSelect, sparks }: { stories: Story[]; activeId: string | null; onSelect: (id: string) => void; sparks: Record<string, SeriesPoint[] | undefined> }) {
+export const StoryRow = memo(function StoryRow({ stories, activeId, onSelect, sparks, queued, onQueue, onPlayNext }: { stories: Story[]; activeId: string | null; onSelect: (id: string) => void; sparks: Record<string, SeriesPoint[] | undefined>; queued?: string[]; onQueue?: (id: string) => void; onPlayNext?: (id: string) => void }) {
   const { t, lang, reduceMotion } = usePrefs();
   const row = useRef<HTMLUListElement>(null), cards = useRef(new Map<string, HTMLButtonElement>());
   useEffect(() => {
@@ -53,7 +53,7 @@ export const StoryRow = memo(function StoryRow({ stories, activeId, onSelect, sp
           {stories.map((s, i) => {
             const active = s.id === activeId, frame = s.frameId ? EIC_FRAMES.find((f) => f.id === s.frameId) : null;
             return (
-              <li key={s.id} className="story-card shrink-0">
+              <li key={s.id} className="story-card shrink-0 relative">
                 <button ref={(el) => { if (el) cards.current.set(s.id, el); else cards.current.delete(s.id); }} type="button" tabIndex={i === activeIdx ? 0 : -1}
                   aria-pressed={active} onClick={() => onSelect(s.id)} onKeyDown={(e) => onKey(e, i)}
                   className={`w-full h-full text-left rounded-xl border p-3 flex flex-col gap-2 cursor-pointer lift ${active ? 'border-[var(--brass)] bg-[var(--panel-2)] shadow-[inset_0_-3px_0_var(--brass)]' : 'glass-flat'}`}>
@@ -67,6 +67,11 @@ export const StoryRow = memo(function StoryRow({ stories, activeId, onSelect, sp
                   <span className="font-semibold leading-snug text-sm">{lang === 'bn' ? s.titleBn : s.title}</span>
                   <span className="text-xs text-[var(--ink-3)] tnum mt-auto">{s.visual === 'eic' ? t('jbPicture') : s.period}</span>
                 </button>
+                {s.visual === 'chart' && onQueue && !active && (
+                  <span className="absolute bottom-2 right-2 flex gap-1">
+                    <button type="button" className="btn btn-icon !min-h-[32px] !w-8 !p-0" aria-pressed={queued?.includes(s.id) || undefined} aria-label={t('jbPlayNext', { title: lang === 'bn' ? s.titleBn : s.title })} onClick={() => onPlayNext?.(s.id)}><SkipForward className="w-3.5 h-3.5" aria-hidden="true" /></button>
+                    <button type="button" className="btn btn-icon !min-h-[32px] !w-8 !p-0" aria-pressed={queued?.includes(s.id) || undefined} aria-label={t('jbQueueAdd', { title: lang === 'bn' ? s.titleBn : s.title })} onClick={() => onQueue(s.id)}><ListPlus className="w-3.5 h-3.5" aria-hidden="true" /></button>
+                  </span>)}
               </li>);
           })}
         </ul>)}

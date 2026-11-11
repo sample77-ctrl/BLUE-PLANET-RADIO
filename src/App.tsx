@@ -22,6 +22,8 @@ import { TimelineBar } from './atlas/TimelineBar';
 import { TourBar } from './demo/TourBar';
 import { NowPlayingBar } from './player/NowPlayingBar';
 import { usePublishNowPlaying } from './player/nowPlaying';
+import { setQueue } from './player/queue';
+import { installMediaSession } from './player/mediaSession';
 import { formatDay } from './atlas/formatDay';
 import { usePrefs } from './lib/prefs';
 import { useCountry } from './countries/useCountry';
@@ -42,7 +44,7 @@ const HarmoniumChatModal = lazy(() => import('./harmonium/HarmoniumChatModal').t
 type View = '3d-globe' | '2d-map' | 'audio-first';
 export function App() {
   const { t, lang, set } = usePrefs();
-  const [initialShare] = useState(() => decodeLocation(window.location.pathname, window.location.search, window.location.hash, { frames: [], pairs: [] }));
+  const [initialShare] = useState(() => { const d = decodeLocation(window.location.pathname, window.location.search, window.location.hash, { frames: [], pairs: [] }); if (d?.q) setQueue(d.q); return d; });
   const [showHero, setShowHero] = useState(!initialShare?.track);
   const [autoListen, setAutoListen] = useState(false);
   const [track, setTrack] = useState<Track>(initialShare?.track ?? 'atlas');
@@ -115,6 +117,7 @@ export function App() {
   // The landing page is laid out for a 90% type scale on desktop (see html.landing-open in index.css)
   useEffect(() => { document.documentElement.classList.toggle('landing-open', showHero); return () => document.documentElement.classList.remove('landing-open'); }, [showHero]);
 
+  useEffect(() => installMediaSession(), []);
   usePublishNowPlaying('atlas', track === 'atlas' && !showHero && view !== '2d-map' && slices.length > 0 ? {
     id: 'atlas', title: t('track1'), subtitle: `${t('npAtlasSub')} · ${formatDay(slices[0].dateLabel, lang)}–${formatDay(slices[slices.length - 1].dateLabel, lang)}`, badge: 'snapshot', state: playing ? 'playing' : 'ready',
     index: day, count: slices.length, label: formatDay(slices[day]?.dateLabel ?? slices[0].dateLabel, lang), valueText: '', spark: [],

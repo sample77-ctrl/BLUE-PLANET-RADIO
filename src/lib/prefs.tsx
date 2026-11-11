@@ -6,10 +6,11 @@ export interface Prefs {
   reduceMotion: boolean;
   highContrast: boolean;
   narration: boolean;
+  autoplayNext: boolean; // Jukebox: when a story ends, play the next one in the queue
   calmBackground: boolean; // pauses non-essential motion (starfield, idle globe spin, clouds) without changing the rest
 }
 
-const DEFAULTS: Prefs = { lang: 'en', reduceMotion: false, highContrast: false, narration: false, calmBackground: false };
+const DEFAULTS: Prefs = { lang: 'en', reduceMotion: false, highContrast: false, narration: false, autoplayNext: true, calmBackground: false };
 const KEY = 'sea-prefs-v1';
 
 function load(): Prefs {

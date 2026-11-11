@@ -21,6 +21,7 @@ import { TimelineView } from './TimelineView';
 import { StoryPanel, type StoryLoad } from './StoryPanel';
 import { digits, timeLabel, valueLabel } from './format';
 import { publishNowPlaying } from '../player/nowPlaying';
+import { useQueue, enqueue, playNext, dequeue, clearQueue, shiftQueue } from '../player/queue';
 import { captionFor } from './caption';
 import { useSeriesPlayer } from './useSeriesPlayer';
 import { SoundOptions } from './PlayerControls';
@@ -48,7 +49,8 @@ type Tab = 'filters' | 'timeline' | 'story';
 const isPictureStory = (st: Story | null) => st?.visual === 'eic';
 
 export function JukeboxView({ countries, initialStory, initialT, onOpenCollection }: Props) {
-  const { t, lang } = usePrefs();
+  const { t, lang, autoplayNext } = usePrefs();
+  const queue = useQueue();
   const profile = useContext(ProfileDataContext);
   const geoContains = useGeoContains();
   const { country, point } = countries;
@@ -99,7 +101,7 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
   useEffect(() => {
     const curShare = decodeLocation(window.location.pathname, window.location.search, window.location.hash, { frames: [], pairs: [] });
     if (curShare?.track && curShare.track !== 'jukebox') return;
-    const nextShare: ShareState = { ...curShare, track: 'jukebox', story: s.storyId ?? undefined, t: s.cursor ?? undefined };
+    const nextShare: ShareState = { ...curShare, track: 'jukebox', story: s.storyId ?? undefined, t: s.cursor ?? undefined, q: queue.length ? queue : undefined };
     const isLegacyHash = window.location.hash && window.location.hash.includes('v1&');
     if (isLegacyHash) {
       const nextHash = encodeLegacyShare(nextShare);
@@ -110,7 +112,7 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
       // replaceState only: assigning location.hash would add a history entry per cursor step (Back would walk the timeline).
       if (window.location.pathname + window.location.search + window.location.hash !== nextUrl + nextHash) history.replaceState(null, '', nextUrl + nextHash);
     }
-  }, [s.storyId, s.cursor]);
+  }, [s.storyId, s.cursor, queue]);
 
   // Series player: loads what the chart shows (and period B when comparing); it reports cursor moves with origin 'playback'.
   const [player, pstate] = useSeriesPlayer();
@@ -145,6 +147,18 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
   };
   usePlaybackReport('jukebox', story ? (lang === 'bn' ? story.titleBn : story.title) : t('navJukebox'), pstate === 'playing', () => player.pause());
 
+  // When a story ends, move to the next queued one that exists, then start it once its series has loaded.
+  const autoStart = useRef(false);
+  const advanceQueue = useCallback((): boolean => {
+    for (let id = shiftQueue(); id; id = shiftQueue()) {
+      const st = stories.find((x) => x.id === id && x.visual === 'chart');
+      if (st) { autoStart.current = true; dispatch({ type: 'selectStory', id }); return true; }
+    }
+    return false;
+  }, [stories, dispatch]);
+  useEffect(() => { if (pstate === 'ended' && autoplayNext) advanceQueue(); }, [pstate, autoplayNext, advanceQueue]);
+  useEffect(() => { if (pstate === 'ready' && autoStart.current) { autoStart.current = false; void play(); } }); // eslint-disable-line react-hooks/exhaustive-deps
+
   const onCursor = useCallback((tm: string, origin: Origin) => dispatch({ type: 'setCursor', t: tm, origin }), [dispatch]);
   const filters = s.filters.region === 'country' && !country ? { ...s.filters, region: 'all' as const } : s.filters;
   const shown = useMemo(() => stories.filter((x) => matchesFilters(x, filters)), [stories, filters.topic, filters.source, filters.region]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -176,8 +190,10 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
       state: pstate === 'playing' ? 'playing' : pstate === 'paused' ? 'paused' : pstate === 'loading' || pstate === 'idle' ? 'busy' : 'ready',
       index: ci, count: vt.length, label: ci >= 0 ? timeLabel(vt[ci], lang) : '', valueText: cp && cp.v != null ? valueLabel(cp.v, series.unit, lang) : '',
       spark: npSpark, volume: snd.volume, muted: snd.muted, speed: snd.speed,
+      details: { narration: captionFor(series.variable, series.unit, points, s.cursor, lang, t), mapping: spec ? [lang === 'bn' ? spec.legend.bn : spec.legend.en, t(spec.fixed ? 'lgRange' : 'lgRangeOwn', { lo: valueLabel(spec.ref[0], series.unit, lang), hi: valueLabel(spec.ref[1], series.unit, lang) })] : [] },
+      upNext: queue.flatMap((id) => { const st = stories.find((x) => x.id === id); return st ? [{ id, title: lang === 'bn' ? st.titleBn : st.title }] : []; }),
       controls: {
-        toggle: () => { if (pstate === 'playing') player.pause(); else void play(); }, stop: () => player.stop(),
+        toggle: () => { if (pstate === 'playing') player.pause(); else void play(); }, stop: () => player.stop(), nextStory: () => { advanceQueue(); }, dequeue, clearQueue,
         step: (by) => dispatch({ type: 'step', by, origin: 'user' }), seek: (i) => { if (vt[i]) onCursor(vt[i], 'user'); },
         setVolume: (v) => setSnd((o) => ({ ...o, volume: v })), setMuted: (m) => setSnd((o) => ({ ...o, muted: m })), setSpeed: (x) => setSnd((o) => ({ ...o, speed: x })),
       },
@@ -202,7 +218,7 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
             onToggle={() => { if (pstate === 'playing') player.pause(); else void play(); }} position={`${Math.max(1, shown.findIndex((x) => x.id === story.id) + 1)} / ${shown.length}`} />
         )}
 
-        <StoryRow stories={shown} activeId={s.storyId} onSelect={selectStory} sparks={sparks} />
+        <StoryRow stories={shown} activeId={s.storyId} onSelect={selectStory} sparks={sparks} queued={queue} onQueue={enqueue} onPlayNext={playNext} />
 
         <div className="md:hidden flex gap-1 panel p-1" role="group" aria-label={t('jbShow')}>
           {(['filters', 'timeline', 'story'] as Tab[]).map((k) => (

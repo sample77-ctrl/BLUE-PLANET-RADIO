@@ -18,7 +18,14 @@ export interface ShareState {
   c?: string; // selected country, ISO alpha-3
   story?: string; // Data Jukebox story id
   t?: string; // Data Jukebox timeline cursor: YYYY, YYYY-MM or YYYY-MM-DD
+  q?: string[]; // Data Jukebox queue (up next), story ids in order
 }
+
+/** Queue ids from a `q=a,b,c` value: shape-checked, de-duplicated, at most 20. */
+export function parseQueue(v: string | null | undefined): string[] {
+  return [...new Set((v ?? '').split(',').filter((x) => STORY_RE.test(x)))].slice(0, 20);
+}
+const setQueueParam = (p: URLSearchParams, q?: string[]) => { const ok = parseQueue(q?.join(',')); if (ok.length) p.set('q', ok.join(',')); };
 
 export interface ShareChoices { frames: string[]; pairs: string[] }
 
@@ -41,6 +48,7 @@ export function encodeShare(s: ShareState): string {
   if (s.c && isAlpha3(s.c)) p.set('c', s.c);
   if (s.story && STORY_RE.test(s.story)) p.set('story', s.story);
   if (s.t && TIME_RE.test(s.t)) p.set('t', s.t);
+  setQueueParam(p, s.q);
   const queryStr = p.toString();
   return queryStr ? `${route}?${queryStr}` : route;
 }
@@ -55,6 +63,7 @@ export function encodeLegacyShare(s: ShareState): string {
   if (s.c && isAlpha3(s.c)) p.set('c', s.c);
   if (s.story && STORY_RE.test(s.story)) p.set('story', s.story);
   if (s.t && TIME_RE.test(s.t)) p.set('t', s.t);
+  setQueueParam(p, s.q);
   return `#v1&${p.toString()}`;
 }
 
@@ -77,6 +86,7 @@ export function buildUrl(s: ShareState): string {
   if (s.c && isAlpha3(s.c)) p.set('c', s.c);
   if (s.story && STORY_RE.test(s.story)) p.set('story', s.story);
   if (s.t && TIME_RE.test(s.t)) p.set('t', s.t);
+  setQueueParam(p, s.q);
   const queryStr = p.toString();
   return queryStr ? `${route}?${queryStr}` : route;
 }
@@ -125,6 +135,7 @@ export function decodeLocation(pathname: string, search: string, hash: string, o
   const story = p.get('story'), t = p.get('t');
   if (story && STORY_RE.test(story)) out.story = story;
   if (t && TIME_RE.test(t)) out.t = t;
+  { const q = parseQueue(p.get('q')); if (q.length) out.q = q; }
 
   return out;
 }
@@ -159,6 +170,7 @@ export function decodeShare(hash: string, ok: ShareChoices): ShareState | null {
     const story = p.get('story'), t = p.get('t');
     if (story && STORY_RE.test(story)) out.story = story;
     if (t && TIME_RE.test(t)) out.t = t;
+  { const q = parseQueue(p.get('q')); if (q.length) out.q = q; }
     return Object.keys(out).length ? out : null;
   }
 
@@ -207,6 +219,7 @@ export function decodeShare(hash: string, ok: ShareChoices): ShareState | null {
   const story = p.get('story'), t = p.get('t');
   if (story && STORY_RE.test(story)) out.story = story;
   if (t && TIME_RE.test(t)) out.t = t;
+  { const q = parseQueue(p.get('q')); if (q.length) out.q = q; }
 
   return Object.keys(out).length ? out : null;
 }
