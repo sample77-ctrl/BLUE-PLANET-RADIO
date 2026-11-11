@@ -19,7 +19,7 @@ export async function recordOutput(seconds: number, onTick: (left: number) => vo
   if (rec.state === 'recording') rec.stop();
   await done;
   const ext = (rec.mimeType || 'audio/webm').includes('ogg') ? 'ogg' : (rec.mimeType || '').includes('mp4') ? 'm4a' : 'webm';
-  const name = `sonic-earth-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.${ext}`;
+  const name = `blue-planet-radio-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.${ext}`;
   const url = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType || 'audio/webm' }));
   const a = document.createElement('a');
   a.href = url; a.download = name; a.click();

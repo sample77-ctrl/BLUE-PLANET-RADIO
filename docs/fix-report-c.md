@@ -18,7 +18,7 @@ Branch `fix/audit-c-honesty-followups`, built on the merge of PR #3 (audit A) an
 
 ## 1. Passport (HIGH)
 
-**Before** (fresh browser, empty localStorage, `#v1&track=quest` then Earth Passport; `docs/fix-c-shots/passport-before-fresh-1440.png`, `-375.png`): "Level 1 · 250 XP · 6 / 7 Badges · 0 Stars", six badges UNLOCKED, a fixed "Hash: #SEAP-2026-NASA-VALIDATED", "100% SCIENTIFIC INTEGRITY", "VERIFIED BY Sonic Earth Atlas Research Council", "Official Certificate", "NASA Space Apps 2026 Certified". `totalStars` also defaulted to 12.
+**Before** (fresh browser, empty localStorage, `#v1&track=quest` then Earth Passport; `docs/fix-c-shots/passport-before-fresh-1440.png`, `-375.png`): "Level 1 · 250 XP · 6 / 7 Badges · 0 Stars", six badges UNLOCKED, a fixed "Hash: #SEAP-2026-NASA-VALIDATED", "100% SCIENTIFIC INTEGRITY", "VERIFIED BY Blue Planet Radio Research Council", "Official Certificate", "NASA Space Apps 2026 Certified". `totalStars` also defaulted to 12.
 
 **How progress is really stored.** Only mission stars were stored: `localStorage['sonic_rangers_stars']` = `{1..4: 0..3}`, written by `SonicRangersGame`. Nothing recorded the three mode badges. I kept that key and its format, so existing players keep their progress, and added `sonic_quest_modes` (`{blind?, timemachine?, dj?: true}`), written only when a mode's goal is reached.
 

@@ -211,7 +211,7 @@ export async function sendHarmoniumChatMessageDetailed(
   audioContext: { freq: number; swaraSequence: string; mappedAnomaly: number },
   lang: HLang = currentLang(),
 ): Promise<{ text: string; source: 'ai' | 'built-in' }> {
-  const systemPrompt = `You are "Harmonium Earth AI", an intelligent conversational agent inside Sonic Earth Atlas for the NASA Space Apps Challenge 2026.
+  const systemPrompt = `You are "Harmonium Earth AI", an intelligent conversational agent inside Blue Planet Radio for the NASA Space Apps Challenge 2026.
 You are fluent in both English and Bengali (বাংলা).
 Current musical context:
 - Harmonium dominant pitch: ${Math.round(audioContext.freq)} Hz

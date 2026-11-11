@@ -1,4 +1,4 @@
-# Sonic Earth Atlas — notes for Claude
+# Blue Planet Radio — notes for Claude
 
 NASA Space Apps "Earth Information Jukebox" entry. React 19 + TypeScript + Vite + three.js + Web Audio, deployed on Vercel from `main`.
 

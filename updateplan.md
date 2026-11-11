@@ -1,9 +1,9 @@
-# Sonic Earth Atlas — Master Update Plan
+# Blue Planet Radio — Master Update Plan
 ## Sonic Earth Adventure, Universal Accessibility & Scientific Sonification Blueprint
 
 > **Challenge:** NASA Space Apps Challenge 2026 — *The Earth Information Jukebox*  
 > **Repository:** [github.com/morsad01/SONIC-EARTH-ATLAS](https://github.com/morsad01/SONIC-EARTH-ATLAS)  
-> **Production URL:** [sonic-earth-atlas.vercel.app](https://sonic-earth-atlas.vercel.app)  
+> **Production URL:** [blue-planet-radio.vercel.app](https://blue-planet-radio.vercel.app)  
 > **Tagline:** *Hear the Earth. Explore the Planet. Protect Our Future.*  
 > **Version:** 2.0.0 (Master Expansion Roadmap)
 
@@ -11,9 +11,9 @@
 
 ## 1. Executive Vision & Strategic Objectives
 
-**Sonic Earth Atlas** transforms authentic NASA Earth science observations and satellite imagery into an interactive, real-time spatial sonification platform and educational gaming ecosystem. 
+**Blue Planet Radio** transforms authentic NASA Earth science observations and satellite imagery into an interactive, real-time spatial sonification platform and educational gaming ecosystem. 
 
-Visual interfaces developed by space agencies often exclude individuals with visual impairments and can fail to convey multi-variable temporal anomalies in an intuitive way. Sonic Earth Atlas eliminates this barrier by translating planetary data into mathematical sound, responsive 3D environments, and accessible storytelling.
+Visual interfaces developed by space agencies often exclude individuals with visual impairments and can fail to convey multi-variable temporal anomalies in an intuitive way. Blue Planet Radio eliminates this barrier by translating planetary data into mathematical sound, responsive 3D environments, and accessible storytelling.
 
 ### Core Strategic Goals:
 1. **Uncompromised Scientific Integrity:** Strict mathematical sonification without arbitrary synthetic music; distinct labeling for Live (near-real-time), Climatological, and Historical datasets; verified satellite instrument attribution (FIRMS, POWER, MUR SST, GISTEMP, NOAA GML, NSIDC).
@@ -31,7 +31,7 @@ Visual interfaces developed by space agencies often exclude individuals with vis
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                SONIC EARTH ATLAS 2.0                                   │
+│                                BLUE PLANET RADIO 2.0                                   │
 └──────────────────────────────────────────┬─────────────────────────────────────────────┘
                                            │
          ┌─────────────────────────────────┼──────────────────────────────────┐
@@ -296,9 +296,9 @@ The **Blind Explorer Mode** provides a non-visual, screen-reader-optimized, audi
 *(Use this exact prompt with Claude Code, Cursor, Codex, or Antigravity to implement any feature phase incrementally)*
 
 ```markdown
-### SYSTEM DIRECTIVE: Sonic Earth Atlas 2.0 Feature Implementation
+### SYSTEM DIRECTIVE: Blue Planet Radio 2.0 Feature Implementation
 
-You are working on the Sonic Earth Atlas codebase (Vite + React 19 + TypeScript + Tailwind CSS 4 + Three.js + Web Audio API).
+You are working on the Blue Planet Radio codebase (Vite + React 19 + TypeScript + Tailwind CSS 4 + Three.js + Web Audio API).
 Strictly adhere to the following rules:
 1. ARCHITECTURAL INTEGRITY: Do not rewrite the application from scratch or delete existing features. Incrementally enhance existing components.
 2. SCIENTIFIC HONESTY: Never fabricate climate data or sonification values. All sound frequencies must derive from the documented mathematical sonification engine using authentic NASA datasets (FIRMS, POWER, MUR SST, GISS).
@@ -315,7 +315,7 @@ Follow the specifications in updateplan.md precisely.
 
 ## 9. NASA Space Apps Challenge 2026 Judging Alignment Matrix
 
-| Judging Dimension | NASA Space Apps Criteria | How Sonic Earth Atlas 2.0 Excels |
+| Judging Dimension | NASA Space Apps Criteria | How Blue Planet Radio 2.0 Excels |
 |---|---|---|
 | **Impact (প্রভাব)** | How much does this solution improve lives and accessibility? | Bridges the sensory divide by enabling blind and visually impaired users to independently explore real NASA Earth data via voice navigation, 3D spatial audio, and screen reader compliance. |
 | **Creativity (সৃজনশীলতা)** | How innovative and unique is the approach? | Combines real-time mathematical sonification, a 3D cartoon adventure game (*Eco-Ninja Cadet*), an Earth DJ remix desk, and the first-ever "Two Players, One Earth" inclusive cooperative mode. |
@@ -335,7 +335,7 @@ Follow the specifications in updateplan.md precisely.
 
 [0:30 - 1:15] PART 2: Blind Explorer Mode (Hear Without Seeing)
 • Action: Press `Alt + B` to activate Blind Explorer Mode. Turn monitor off or close eyes.
-• Spoken: "Sonic Earth Atlas is built blind-first. A visually impaired explorer can navigate by keyboard and spatial audio."
+• Spoken: "Blue Planet Radio is built blind-first. A visually impaired explorer can navigate by keyboard and spatial audio."
 • Audio: Voice synthesizer announces: "Selected: Bangladesh. Rainfall 14.2 mm, 2.3 mm above baseline. Panned 48% right." Press Space to hear rainfall droplet cadence.
 
 [1:15 - 2:00] PART 3: Time Travel Studio (1981 vs 2025)

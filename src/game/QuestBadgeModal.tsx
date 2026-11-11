@@ -56,7 +56,7 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
 
         <div className="text-center">
           <span className="text-xs uppercase tracking-widest text-[var(--signal)] font-semibold font-mono">
-            {isBn ? 'সনিক আর্থ অ্যাটলাস' : 'SONIC EARTH ATLAS'}
+            {isBn ? 'ব্লু প্ল্যানেট রেডিও' : 'BLUE PLANET RADIO'}
           </span>
           <h2 id="quest-badge-title" className="text-2xl sm:text-3xl font-extrabold font-display text-[var(--ink)] mt-1">
             {isBn ? 'সনিক ক্যাডেট ব্যাজ' : 'Sonic Cadet badge'}

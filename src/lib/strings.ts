@@ -1,7 +1,7 @@
 export type Lang = 'en' | 'bn';
 
 const en = {
-  appName: 'Sonic Earth Atlas',
+  appName: 'Blue Planet Radio',
   tagline: 'An Earth Information Jukebox',
   heroLead: 'Real NASA Earth observations and NASA imagery, played as sound. Pick a track, put on headphones, and listen to where the planet is burning, raining and warming.',
   heroNote: 'Every sound is generated live from the data. Nothing is pre-recorded.',
@@ -177,7 +177,7 @@ const en = {
   scSave: 'Save PNG',
   scShared: 'Shared.',
   scShareText: 'Listen to this NASA Earth Information Center frame as sound.',
-  scCardKicker: 'Sonic Earth Atlas · NASA EIC frame',
+  scCardKicker: 'Blue Planet Radio · NASA EIC frame',
   scCardMethod: 'Sound made from this picture’s pixels: brightness is loudness, height is pitch, colour is timbre. The colour shown comes from the image, not a measurement.',
   scRollTitle: 'The score of the data',
   scRollNote: 'One bar for each value in the series, at the note the mapping gave it: higher in the series’ fixed range is higher in pitch. Warm colour is at or above the baseline, cool below it. A gap in the data is a gap here.',
@@ -286,7 +286,7 @@ const en = {
   hearingLive: 'Sound playing', // the synth is sounding the snapshot values; not a live-data label
   hearingOff: 'Sound off',
   stereoPos: 'Stereo position',
-  heroDataLine: 'Sonic Earth Atlas turns real NASA Earth data into sound you can explore. Each value becomes a pitch, a rhythm and a place in your headphones.',
+  heroDataLine: 'Blue Planet Radio turns real NASA Earth data into sound you can explore. Each value becomes a pitch, a rhythm and a place in your headphones.',
   ctaExplore: 'Explore the globe',
   ctaStory: 'Listen to a data story',
   scrollHint: 'Scroll to see how it works',
@@ -400,7 +400,7 @@ const en = {
   pipeSound: 'Your browser builds the sound live with Web Audio.',
   pipeSee: 'The Atlas shows the place, the value and the sound together.',
 
-  aboutLead: 'How Sonic Earth Atlas turns measurements into sound, where every number comes from, and what it cannot tell you.',
+  aboutLead: 'How Blue Planet Radio turns measurements into sound, where every number comes from, and what it cannot tell you.',
   aboutHowTitle: 'How sonification works',
   aboutHowP1: 'Sonification means playing data as sound. Here each observation is first scaled to a number between 0 and 1 with a fixed formula. That number then sets one or more properties of a sound: pitch, loudness, rhythm, brightness or stereo position.',
   aboutHowP2: 'The rules are fixed per dataset, so the same data always gives the same sound. Longitude sets the stereo position (180°W is hard left, 180°E hard right). Nothing is pre-recorded: your browser builds every sound with Web Audio while you listen.',
@@ -811,7 +811,7 @@ const en = {
 export type StringKey = keyof typeof en;
 
 const bn: Partial<Record<StringKey, string>> = {
-  appName: 'সনিক আর্থ অ্যাটলাস',
+  appName: 'ব্লু প্ল্যানেট রেডিও',
   tagline: 'পৃথিবীর তথ্যের জুকবক্স',
   heroLead: 'নাসার আসল পৃথিবী পর্যবেক্ষণ আর স্যাটেলাইট ছবি, শব্দ হয়ে বাজে। একটা ট্র্যাক বেছে নিন, হেডফোন পরুন, শুনুন কোথায় আগুন জ্বলছে, বৃষ্টি হচ্ছে, সমুদ্র গরম হচ্ছে।',
   heroNote: 'প্রতিটি শব্দ ডেটা থেকে সরাসরি তৈরি হয়। কিছুই আগে থেকে রেকর্ড করা নয়।',
@@ -985,7 +985,7 @@ const bn: Partial<Record<StringKey, string>> = {
   scSave: 'PNG সংরক্ষণ',
   scShared: 'শেয়ার হয়েছে।',
   scShareText: 'নাসার আর্থ ইনফরমেশন সেন্টারের এই ফ্রেমটি শব্দ হিসেবে শুনুন।',
-  scCardKicker: 'সনিক আর্থ অ্যাটলাস · NASA EIC ফ্রেম',
+  scCardKicker: 'ব্লু প্ল্যানেট রেডিও · NASA EIC ফ্রেম',
   scCardMethod: 'এই ছবির পিক্সেল থেকে তৈরি শব্দ: উজ্জ্বলতা জোর, উচ্চতা সুর, রং সুরের ধরন। দেখানো রং ছবি থেকে নেওয়া, কোনো পরিমাপ নয়।',
   scRollTitle: 'ডেটার স্কোর',
   scRollNote: 'সিরিজের প্রতিটি মানের জন্য একটি দণ্ড, ম্যাপিং যে স্বর দিয়েছে সেখানে: সিরিজের নির্দিষ্ট পরিসরে উঁচু মানে চড়া সুর। উষ্ণ রং মানে বেসলাইনের সমান বা উপরে, শীতল মানে নিচে। ডেটার ফাঁক এখানেও ফাঁক।',
@@ -1093,7 +1093,7 @@ const bn: Partial<Record<StringKey, string>> = {
   hearingLive: 'শব্দ বাজছে',
   hearingOff: 'শব্দ বন্ধ',
   stereoPos: 'স্টেরিও অবস্থান',
-  heroDataLine: 'সনিক আর্থ অ্যাটলাস নাসার আসল পৃথিবী-ডেটাকে শব্দে রূপ দেয়, যা আপনি ঘুরে ঘুরে শুনতে পারেন। প্রতিটি মান হয়ে যায় একটি সুর, একটি ছন্দ আর হেডফোনে একটি অবস্থান।',
+  heroDataLine: 'ব্লু প্ল্যানেট রেডিও নাসার আসল পৃথিবী-ডেটাকে শব্দে রূপ দেয়, যা আপনি ঘুরে ঘুরে শুনতে পারেন। প্রতিটি মান হয়ে যায় একটি সুর, একটি ছন্দ আর হেডফোনে একটি অবস্থান।',
   ctaExplore: 'গ্লোব ঘুরে দেখুন',
   ctaStory: 'একটি ডেটা-গল্প শুনুন',
   scrollHint: 'কীভাবে কাজ করে দেখতে নিচে যান',
@@ -1205,7 +1205,7 @@ const bn: Partial<Record<StringKey, string>> = {
   pipeSound: 'আপনার ব্রাউজার Web Audio দিয়ে সরাসরি শব্দ তৈরি করে।',
   pipeSee: 'অ্যাটলাস জায়গা, মান আর শব্দ একসাথে দেখায়।',
 
-  aboutLead: 'সনিক আর্থ অ্যাটলাস কীভাবে পরিমাপকে শব্দে রূপ দেয়, প্রতিটি সংখ্যা কোথা থেকে আসে, আর এটি কী বলতে পারে না।',
+  aboutLead: 'ব্লু প্ল্যানেট রেডিও কীভাবে পরিমাপকে শব্দে রূপ দেয়, প্রতিটি সংখ্যা কোথা থেকে আসে, আর এটি কী বলতে পারে না।',
   aboutHowTitle: 'সনিফিকেশন কীভাবে কাজ করে',
   aboutHowP1: 'সনিফিকেশন মানে ডেটাকে শব্দ হিসেবে বাজানো। এখানে প্রতিটি পর্যবেক্ষণ প্রথমে একটি নির্দিষ্ট সূত্রে ০ থেকে ১-এর মধ্যে একটি সংখ্যায় আনা হয়। সেই সংখ্যা শব্দের এক বা একাধিক গুণ ঠিক করে: সুর, জোর, ছন্দ, উজ্জ্বলতা বা স্টেরিও অবস্থান।',
   aboutHowP2: 'প্রতিটি ডেটাসেটের নিয়ম স্থির, তাই একই ডেটা সবসময় একই শব্দ দেয়। দ্রাঘিমাংশ স্টেরিও অবস্থান ঠিক করে (১৮০° পশ্চিম একদম বামে, ১৮০° পূর্ব একদম ডানে)। কিছুই আগে থেকে রেকর্ড করা নয়: আপনি শোনার সময় ব্রাউজার Web Audio দিয়ে প্রতিটি শব্দ তৈরি করে।',

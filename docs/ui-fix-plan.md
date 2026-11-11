@@ -1,4 +1,4 @@
-# Sonic Earth Atlas — UI audit and fix plan (Phase 8)
+# Blue Planet Radio — UI audit and fix plan (Phase 8)
 
 **Date:** 2026-10-09 · **Branch for the fixes:** `fix/ui-polish` (one PR, four commits, one per track below)
 **Scope:** bugs, text layout, the Settings button, glass surfaces, a glass header, landing-page globe lag and a site-wide font system. This document is the plan only. No app code was changed in the audit.

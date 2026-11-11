@@ -311,7 +311,7 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
           <div className="p-4 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] text-[var(--signal)] text-xs sm:text-sm leading-relaxed">
             {isBn
               ? 'নাসার স্যাটেলাইটগুলো এভাবেই কাজ করে: যখনই কোথাও বন বা পাহাড়ে বড় আগুন লাগে, স্যাটেলাইটের ডেটা বেশি হয়, আর আমাদের শব্দ তত দ্রুত পটপট করতে থাকে!'
-              : 'This is the core concept of Sonic Earth Atlas: Larger wildfires give higher NASA power values, making the crackle bursts fire much faster!'}
+              : 'This is the core concept of Blue Planet Radio: Larger wildfires give higher NASA power values, making the crackle bursts fire much faster!'}
           </div>
 
           <div className="flex justify-end mt-2">

@@ -114,5 +114,5 @@ export async function renderShareCard(o: CardInput): Promise<Blob | null> {
   return new Promise((res) => { try { cv.toBlob((b) => res(b), 'image/png'); } catch { res(null); } });
 }
 
-/** The file name of a card: `sonic-earth-<frame id>.png`, safe for any file system. */
-export const cardFileName = (frameId: string) => `sonic-earth-${frameId.replace(/[^a-z0-9-]+/gi, '-').toLowerCase()}.png`;
+/** The file name of a card: `blue-planet-radio-<frame id>.png`, safe for any file system. */
+export const cardFileName = (frameId: string) => `blue-planet-radio-${frameId.replace(/[^a-z0-9-]+/gi, '-').toLowerCase()}.png`;
