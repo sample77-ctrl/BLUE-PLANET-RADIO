@@ -106,13 +106,13 @@ export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, on
 
         {/* Sonic Quest invite for kids and learners */}
         <section className="reveal max-w-6xl mx-auto px-5 sm:px-10 pb-12" aria-labelledby="quest-banner-title">
-          <div className="glass-flat p-6 sm:p-8 rounded-2xl border border-[var(--brass)]/50 bg-[var(--accent-surface)] flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="glass-flat p-6 sm:p-8 rounded-2xl border border-[var(--signal)]/50 bg-[var(--accent-surface)] flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[var(--teal)] p-0.5 shadow-xl border-2 border-[var(--brass)] shrink-0 overflow-hidden">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[var(--teal)] p-0.5 shadow-xl border-2 border-[var(--signal)] shrink-0 overflow-hidden">
                 <img src="/images/ninja_cadet_avatar_sm.jpg" width={96} height={96} loading="lazy" decoding="async" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
               </div>
               <div className="flex flex-col gap-2">
-                <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-[var(--brass)] font-semibold font-mono mx-auto sm:mx-0">
+                <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-[var(--signal)] font-semibold font-mono mx-auto sm:mx-0">
                   <Sparkles className="w-4 h-4" />
                   <span>{t('questTagline')}</span>
                 </div>

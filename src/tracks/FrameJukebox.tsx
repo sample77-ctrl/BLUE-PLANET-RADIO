@@ -392,14 +392,14 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
                 </div>
               </div>
             )}
-            {region && <div className="absolute top-0 bottom-0 pointer-events-none border-x-2 border-[var(--brass)] bg-[var(--brass)]/10" style={{ left: `${(region[0] / COLS) * 100}%`, width: `${((region[1] - region[0] + 1) / COLS) * 100}%` }} />}
-            <div className="absolute top-0 bottom-0 w-[2px] bg-[var(--brass)] shadow-[0_0_14px_var(--brass)] pointer-events-none" style={{ left: needle, opacity: playing || status === 'ready' ? 1 : 0 }} />
+            {region && <div className="absolute top-0 bottom-0 pointer-events-none border-x-2 border-[var(--signal)] bg-[var(--signal)]/10" style={{ left: `${(region[0] / COLS) * 100}%`, width: `${((region[1] - region[0] + 1) / COLS) * 100}%` }} />}
+            <div className="absolute top-0 bottom-0 w-[2px] bg-[var(--signal)] shadow-[0_0_14px_var(--signal)] pointer-events-none" style={{ left: needle, opacity: playing || status === 'ready' ? 1 : 0 }} />
             {status !== 'ready' && (
               <div className="absolute inset-0 grid place-items-center bg-black/60 text-sm text-[var(--ink-2)] p-6 text-center">
                 {status === 'loading' ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> {frame.src && !userFile ? 'Loading Earth Information Center image…' : 'Loading NASA imagery from GIBS…'}</span>
                   : (
                     <div className="flex flex-col items-center gap-3" role="alert">
-                      <span className="flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-[var(--brass)]" /> {frame.src && !userFile ? 'This picture could not be loaded.' : 'NASA GIBS did not respond. Check the internet connection, or load an image file below.'}</span>
+                      <span className="flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-[var(--signal)]" /> {frame.src && !userFile ? 'This picture could not be loaded.' : 'NASA GIBS did not respond. Check the internet connection, or load an image file below.'}</span>
                       {!(frame.src && !userFile) && <button className="btn btn-brass" onClick={() => { setMode('single'); setUserFile(null); setFrameId(EIC_FRAMES[0].id); }}>{t('tryEic')}</button>}
                     </div>
                   )}
@@ -432,7 +432,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
               <span><strong className="tnum">{heard.note}</strong> <span className="text-[var(--ink-3)] tnum">{heard.hz} Hz</span></span>
               <span className="flex items-center gap-2">{t('loudness')}
                 <span className="inline-block w-24 h-2 rounded bg-[var(--line)] overflow-hidden" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={heard.level}>
-                  <span className="block h-full bg-[var(--brass)]" style={{ width: `${heard.level}%` }} />
+                  <span className="block h-full bg-[var(--signal)]" style={{ width: `${heard.level}%` }} />
                 </span>
                 <span className="tnum text-[var(--ink-3)]">{heard.level}%</span>
               </span>
@@ -448,13 +448,13 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
               <button className="btn mt-2" onClick={() => goStory(story + 1)}>{t('storyNext')}</button>
             </div>
           )}
-          {audioBlocked && <p role="alert" className="mt-3 text-sm text-[var(--brass)] max-w-[70ch]">{t('audioBlocked')}</p>}
+          {audioBlocked && <p role="alert" className="mt-3 text-sm text-[var(--signal)] max-w-[70ch]">{t('audioBlocked')}</p>}
 
           <div className="mt-3 max-w-[70ch]">
             <label htmlFor="frame-scrub" className="label">{t('scrub')}</label>
             <input id="frame-scrub" type="range" min={0} max={COLS - 1} value={col} disabled={status !== 'ready'}
               onChange={(e) => seek(+e.target.value)} aria-valuetext={where(col)} aria-describedby="frame-scrub-hint"
-              className="w-full accent-[var(--brass)] disabled:opacity-50" />
+              className="w-full accent-[var(--signal)] disabled:opacity-50" />
             <p id="frame-scrub-hint" className="text-xs text-[var(--ink-3)]">{t('scrubHint')} {t('regionHint')}</p>
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <button className="btn" aria-pressed={loop} onClick={() => setLoop(!loop)}><Repeat className="w-4 h-4" /> {t('loop')}</button>
@@ -484,7 +484,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
               <li>{t('hearScrub')}</li>
             </ul>
           </details>
-          {meta && <p className="mt-3 text-sm text-[var(--ink-2)] max-w-[70ch]"><strong className="text-[var(--ink)]">{meta.title}.</strong> {meta.what} <span className="text-[var(--ink-3)]">{t('srcLine', { c: meta.credit })}</span>{meta.url && <> <a href={meta.url} target="_blank" rel="noreferrer" className="underline text-[var(--brass)]">{t('frSeeEarthGov')}</a></>}</p>}
+          {meta && <p className="mt-3 text-sm text-[var(--ink-2)] max-w-[70ch]"><strong className="text-[var(--ink)]">{meta.title}.</strong> {meta.what} <span className="text-[var(--ink-3)]">{t('srcLine', { c: meta.credit })}</span>{meta.url && <> <a href={meta.url} target="_blank" rel="noreferrer" className="underline text-[var(--signal)]">{t('frSeeEarthGov')}</a></>}</p>}
         </div>
 
         <section className="space-y-3" aria-label={t('frChoose')}>
@@ -494,7 +494,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
               <div className="grid grid-cols-2 lg:grid-cols-1 gap-2">
                 {EIC_FRAMES.map((f) => (
                   <button key={f.id} onClick={() => pickFrame(f.id)} aria-pressed={!userFile && frameId === f.id}
-                    className={`text-left rounded-lg border p-2 flex gap-3 items-center cursor-pointer transition ${!userFile && frameId === f.id ? 'border-[var(--brass)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>
+                    className={`text-left rounded-lg border p-2 flex gap-3 items-center cursor-pointer transition ${!userFile && frameId === f.id ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>
                     <img src={f.src} alt="" loading="lazy" className="w-16 h-8 object-cover rounded bg-black shrink-0 hidden lg:block" />
                     <span className="text-sm leading-snug">{lang === 'bn' ? f.titleBn : f.title}</span>
                   </button>
@@ -504,7 +504,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
               <div className="grid grid-cols-2 lg:grid-cols-1 gap-2">
                 {FRAMES.map((f) => (
                   <button key={f.id} onClick={() => pickFrame(f.id)} aria-pressed={!userFile && frameId === f.id}
-                    className={`text-left rounded-lg border p-2 flex gap-3 items-center cursor-pointer transition ${!userFile && frameId === f.id ? 'border-[var(--brass)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>
+                    className={`text-left rounded-lg border p-2 flex gap-3 items-center cursor-pointer transition ${!userFile && frameId === f.id ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>
                     <img src={gibsUrl(f.overlayOn && f.id !== 'sstanom' ? f.layer : f.layer, f.date, f.format, 128)} alt="" loading="lazy" className="w-16 h-8 object-cover rounded bg-black shrink-0 hidden lg:block" />
                     <span className="text-sm leading-snug">{lang === 'bn' ? f.titleBn : f.title}</span>
                   </button>
@@ -516,10 +516,10 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
               <div className="label">{t('frThen')}</div>
               {PAIRS.map((p) => (
                 <button key={p.id} onClick={() => setPairId(p.id)} aria-pressed={pairId === p.id}
-                  className={`w-full text-left rounded-lg border p-3 text-sm cursor-pointer ${pairId === p.id ? 'border-[var(--brass)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>{p.label}</button>
+                  className={`w-full text-left rounded-lg border p-3 text-sm cursor-pointer ${pairId === p.id ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>{p.label}</button>
               ))}
               <button onClick={() => setPairId('custom')} aria-pressed={pairId === 'custom'}
-                className={`w-full text-left rounded-lg border p-3 text-sm cursor-pointer ${pairId === 'custom' ? 'border-[var(--brass)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>{t('chooseAny')}</button>
+                className={`w-full text-left rounded-lg border p-3 text-sm cursor-pointer ${pairId === 'custom' ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>{t('chooseAny')}</button>
               {pairId === 'custom' && (
                 <div className="space-y-2">
                   {([['leftEar', customA, setCustomA], ['rightEar', customB, setCustomB]] as const).map(([k, val, setVal]) => (

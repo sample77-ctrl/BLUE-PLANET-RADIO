@@ -515,7 +515,7 @@ export const TacticalWildfireMission: React.FC<Props> = ({
               <span className="chip border-red-500/50 bg-red-950/40 text-red-300 font-mono text-xs font-semibold uppercase tracking-wider">
                 {isBn ? 'দাবানল জরুরি নিয়ন্ত্রণ' : 'WILDFIRE INCIDENT COMMAND'}
               </span>
-              <span className="font-mono text-xs text-[var(--brass)] font-semibold">
+              <span className="font-mono text-xs text-[var(--signal)] font-semibold">
                 ⏱️ {formatTimer(missionTimer)}
               </span>
             </div>
@@ -552,7 +552,7 @@ export const TacticalWildfireMission: React.FC<Props> = ({
           {onSwitchToPlatformer && (
             <button
               onClick={onSwitchToPlatformer}
-              className="btn btn-ghost border border-[var(--line)] text-xs font-semibold py-2 px-3 rounded-xl flex items-center gap-1 cursor-pointer hover:border-[var(--brass)]"
+              className="btn btn-ghost border border-[var(--line)] text-xs font-semibold py-2 px-3 rounded-xl flex items-center gap-1 cursor-pointer hover:border-[var(--signal)]"
             >
               <span>{isBn ? 'প্ল্যাটফর্মার মোড' : 'Platformer View'}</span>
             </button>
@@ -573,7 +573,7 @@ export const TacticalWildfireMission: React.FC<Props> = ({
         <div className="lg:col-span-1 flex flex-col gap-3">
           {/* Objectives Card */}
           <div className="p-3.5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-2.5 shadow-md">
-            <span className="text-2xs font-mono uppercase tracking-wider text-[var(--brass)] font-semibold">
+            <span className="text-2xs font-mono uppercase tracking-wider text-[var(--signal)] font-semibold">
               {isBn ? 'মিশন অবজেক্টিভস' : 'INCIDENT OBJECTIVES'}
             </span>
             <div className="flex flex-col gap-2 text-xs">

@@ -27,7 +27,7 @@ export function VinylHero({ title, unit, point, mapped, playing, onToggle, posit
         <dl className="vinyl-read">
           <div><dt>{t('jbRdWhen')}</dt><dd className="big">{point ? timeLabel(point.t, lang) : '–'}</dd></div>
           <div><dt>{t('jbRdValue')}</dt><dd>{point && point.v !== null ? valueLabel(point.v, unit, lang) : '–'}</dd></div>
-          <div><dt>{t('jbRdNote')}</dt><dd style={{ color: 'var(--warm)' }}>{note ? `${note.note} · ${digits(Math.round(note.freq), lang)} Hz` : '–'}</dd></div>
+          <div><dt>{t('jbRdNote')}</dt><dd>{note ? `${note.note} · ${digits(Math.round(note.freq), lang)} Hz` : '–'}</dd></div>
           <div><dt>{t('jbRdTimbre')}</dt><dd>{note ? t(note.timbre === 'warm' ? 'jbTimbreWarm' : note.timbre === 'soft' ? 'jbTimbreSoft' : 'jbTimbrePlain') : '–'}</dd></div>
           <div><dt>{t('jbRdPulses')}</dt><dd>{note ? `${digits(note.pulses, lang)} / ${digits(MAX_PULSES, lang)}` : '–'}</dd></div>
         </dl>

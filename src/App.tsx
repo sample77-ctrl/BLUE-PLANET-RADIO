@@ -376,30 +376,30 @@ export function App() {
 
             {/* View switch and globe options */}
             <div data-ctl="views" className="absolute left-[3.75rem] right-3 justify-end flex-wrap top-[calc(var(--header-h)+3.5rem)] lg:top-[calc(var(--header-h)+.75rem)] lg:left-1/2 lg:right-auto lg:justify-start lg:flex-nowrap lg:-translate-x-1/2 z-20 flex flex-row items-start lg:items-center gap-2">
-              <div className="panel p-1 flex gap-1" role="group" aria-label={t('viewGroup')}>
+              <div className="glass p-1 flex gap-1" role="group" aria-label={t('viewGroup')}>
                 {([['3d-globe', Globe, 'globe'], ['2d-map', MapIcon, 'map'], ['audio-first', List, 'list']] as const).map(([v, Icon, key]) => (
                   <button key={v} className="btn btn-ghost min-h-[36px] pointer-coarse:min-h-[44px] px-2.5" aria-pressed={view === v} aria-label={t(key)} onClick={() => setView(v)}>
                     <Icon className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline" aria-hidden="true">{t(key)}</span>
                   </button>
                 ))}
               </div>
-              <div className="panel p-1 flex flex-row gap-1">
-                <button className="btn btn-ghost min-h-[36px] px-2.5" onClick={surprise} title={t('surpriseHint')}><Shuffle className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline">{t('surprise')}</span></button>
-                {view === '3d-globe' && <button className="btn btn-ghost min-h-[36px] px-2.5" aria-pressed={tune} onClick={() => setTune((v) => !v)} title={t('tuneHint')}><Crosshair className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline">{t('tune')}</span></button>}
+              <div className="glass p-1 flex flex-row gap-1">
+                <button className="btn btn-ghost min-h-[36px] px-2.5" onClick={surprise} title={t('surpriseHint')}><Shuffle className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline lg:max-2xl:sr-only">{t('surprise')}</span></button>
+                {view === '3d-globe' && <button className="btn btn-ghost min-h-[36px] px-2.5" aria-pressed={tune} onClick={() => setTune((v) => !v)} title={t('tuneHint')}><Crosshair className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline lg:max-2xl:sr-only">{t('tune')}</span></button>}
               </div>
               {view === '3d-globe' && (
-                <div className="panel p-1 flex flex-row gap-1">
-                  <button className="btn btn-ghost min-h-[36px] px-2.5 justify-start" aria-pressed={imagery} onClick={() => setImagery(!imagery)} title={t('imageryHint')}><Satellite className="w-4 h-4" /><span className="hidden sm:inline">{t('imagery')}</span></button>
-                  <button className="btn btn-ghost min-h-[36px] px-2.5 justify-start" aria-pressed={autoRotate} onClick={() => setAutoRotate(!autoRotate)} aria-label={t('spinHint')}><RotateCw className="w-4 h-4" /><span className="hidden sm:inline">{t('spin')}</span></button>
+                <div className="glass p-1 flex flex-row gap-1">
+                  <button className="btn btn-ghost min-h-[36px] px-2.5 justify-start" aria-pressed={imagery} onClick={() => setImagery(!imagery)} title={t('imageryHint')}><Satellite className="w-4 h-4" /><span className="hidden sm:inline lg:max-2xl:sr-only">{t('imagery')}</span></button>
+                  <button className="btn btn-ghost min-h-[36px] px-2.5 justify-start" aria-pressed={autoRotate} onClick={() => setAutoRotate(!autoRotate)} aria-label={t('spinHint')}><RotateCw className="w-4 h-4" /><span className="hidden sm:inline lg:max-2xl:sr-only">{t('spin')}</span></button>
                 </div>
               )}
             </div>
 
             {/* Mobile panel buttons */}
             <div data-ctl="bar" className="lg:hidden absolute left-3 right-3 top-[calc(var(--header-h)+.5rem)] z-20 flex gap-2 overflow-x-auto scroll-thin fade-x pe-7">
-              <button className="btn panel shrink-0" onClick={() => setSheet('layers')}><Layers className="w-4 h-4" />{t('layers')}</button>
-              <button className="btn panel shrink-0" onClick={() => setSheet('hearing')}><AudioLines className="w-4 h-4" />{t('nowHearing')}</button>
-              {view !== 'audio-first' && <button className="btn panel shrink-0" onClick={() => setSheet('country')}><MapPinned className="w-4 h-4" />{t('country')}</button>}
+              <button className="btn glass shrink-0" onClick={() => setSheet('layers')}><Layers className="w-4 h-4" />{t('layers')}</button>
+              <button className="btn glass shrink-0" onClick={() => setSheet('hearing')}><AudioLines className="w-4 h-4" />{t('nowHearing')}</button>
+              {view !== 'audio-first' && <button className="btn glass shrink-0" onClick={() => setSheet('country')}><MapPinned className="w-4 h-4" />{t('country')}</button>}
             </div>
             {sheet && (
               <MobileSheet onClose={() => setSheet(null)}>
@@ -408,7 +408,7 @@ export function App() {
             )}
 
             <div data-ctl="timeline" className="absolute bottom-2 sm:bottom-3 left-2 right-2 lg:left-[var(--tl-l)] lg:right-3 z-20" style={{ ['--tl-l' as string]: leftOpen ? '340px' : '12px' }}>
-              {globeFailed && view === '3d-globe' && <p role="status" className="panel px-3 py-2 mb-2 text-sm text-[var(--ink-2)] w-fit max-w-full">{t('webglOff')}</p>}
+              {globeFailed && view === '3d-globe' && <p role="status" className="glass px-3 py-2 mb-2 text-sm text-[var(--ink-2)] w-fit max-w-full">{t('webglOff')}</p>}
               <TimelineBar slices={slices} index={day} onChange={setDay} playing={playing}
                 hearChange={hearChange} onToggleHearChange={() => setHearChange(!hearChange)} enabled={enabled} speed={speed} />
             </div>

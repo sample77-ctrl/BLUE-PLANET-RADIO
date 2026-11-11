@@ -24,10 +24,10 @@ interface Props {
 export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, statuses, isFallback, statusMessage, audioReady, onOpenData, muted, onMute, onSolo }) => {
   const { t } = usePrefs();
   return (
-    <div className="panel p-3 space-y-2" role="group" aria-label={t('layers')}>
+    <div className="glass p-3 space-y-2" role="group" aria-label={t('layers')}>
       <div className="flex items-center justify-between px-1">
         <h2 className="font-display font-semibold text-lg">{t('layers')}</h2>
-        <span className={`chip ${isFallback ? 'border-[var(--brass)] text-[var(--brass)]' : 'border-[var(--teal)] text-[var(--teal)]'}`}>
+        <span className={`chip ${isFallback ? 'border-[var(--signal)] text-[var(--signal)]' : 'border-[var(--teal)] text-[var(--teal)]'}`}>
           <span className="dot" style={{ background: isFallback ? '#fbbf24' : '#34d399' }} />{isFallback ? 'Sample' : t('realData')}
         </span>
       </div>

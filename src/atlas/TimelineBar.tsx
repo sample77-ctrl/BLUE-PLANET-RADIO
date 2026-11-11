@@ -42,12 +42,12 @@ export const TimelineBar: React.FC<Props> = ({ slices, index, onChange, playing,
 
   if (!n) return null;
   return (
-    <div className="panel p-2.5 sm:p-3 flex flex-col gap-2">
+    <div className="glass p-2.5 sm:p-3 flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex-1 min-w-[160px] grid gap-1" style={{ gridTemplateColumns: `repeat(${n}, minmax(0,1fr))` }} role="tablist" aria-label={t('dayLabel')}>
           {slices.map((s, i) => (
             <button key={s.dateLabel} role="tab" aria-selected={i === index} onClick={() => onChange(i)}
-              className={`min-h-[40px] rounded-lg text-sm tnum cursor-pointer border transition ${i === index ? 'border-[var(--brass)] text-[var(--brass)] bg-[var(--panel-2)] font-semibold' : 'border-[var(--line)] text-[var(--ink-2)] hover:text-[var(--ink)]'}`}>
+              className={`min-h-[40px] rounded-lg text-sm tnum cursor-pointer border transition ${i === index ? 'border-[var(--signal)] text-[var(--signal)] bg-[var(--panel-2)] font-semibold' : 'border-[var(--line)] text-[var(--ink-2)] hover:text-[var(--ink)]'}`}>
               {formatDay(s.dateLabel, lang)}
             </button>
           ))}

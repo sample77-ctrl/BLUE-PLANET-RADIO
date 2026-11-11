@@ -56,12 +56,12 @@ export const StoryRow = memo(function StoryRow({ stories, activeId, onSelect, sp
               <li key={s.id} className="story-card shrink-0 relative">
                 <button ref={(el) => { if (el) cards.current.set(s.id, el); else cards.current.delete(s.id); }} type="button" tabIndex={i === activeIdx ? 0 : -1}
                   aria-pressed={active} onClick={() => onSelect(s.id)} onKeyDown={(e) => onKey(e, i)}
-                  className={`w-full h-full text-left rounded-xl border p-3 flex flex-col gap-2 cursor-pointer lift ${active ? 'border-[var(--brass)] bg-[var(--panel-2)] shadow-[inset_0_-3px_0_var(--brass)]' : 'glass-flat'}`}>
+                  className={`w-full h-full text-left rounded-xl border p-3 flex flex-col gap-2 cursor-pointer lift ${active ? 'border-[var(--signal)] bg-[var(--panel-2)] shadow-[inset_0_-3px_0_var(--signal)]' : 'glass-flat'}`}>
                   <div className="flex flex-wrap gap-1 text-2xs">
                     <span className="chip">{t(topicKey(s.topic))}</span>
                     <span className="chip">{regionLabel(s, lang, t)}</span>
                     {s.isSample && <span className="chip border-[var(--warm)]">{t('provSample')}</span>}
-                    {active && <span className="chip border-[var(--brass)] text-[var(--brass)]">{t('jbNowShowing')}</span>}
+                    {active && <span className="chip border-[var(--signal)] text-[var(--signal)]">{t('jbNowShowing')}</span>}
                   </div>
                   {frame ? <ImgOr src={frame.src} alt="" loading="lazy" className="w-full h-10 object-cover rounded opacity-90" /> : <Spark points={sparks[s.id]} />}
                   <span className="font-semibold leading-snug text-sm">{lang === 'bn' ? s.titleBn : s.title}</span>

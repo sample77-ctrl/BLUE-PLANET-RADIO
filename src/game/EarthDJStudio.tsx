@@ -100,7 +100,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
       {/* Top Header */}
       <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-[var(--brass)]/20 border border-[var(--brass)]/40 text-[var(--brass)]">
+          <div className="p-2.5 rounded-xl bg-[var(--signal)]/20 border border-[var(--signal)]/40 text-[var(--signal)]">
             <Sparkles className="w-6 h-6" />
           </div>
           <div>
@@ -265,7 +265,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
       <div className="glass panel p-6 rounded-2xl flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Music className="w-5 h-5 text-[var(--brass)]" />
+            <Music className="w-5 h-5 text-[var(--signal)]" />
             <h3 className="text-base sm:text-lg font-semibold text-[var(--ink)]">
               {isBn ? 'জলবায়ু পিয়ানো (G-Major Pentatonic Scale)' : 'Climate Piano: Pentatonic Sound Pads'}
             </h3>

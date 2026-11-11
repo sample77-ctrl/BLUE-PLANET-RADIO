@@ -92,7 +92,7 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-2">
-          <span className="chip border-[var(--brass)] text-[var(--brass)] font-semibold">
+          <span className="chip border-[var(--signal)] text-[var(--signal)] font-semibold">
             {isBn ? 'লেভেল ৪ (ফাইনাল)' : 'Level 4 (Final)'}
           </span>
           <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--ink)]">
@@ -107,7 +107,7 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
 
       <div className="glass panel p-6 sm:p-8 flex flex-col gap-6">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-[var(--brass)]/20 border border-[var(--brass)]/40 text-[var(--brass)]">
+          <div className="p-2.5 rounded-lg bg-[var(--signal)]/20 border border-[var(--signal)]/40 text-[var(--signal)]">
             <Music className="w-6 h-6" />
           </div>
           <div>
@@ -153,7 +153,7 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
                   onClick={() => playSingleMilestone(idx)}
                   className={`p-3 rounded-xl border flex flex-col items-center justify-between gap-1.5 transition-all cursor-pointer text-center ${
                     isActive
-                      ? 'border-[var(--brass)] bg-[var(--panel-2)] scale-105 shadow-md ring-2 ring-[var(--brass)]'
+                      ? 'border-[var(--signal)] bg-[var(--panel-2)] scale-105 shadow-md ring-2 ring-[var(--signal)]'
                       : 'border-[var(--glass-border)] bg-[var(--panel)] hover:border-[var(--line)]'
                   }`}
                 >
@@ -177,7 +177,7 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
               <span className="text-[var(--ink-2)]">
                 {isBn ? milestones[activeStep].eraBn : milestones[activeStep].eraEn}
               </span>
-              <span className="font-mono text-[var(--brass)] font-semibold">
+              <span className="font-mono text-[var(--signal)] font-semibold">
                 {milestones[activeStep].note} ({milestones[activeStep].pitchHz.toFixed(1)} Hz)
               </span>
             </div>
@@ -245,11 +245,11 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
 
         {/* Feedback & Graduation Trigger */}
         {isAnswered && (
-          <div className="p-5 rounded-xl bg-gradient-to-r from-amber-950/40 to-emerald-950/40 border border-[var(--brass)] flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+          <div className="p-5 rounded-xl bg-gradient-to-r from-amber-950/40 to-emerald-950/40 border border-[var(--signal)] flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
             <div className="flex items-start gap-3">
-              <Sparkles className="w-6 h-6 text-[var(--brass)] shrink-0 mt-0.5 animate-bounce" />
+              <Sparkles className="w-6 h-6 text-[var(--signal)] shrink-0 mt-0.5 animate-bounce" />
               <div>
-                <h4 className="font-semibold text-base text-[var(--brass)]">
+                <h4 className="font-semibold text-base text-[var(--signal)]">
                   {selectedAnswer === 'higher'
                     ? (isBn ? 'অভিনন্দন ক্যাডেট! তুমি পৃথিবীর সুরের গোপন সূত্র ধরে ফেলেছ!' : 'Congratulations Cadet! You decoded the Earth’s warming song!')
                     : (isBn ? 'সুরটি আসলে অনেক উঁচুতে উঠেছিল, কারণ পৃথিবী এখন বেশি গরম!' : 'The notes climbed much higher because our planet warmed up!')}

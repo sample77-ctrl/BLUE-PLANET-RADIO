@@ -55,15 +55,15 @@ export const GameHome: React.FC<Props> = ({
   return (
     <div className="w-full flex flex-col gap-8 max-w-5xl mx-auto" role="region" aria-label="Game Home">
       {/* Hero Banner: 3D Animated Earth Sphere + Brand Identity */}
-      <div className="relative rounded-3xl overflow-hidden border-2 border-[var(--brass)]/50 bg-gradient-to-br from-blue-950/40 via-[var(--panel)] to-amber-950/30 p-6 sm:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="relative rounded-3xl overflow-hidden border-2 border-[var(--signal)]/50 bg-gradient-to-br from-blue-950/40 via-[var(--panel)] to-amber-950/30 p-6 sm:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="flex flex-col gap-3 text-center md:text-left z-10">
-          <div className="inline-flex items-center gap-2 text-2xs uppercase tracking-widest text-[var(--brass)] font-semibold font-mono mx-auto md:mx-0">
+          <div className="inline-flex items-center gap-2 text-2xs uppercase tracking-widest text-[var(--signal)] font-semibold font-mono mx-auto md:mx-0">
             <Sparkles className="w-4 h-4" />
             <span>NASA Space Apps 2026 · The Earth Information Jukebox</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-display font-bold text-[var(--ink)] tracking-tight leading-tight">
-            SONIC EARTH <span className="text-[var(--brass)]">ADVENTURE</span>
+            SONIC EARTH <span className="text-[var(--signal)]">ADVENTURE</span>
           </h1>
 
           <p className="text-sm sm:text-base text-[var(--ink-2)] max-w-xl font-medium">
@@ -84,9 +84,9 @@ export const GameHome: React.FC<Props> = ({
 
             <button
               onClick={onOpenStepGuide}
-              className="btn btn-ghost border border-[var(--brass)]/60 text-xs sm:text-sm font-semibold px-5 py-3 rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-[var(--brass)]/10"
+              className="btn btn-ghost border border-[var(--signal)]/60 text-xs sm:text-sm font-semibold px-5 py-3 rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-[var(--signal)]/10"
             >
-              <Sparkles className="w-4 h-4 text-[var(--brass)]" />
+              <Sparkles className="w-4 h-4 text-[var(--signal)]" />
               <span>{isBn ? '🌟 আপডেট প্ল্যান (ধাপে ধাপে)' : '🌟 Step-by-Step Guide'}</span>
             </button>
 
@@ -100,7 +100,7 @@ export const GameHome: React.FC<Props> = ({
 
             <button
               onClick={onOpenSettings}
-              className="btn btn-ghost border border-[var(--line)] text-xs sm:text-sm font-semibold px-4 py-3 rounded-2xl flex items-center gap-1.5 cursor-pointer hover:border-[var(--brass)]"
+              className="btn btn-ghost border border-[var(--line)] text-xs sm:text-sm font-semibold px-4 py-3 rounded-2xl flex items-center gap-1.5 cursor-pointer hover:border-[var(--signal)]"
             >
               <Settings className="w-4 h-4 text-teal-400" />
               <span>{isBn ? 'সেটিংস' : 'Settings'}</span>
@@ -110,7 +110,7 @@ export const GameHome: React.FC<Props> = ({
 
         {/* Tactical Mission Thumbnail / Character Avatar */}
         <div className="relative shrink-0 flex flex-col items-center gap-3">
-          <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-cyan-500 p-1 shadow-2xl border-2 border-[var(--brass)] flex items-center justify-center overflow-hidden">
+          <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-cyan-500 p-1 shadow-2xl border-2 border-[var(--signal)] flex items-center justify-center overflow-hidden">
             <img
               src="/images/game/nasa_satellite_drone_mesh.jpg"
               alt="NASA Satellite Drone Mesh"
@@ -118,7 +118,7 @@ export const GameHome: React.FC<Props> = ({
             />
           </div>
           <div className="text-center">
-            <span className="chip border-[var(--brass)] text-[var(--brass)] text-3xs font-mono font-semibold">
+            <span className="chip border-[var(--signal)] text-[var(--signal)] text-3xs font-mono font-semibold">
               {cadetRank}
             </span>
             <div className="text-xs font-mono font-semibold text-[var(--ink)] mt-1">
@@ -132,7 +132,7 @@ export const GameHome: React.FC<Props> = ({
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between border-b border-[var(--line)] pb-2">
           <h2 className="text-lg font-display font-bold text-[var(--ink)] flex items-center gap-2">
-            <Compass className="w-5 h-5 text-[var(--brass)]" />
+            <Compass className="w-5 h-5 text-[var(--signal)]" />
             <span>{isBn ? 'গেমের ১০টি মূল সেকশন' : 'The Ten Game Sections'}</span>
           </h2>
           <span className="text-xs text-[var(--ink-3)] font-mono">
@@ -144,12 +144,12 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 02: Adventure Hub */}
           <div
             onClick={onOpenHub}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--brass)] transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
                 <span className="text-xl">🗺️</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--brass)] transition">
+                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '০২. অ্যাডভেঞ্চার হাব (Adventure Hub)' : '02. Adventure Hub'}
                 </h3>
               </div>
@@ -159,7 +159,7 @@ export const GameHome: React.FC<Props> = ({
                   : 'Explore 3D Earth biomes, navigate regions, and roam freely with Sonic Cadet scanning real-time environmental frequencies.'}
               </p>
             </div>
-            <span className="text-2xs font-semibold text-[var(--brass)] flex items-center gap-1">
+            <span className="text-2xs font-semibold text-[var(--signal)] flex items-center gap-1">
               <span>{isBn ? 'হাবে প্রবেশ করুন' : 'Launch Hub'}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </span>

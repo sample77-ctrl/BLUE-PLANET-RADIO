@@ -81,7 +81,7 @@ export const HearingPanel: React.FC<Props> = ({ observations, enabled, audioRead
   };
 
   return (
-    <section className="panel p-3 hearing-panel" aria-labelledby="hearing-title">
+    <section className="glass p-3 hearing-panel" aria-labelledby="hearing-title">
       <button className="w-full flex items-center justify-between gap-2 cursor-pointer" onClick={() => setOpen(!open)} aria-expanded={open}>
         <h2 id="hearing-title" className="font-display font-semibold text-lg">{t('nowHearing')}</h2>
         <span className="flex items-center gap-2">

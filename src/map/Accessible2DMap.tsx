@@ -175,12 +175,12 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onClick={handleClick}
-      className="relative w-full h-full overflow-hidden bg-[#071019] select-none outline-none"
+      className="relative w-full h-full overflow-hidden bg-[var(--ground)] select-none outline-none"
       aria-label={t('mapLabel')}
       role="application"
     >
       {/* Zoom / Pan Navigation Toolbar */}
-      <div className="absolute top-16 right-3 lg:right-[364px] lg:top-[calc(var(--header-h)+4rem)] z-20 flex flex-col gap-1.5 panel p-1.5">
+      <div className="absolute top-16 right-3 lg:right-[364px] lg:top-[calc(var(--header-h)+4rem)] z-20 flex flex-col gap-1.5 glass p-1.5">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -264,9 +264,9 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
           preserveAspectRatio="xMidYMid meet"
         >
           {/* Deep Space / Ocean Background */}
-          <rect x="0" y="0" width="1000" height="500" fill="#040b17" />
+          <rect x="0" y="0" width="1000" height="500" fill="#0f0f0f" />
           <image href="/textures/earth_atmos_2048.jpg" x="0" y="0" width="1000" height="500" preserveAspectRatio="none" opacity="0.9" />
-          <rect x="0" y="0" width="1000" height="500" fill="#020817" opacity="0.28" />
+          <rect x="0" y="0" width="1000" height="500" fill="#000" opacity="0.28" />
 
           {/* Graticule Grid */}
           {[-60, -30, 0, 30, 60].map((lat) => (
@@ -276,7 +276,7 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
               y1={((90 - lat) / 180) * 500}
               x2="1000"
               y2={((90 - lat) / 180) * 500}
-              stroke={lat === 0 ? 'rgba(70, 160, 240, 0.4)' : 'rgba(70, 130, 180, 0.15)'}
+              stroke={lat === 0 ? 'rgba(255, 255, 255, 0.34)' : 'rgba(255, 255, 255, 0.1)'}
               strokeWidth={lat === 0 ? 1.5 : 0.8}
               strokeDasharray={lat === 0 ? '' : '4, 6'}
             />
@@ -288,7 +288,7 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
               y1="0"
               x2={((lon + 180) / 360) * 1000}
               y2="500"
-              stroke={lon === 0 ? 'rgba(70, 160, 240, 0.4)' : 'rgba(70, 130, 180, 0.15)'}
+              stroke={lon === 0 ? 'rgba(255, 255, 255, 0.34)' : 'rgba(255, 255, 255, 0.1)'}
               strokeWidth={lon === 0 ? 1.5 : 0.8}
               strokeDasharray={lon === 0 ? '' : '4, 6'}
             />
@@ -300,9 +300,9 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
             const cy = ((90 - obs.latitude) / 180) * 500;
             const isSelected = selectedObservation?.id === obs.id;
 
-            let color = '#ff7a3d';
-            if (obs.phenomenon === 'precipitation') color = '#4cc3ff';
-            else if (obs.phenomenon === 'sst') color = obs.value >= 0 ? '#f25c8a' : '#5b8cff';
+            let color = 'var(--fire)';
+            if (obs.phenomenon === 'precipitation') color = 'var(--rain)';
+            else if (obs.phenomenon === 'sst') color = obs.value >= 0 ? 'var(--warm)' : 'var(--cold)';
 
             const baseRadius = 3 + obs.normalizedValue * 6;
 
@@ -333,7 +333,7 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
                 <path
                   d={markerPath(MARKER_SHAPE[obs.phenomenon], cx, cy, baseRadius)}
                   fill={color}
-                  stroke={isSelected ? '#e9c46a' : 'rgba(255,255,255,0.7)'}
+                  stroke={isSelected ? 'var(--signal)' : 'rgba(255,255,255,0.7)'}
                   strokeWidth={isSelected ? '2.5' : '0.6'}
                   opacity="0.92"
                 />
@@ -346,7 +346,7 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
                     fill="#ffffff"
                     fontSize="12"
                     paintOrder="stroke"
-                    stroke="#071019"
+                    stroke="var(--ground)"
                     strokeWidth="3"
                     className="select-none pointer-events-none"
                   >
@@ -360,9 +360,9 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
           {/* Selected country: brass outline, plus a text label (never colour alone) */}
           {country && selPath && (
             <g pointerEvents="none">
-              <path d={selPath} fill="rgba(233,196,106,0.12)" stroke="#071019" strokeWidth="4.5" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-              <path d={selPath} fill="none" stroke="#e9c46a" strokeWidth="2.5" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
-              {lblPt && <text x={lblPt.x} y={lblPt.y} textAnchor="middle" fill="#ffffff" fontSize="13" fontWeight="700" paintOrder="stroke" stroke="#071019" strokeWidth="3.5">{countryLabel(country.id, country.name, lang)} · {t('selectedBadge')}</text>}
+              <path d={selPath} fill="color-mix(in srgb, var(--signal) 14%, transparent)" stroke="var(--ground)" strokeWidth="4.5" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+              <path d={selPath} fill="none" stroke="var(--signal)" strokeWidth="2.5" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+              {lblPt && <text x={lblPt.x} y={lblPt.y} textAnchor="middle" fill="#ffffff" fontSize="13" fontWeight="700" paintOrder="stroke" stroke="var(--ground)" strokeWidth="3.5">{countryLabel(country.id, country.name, lang)} · {t('selectedBadge')}</text>}
             </g>
           )}
 
@@ -373,7 +373,7 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
               cy={((90 - crosshair.lat) / 180) * 500}
               r="16"
               fill="none"
-              stroke="#e9c46a"
+              stroke="var(--signal)"
               strokeWidth="2"
               strokeDasharray="4, 3"
             />
@@ -382,7 +382,7 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
               y1={((90 - crosshair.lat) / 180) * 500}
               x2={((crosshair.lon + 180) / 360) * 1000 + 24}
               y2={((90 - crosshair.lat) / 180) * 500}
-              stroke="#e9c46a"
+              stroke="var(--signal)"
               strokeWidth="1.5"
             />
             <line
@@ -390,7 +390,7 @@ export const Accessible2DMap: React.FC<Accessible2DMapProps> = ({
               y1={((90 - crosshair.lat) / 180) * 500 - 24}
               x2={((crosshair.lon + 180) / 360) * 1000}
               y2={((90 - crosshair.lat) / 180) * 500 + 24}
-              stroke="#e9c46a"
+              stroke="var(--signal)"
               strokeWidth="1.5"
             />
           </g>

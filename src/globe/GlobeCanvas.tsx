@@ -19,7 +19,7 @@ interface GlobeCanvasProps {
   imageryUrl?: string | null;
   framing?: Framing;
   countries?: Country[]; // borders for hover/click selection
-  country?: Country | null; // selected: brass outline
+  country?: Country | null; // selected: signal-coloured outline
   countryPoint?: { lat: number; lon: number } | null; // fly-to target
   onSelectCountry?: (c: Country) => void;
   onCenter?: (lat: number, lon: number) => void; // the point facing the viewer, whole degrees, only when it changes (tune mode)
@@ -133,40 +133,9 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
     renderer.toneMappingExposure = 1.5;
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
-    document.documentElement.classList.add('globe-on'); // the 2D starfield stops animating: one starfield at a time
+    document.documentElement.classList.add('globe-on');
 
-    // --- Deep Space & Cosmic Starfield Background ---
-    const starGeometry = new THREE.BufferGeometry();
-    const starCount = 1800;
-    const starPositions = new Float32Array(starCount * 3);
-    const starColors = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount * 3; i += 3) {
-      starPositions[i] = (Math.random() - 0.5) * 110;
-      starPositions[i + 1] = (Math.random() - 0.5) * 110;
-      starPositions[i + 2] = -15 - Math.random() * 50;
-
-      // Color variation: cyan, deep space blue, warm white, cosmic purple
-      const c = Math.random();
-      if (c > 0.85) {
-        starColors[i] = 0.49; starColors[i + 1] = 0.83; starColors[i + 2] = 0.98; // Cyan
-      } else if (c > 0.65) {
-        starColors[i] = 0.75; starColors[i + 1] = 0.52; starColors[i + 2] = 0.99; // Purple
-      } else if (c > 0.4) {
-        starColors[i] = 0.25; starColors[i + 1] = 0.55; starColors[i + 2] = 0.95; // Blue
-      } else {
-        starColors[i] = 0.98; starColors[i + 1] = 0.96; starColors[i + 2] = 0.92; // Warm White
-      }
-    }
-    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
-    const starMaterial = new THREE.PointsMaterial({
-      size: 0.18,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.85,
-    });
-    const starField = new THREE.Points(starGeometry, starMaterial);
-    scene.add(starField);
+    // (v5: no starfield behind the Earth on the Atlas; the ground is the page's near-black. The landing hero keeps its stars.)
 
     // --- Globe Group ---
     const globeGroup = new THREE.Group();
@@ -403,8 +372,6 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       haloObserver.disconnect();
       atmosphereGeometry.dispose();
       atmosphereMaterial.dispose();
-      starGeometry.dispose();
-      starMaterial.dispose();
     };
   }, []);
 
@@ -418,13 +385,13 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
   // --- d3-geo's geoContains, loaded once for hover/click lookups ---
   useEffect(() => { let on = true; import('d3-geo').then((m) => { if (on) geoContainsRef.current = m.geoContains as never; }); return () => { on = false; }; }, []);
 
-  // --- Selected country: brass outline, and a fly-to (a jump with reduced motion, see the animation loop) ---
+  // --- Selected country: signal-coloured outline, and a fly-to (a jump with reduced motion, see the animation loop) ---
   useEffect(() => {
     const gg = globeGroupRef.current;
     if (!gg) return;
     if (selOutlineRef.current) { gg.remove(selOutlineRef.current); disposeGroup(selOutlineRef.current); selOutlineRef.current = null; }
     if (!country) return;
-    const o = makeOutline(country, 0xe9c46a, OUTLINE_R, 1);
+    const o = makeOutline(country, 0xbaed3f, OUTLINE_R, 1);
     gg.add(o); selOutlineRef.current = o;
   }, [country]);
   useEffect(() => {
@@ -671,7 +638,7 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
     >
       <div className="globe-poster" data-ready={texReady} aria-hidden="true" />
       {onSelectCountry && (
-        <button type="button" data-ctl="reset" aria-label={t('resetView')} className="btn panel absolute z-20 left-3 top-[calc(var(--header-h)+3.5rem)] lg:left-1/2 lg:-translate-x-1/2 lg:top-[calc(var(--header-h)+4rem)] min-h-[40px]" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); flyRef.current = { lat: 0, lon: 0, until: performance.now() + 12000 }; frameRef.current = framingTarget(framingRef.current, (containerRef.current?.clientWidth ?? 1) / (containerRef.current?.clientHeight || 1)); }}>
+        <button type="button" data-ctl="reset" aria-label={t('resetView')} className="btn glass absolute z-20 left-3 top-[calc(var(--header-h)+3.5rem)] lg:left-1/2 lg:-translate-x-1/2 lg:top-[calc(var(--header-h)+4rem)] min-h-[40px]" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); flyRef.current = { lat: 0, lon: 0, until: performance.now() + 12000 }; frameRef.current = framingTarget(framingRef.current, (containerRef.current?.clientWidth ?? 1) / (containerRef.current?.clientHeight || 1)); }}>
           <RotateCcw className="w-4 h-4" aria-hidden="true" /><span className="hidden lg:inline">{t('resetView')}</span>
         </button>
       )}

@@ -15,6 +15,7 @@ function setupSpaceBackground() {
   // (html.globe-on) is mounted, because it has a starfield of its own.
   const mq = matchMedia('(prefers-reduced-motion: reduce)');
   const cl = document.documentElement.classList;
+  const off = () => !cl.contains('landing-open'); // v5: stars only behind the landing hero; every other view has the plain ground
   const still = () => mq.matches || cl.contains('globe-on') || cl.contains('rm') || cl.contains('calm');
   const TWINKLE = 120;
   let w = 0, h = 0, base = null, twinkle = [], raf = 0, reduce = still();
@@ -65,12 +66,12 @@ function setupSpaceBackground() {
     ctx.clearRect(0, 0, w, h);
     if (base) ctx.drawImage(base, 0, 0);
     for (const s of twinkle) dot(ctx, s, s.a * (reduce ? 1 : 0.65 + 0.35 * Math.sin(t * s.s + s.p)));
-    raf = reduce || document.hidden ? 0 : requestAnimationFrame(draw);
+    raf = reduce || document.hidden || off() ? 0 : requestAnimationFrame(draw);
   }
   const restart = () => {
     cancelAnimationFrame(raf);
     reduce = still();
-    raf = document.hidden ? 0 : requestAnimationFrame(draw);
+    raf = document.hidden || off() ? 0 : requestAnimationFrame(draw);
   };
 
   document.addEventListener('visibilitychange', restart);

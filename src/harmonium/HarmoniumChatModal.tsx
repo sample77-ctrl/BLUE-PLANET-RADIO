@@ -718,7 +718,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                   key={msg.id}
                   className={`flex flex-col max-w-[85%] rounded-2xl p-3.5 text-xs leading-relaxed ${
                     msg.role === 'user'
-                      ? 'ml-auto bg-[var(--brass)] text-black font-medium'
+                      ? 'ml-auto bg-[var(--signal)] text-black font-medium'
                       : 'mr-auto bg-stone-900/90 text-stone-200 border border-amber-900/40'
                   }`}
                 >

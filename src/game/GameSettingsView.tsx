@@ -73,7 +73,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--brass)] cursor-pointer"
+            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
             aria-label="Back to Game Home"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -101,7 +101,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
         {/* Language & Sound Settings */}
         <div className="p-5 rounded-3xl bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-5 shadow-lg">
           <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
-            <Globe className="w-5 h-5 text-[var(--brass)]" />
+            <Globe className="w-5 h-5 text-[var(--signal)]" />
             <h3 className="font-display font-bold text-sm text-[var(--ink)]">
               {isBn ? 'ভাষা ও সাধারণ অডিও' : 'Language & Audio Engine'}
             </h3>
@@ -117,8 +117,8 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
                 onClick={() => set({ lang: 'en' })}
                 className={`py-2 px-3 rounded-xl border text-xs font-semibold cursor-pointer transition ${
                   lang === 'en'
-                    ? 'bg-[var(--brass)] text-black border-[var(--brass)] shadow-md'
-                    : 'bg-black/30 border-[var(--line)] text-[var(--ink)] hover:border-[var(--brass)]'
+                    ? 'bg-[var(--signal)] text-black border-[var(--signal)] shadow-md'
+                    : 'bg-black/30 border-[var(--line)] text-[var(--ink)] hover:border-[var(--signal)]'
                 }`}
               >
                 English (US)
@@ -127,8 +127,8 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
                 onClick={() => set({ lang: 'bn' })}
                 className={`py-2 px-3 rounded-xl border text-xs font-semibold cursor-pointer transition ${
                   lang === 'bn'
-                    ? 'bg-[var(--brass)] text-black border-[var(--brass)] shadow-md'
-                    : 'bg-black/30 border-[var(--line)] text-[var(--ink)] hover:border-[var(--brass)]'
+                    ? 'bg-[var(--signal)] text-black border-[var(--signal)] shadow-md'
+                    : 'bg-black/30 border-[var(--line)] text-[var(--ink)] hover:border-[var(--signal)]'
                 }`}
               >
                 বাংলা (Bengali)
@@ -148,7 +148,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
               max={100}
               value={masterVolume}
               onChange={(e) => setMasterVolume(Number(e.target.value))}
-              className="w-full accent-[var(--brass)] cursor-pointer h-2 bg-black/40 rounded-lg appearance-none"
+              className="w-full accent-[var(--signal)] cursor-pointer h-2 bg-black/40 rounded-lg appearance-none"
               aria-label="Master Volume"
             />
           </div>
@@ -165,7 +165,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
                   onClick={() => setPitchScale(scale)}
                   className={`py-1.5 px-2 rounded-xl border text-xs font-mono font-semibold capitalize cursor-pointer transition ${
                     pitchScale === scale
-                      ? 'bg-[var(--brass)] text-black border-[var(--brass)] shadow-md'
+                      ? 'bg-[var(--signal)] text-black border-[var(--signal)] shadow-md'
                       : 'bg-black/30 border-[var(--line)] text-[var(--ink)]'
                   }`}
                 >
@@ -177,9 +177,9 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
 
           <button
             onClick={testAudioTone}
-            className="btn btn-ghost border border-[var(--line)] py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer hover:border-[var(--brass)]"
+            className="btn btn-ghost border border-[var(--line)] py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer hover:border-[var(--signal)]"
           >
-            <Volume2 className="w-4 h-4 text-[var(--brass)]" />
+            <Volume2 className="w-4 h-4 text-[var(--signal)]" />
             <span>{isBn ? 'সাউন্ড টেস্ট করুন' : 'Test Audio Tone'}</span>
           </button>
         </div>
@@ -332,7 +332,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
       {/* Keyboard Shortcuts Reference Guide */}
       <div className="p-5 rounded-3xl bg-black/60 border border-[var(--line)] flex flex-col gap-3 shadow-inner">
         <div className="flex items-center gap-2 border-b border-[var(--line)] pb-2.5">
-          <Keyboard className="w-5 h-5 text-[var(--brass)]" />
+          <Keyboard className="w-5 h-5 text-[var(--signal)]" />
           <h3 className="font-display font-bold text-sm text-[var(--ink)]">
             {isBn ? 'সম্পূর্ণ কীবোর্ড শর্টকাট রেফারেন্স' : 'Comprehensive Keyboard Shortcuts Reference'}
           </h3>

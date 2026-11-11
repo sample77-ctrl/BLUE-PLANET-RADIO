@@ -101,7 +101,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
       num: 1,
       titleEn: 'Mission Briefing & Authentic Science',
       titleBn: 'মিশন পরিচিতি ও আসল বিজ্ঞান',
-      icon: <ShieldCheck className="w-4 h-4 text-[var(--brass)]" />,
+      icon: <ShieldCheck className="w-4 h-4 text-[var(--signal)]" />,
     },
     {
       num: 2,
@@ -149,7 +149,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
           <div className="flex items-center gap-3">
             <span className="text-3xl">🚀</span>
             <div>
-              <div className="inline-flex items-center gap-2 text-2xs uppercase tracking-widest text-[var(--brass)] font-semibold font-mono">
+              <div className="inline-flex items-center gap-2 text-2xs uppercase tracking-widest text-[var(--signal)] font-semibold font-mono">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{isBn ? 'মাস্টার আপডেট প্ল্যান' : 'Master Update Plan Roadmap'}</span>
               </div>
@@ -160,7 +160,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
           </div>
 
           <div className="flex items-center gap-2 self-end sm:self-auto">
-            <span className="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-[var(--panel)] border border-[var(--line)] text-[var(--brass)]">
+            <span className="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-[var(--panel)] border border-[var(--line)] text-[var(--signal)]">
               {isBn ? `ধাপ ${activeStep} / ${totalSteps}` : `Step ${activeStep} of ${totalSteps}`}
             </span>
           </div>
@@ -179,7 +179,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                 onClick={() => setActiveStep(step.num)}
                 className={`flex items-center gap-2 py-2 px-3 sm:px-3.5 rounded-2xl text-xs font-semibold whitespace-nowrap transition cursor-pointer border ${
                   isCurrent
-                    ? 'bg-[var(--brass)] text-[var(--brass-ink)] border-[var(--brass)] shadow-md'
+                    ? 'bg-[var(--signal)] text-[var(--on-signal)] border-[var(--signal)] shadow-md'
                     : isCompleted
                     ? 'bg-[var(--panel)] text-[var(--ink)] border-emerald-500/40 hover:border-emerald-400'
                     : 'bg-[var(--abyss)]/60 text-[var(--ink-3)] border-[var(--line)] hover:text-[var(--ink)]'
@@ -203,7 +203,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <ShieldCheck className="w-6 h-6 text-amber-400" />
             </div>
             <div>
-              <span className="text-2xs font-mono text-[var(--brass)] uppercase font-semibold">
+              <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
                 NASA Space Apps Challenge 2026 · The Earth Information Jukebox
               </span>
               <h3 className="text-2xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -266,7 +266,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
           {/* Quick Mission Deploy Grid in Step 1 */}
           <div className="flex flex-col gap-3">
             <h4 className="font-display font-bold text-sm text-[var(--ink)] flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[var(--brass)]" />
+              <Sparkles className="w-4 h-4 text-[var(--signal)]" />
               <span>{isBn ? 'নাসার ৪টি বৈজ্ঞানিক সাউন্ড মিশন:' : 'Four Authentic NASA Sound Missions:'}</span>
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -351,7 +351,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <Sliders className="w-6 h-6 text-cyan-400" />
             </div>
             <div>
-              <span className="text-2xs font-mono text-[var(--brass)] uppercase font-semibold">
+              <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
                 Universal Architecture · Everyone Can Play
               </span>
               <h3 className="text-2xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -367,7 +367,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Mode 1 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--brass)] transition">
+            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🥷</span>
@@ -391,7 +391,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 2 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--brass)] transition">
+            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🗺️</span>
@@ -415,7 +415,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 3 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--brass)] transition">
+            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🎧</span>
@@ -439,7 +439,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 4 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--brass)] transition">
+            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🎛️</span>
@@ -463,7 +463,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 5 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--brass)] transition">
+            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🔍</span>
@@ -487,7 +487,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 6 & 7 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--brass)] transition">
+            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🤝</span>
@@ -521,7 +521,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <Flame className="w-6 h-6 text-amber-400" />
             </div>
             <div>
-              <span className="text-2xs font-mono text-[var(--brass)] uppercase font-semibold">
+              <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
                 Authentic NASA Missions
               </span>
               <h3 className="text-2xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -655,7 +655,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <Volume2 className="w-6 h-6 text-emerald-400" />
             </div>
             <div>
-              <span className="text-2xs font-mono text-[var(--brass)] uppercase font-semibold">
+              <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
                 Transparent Sonification Engine
               </span>
               <h3 className="text-2xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -793,7 +793,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <Clock className="w-6 h-6 text-indigo-400" />
             </div>
             <div>
-              <span className="text-2xs font-mono text-[var(--brass)] uppercase font-semibold">
+              <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
                 Earth Sound Comparison Studio
               </span>
               <h3 className="text-2xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -893,7 +893,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <EyeOff className="w-6 h-6 text-rose-400" />
             </div>
             <div>
-              <span className="text-2xs font-mono text-[var(--brass)] uppercase font-semibold">
+              <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
                 True Blind-First Accessibility Architecture
               </span>
               <h3 className="text-2xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -911,7 +911,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             {/* Spatial Audio Direction Test */}
             <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-3">
               <div className="flex items-center gap-2">
-                <Headphones className="w-4 h-4 text-[var(--brass)]" />
+                <Headphones className="w-4 h-4 text-[var(--signal)]" />
                 <h4 className="font-semibold text-xs text-[var(--ink)]">
                   {isBn ? 'হেডফোনে ৩ডি স্প্যাশিয়াল অডিও টেস্ট' : '3D Binaural Spatial Audio Test'}
                 </h4>
@@ -927,7 +927,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                     ensureAudio();
                     audio.playTone(320, -0.9, 1400);
                   }}
-                  className="btn btn-ghost border border-[var(--line)] text-3xs py-2 px-2 rounded-xl text-center cursor-pointer hover:border-[var(--brass)]"
+                  className="btn btn-ghost border border-[var(--line)] text-3xs py-2 px-2 rounded-xl text-center cursor-pointer hover:border-[var(--signal)]"
                 >
                   ◀ {isBn ? 'বাম কান (-90°)' : 'Left Ear (-90°)'}
                 </button>
@@ -936,7 +936,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                     ensureAudio();
                     audio.playTone(440, 0, 1400);
                   }}
-                  className="btn btn-ghost border border-[var(--line)] text-3xs py-2 px-2 rounded-xl text-center cursor-pointer hover:border-[var(--brass)]"
+                  className="btn btn-ghost border border-[var(--line)] text-3xs py-2 px-2 rounded-xl text-center cursor-pointer hover:border-[var(--signal)]"
                 >
                   ▲ {isBn ? 'সামনে (0°)' : 'Center (0°)'}
                 </button>
@@ -945,7 +945,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                     ensureAudio();
                     audio.playTone(580, 0.9, 1400);
                   }}
-                  className="btn btn-ghost border border-[var(--line)] text-3xs py-2 px-2 rounded-xl text-center cursor-pointer hover:border-[var(--brass)]"
+                  className="btn btn-ghost border border-[var(--line)] text-3xs py-2 px-2 rounded-xl text-center cursor-pointer hover:border-[var(--signal)]"
                 >
                   {isBn ? 'ডান কান (+90°)' : 'Right Ear (+90°)'} ▶
                 </button>
@@ -980,7 +980,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                 <span>{isBn ? 'ভয়েস গাইডেন্স চালান' : 'Speak NASA Data Summary'}</span>
               </button>
               {spokenMessage && (
-                <p className="text-3xs font-mono text-[var(--brass)] bg-black/40 p-2 rounded-lg border border-[var(--line)]" role="status">
+                <p className="text-3xs font-mono text-[var(--signal)] bg-black/40 p-2 rounded-lg border border-[var(--line)]" role="status">
                   "{spokenMessage}"
                 </p>
               )}
@@ -1010,7 +1010,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <Award className="w-6 h-6 text-amber-400" />
             </div>
             <div>
-              <span className="text-2xs font-mono text-[var(--brass)] uppercase font-semibold">
+              <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
                 Verifiable Learning Credential
               </span>
               <h3 className="text-2xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -1024,13 +1024,13 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="p-6 rounded-3xl bg-gradient-to-tr from-amber-950/30 via-[var(--panel)] to-emerald-950/30 border-2 border-[var(--brass)]/60 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
+          <div className="p-6 rounded-3xl bg-gradient-to-tr from-amber-950/30 via-[var(--panel)] to-emerald-950/30 border-2 border-[var(--signal)]/60 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--brass)] flex items-center justify-center overflow-hidden shrink-0">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--signal)] flex items-center justify-center overflow-hidden shrink-0">
                 <img src="/images/ninja_cadet_avatar.png" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
               </div>
               <div>
-                <span className="chip border-[var(--brass)] text-[var(--brass)] text-3xs font-mono font-semibold">
+                <span className="chip border-[var(--signal)] text-[var(--signal)] text-3xs font-mono font-semibold">
                   OFFICIAL CADET CREDENTIAL
                 </span>
                 <h4 className="font-display font-bold text-lg text-[var(--ink)] mt-1">
@@ -1055,7 +1055,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                 onClick={onExploreGlobe}
                 className="btn btn-ghost border border-[var(--line)] text-xs font-semibold py-3 px-5 rounded-2xl flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer"
               >
-                <Compass className="w-4 h-4 text-[var(--brass)]" />
+                <Compass className="w-4 h-4 text-[var(--signal)]" />
                 <span>{isBn ? '৩ডি গ্লোব অন্বেষণ' : 'Launch 3D Globe'}</span>
               </button>
             </div>

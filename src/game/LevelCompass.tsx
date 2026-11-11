@@ -166,7 +166,7 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-2">
-          <span className="chip border-[var(--brass)] text-[var(--brass)] font-semibold">
+          <span className="chip border-[var(--signal)] text-[var(--signal)] font-semibold">
             {isBn ? 'লেভেল ২' : 'Level 2'}
           </span>
           <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--ink)]">
@@ -179,7 +179,7 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
               key={i}
               className={`w-3 h-3 rounded-full transition-colors ${
                 i < currentIdx || (i === currentIdx && isAnswered && selectedId === cur.choices.find((c) => c.correct)?.id)
-                  ? 'bg-[var(--brass)]'
+                  ? 'bg-[var(--signal)]'
                   : i === currentIdx
                   ? 'bg-[var(--rain)] ring-2 ring-[var(--rain)] ring-offset-2 ring-offset-[var(--abyss)]'
                   : 'bg-[var(--line)]'
@@ -192,7 +192,7 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
       <div className="glass panel p-6 sm:p-8 flex flex-col gap-6">
         {/* Headphone Advisory */}
         <div className="flex items-center justify-center gap-2 p-3 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] text-xs sm:text-sm text-[var(--ink-2)]">
-          <Headphones className="w-5 h-5 text-[var(--brass)] shrink-0" />
+          <Headphones className="w-5 h-5 text-[var(--signal)] shrink-0" />
           <span>
             {isBn
               ? 'টিপস: হেডফোন পরলে বাঁ কান ও ডান কানের পার্থক্য সবচেয়ে স্পষ্ট বোঝা যায়!'
@@ -211,7 +211,7 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
             </div>
 
             <div className="flex flex-col items-center gap-1">
-              <Compass className="w-6 h-6 text-[var(--brass)]" />
+              <Compass className="w-6 h-6 text-[var(--signal)]" />
               <span className="text-2xs text-[var(--ink-3)] font-mono">0° Meridian</span>
             </div>
 
@@ -225,7 +225,7 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
 
           <button
             onClick={handlePlaySound}
-            className={`btn btn-brass px-7 py-3 rounded-full flex items-center gap-2.5 font-semibold text-sm ${isPlaying ? 'ring-4 ring-[var(--brass)]' : 'hover:scale-105'}`}
+            className={`btn btn-brass px-7 py-3 rounded-full flex items-center gap-2.5 font-semibold text-sm ${isPlaying ? 'ring-4 ring-[var(--signal)]' : 'hover:scale-105'}`}
           >
             <Volume2 className="w-5 h-5" />
             <span>{isPlaying ? (isBn ? 'শব্দ বাজছে…' : 'Playing in stereo…') : (isBn ? 'শব্দ সংকেত শোনো' : 'Play Clue Sound')}</span>
@@ -261,12 +261,12 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
                     : isFail
                     ? 'border-rose-500 bg-rose-950/40 text-rose-200'
                     : isSelected
-                    ? 'border-[var(--brass)] bg-[var(--panel-2)]'
+                    ? 'border-[var(--signal)] bg-[var(--panel-2)]'
                     : 'border-[var(--glass-border)] bg-[var(--panel)] hover:border-[var(--line)] hover:bg-[var(--panel-2)]'
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-[var(--brass)] shrink-0" />
+                  <MapPin className="w-5 h-5 text-[var(--signal)] shrink-0" />
                   <span className="font-semibold text-base text-[var(--ink)]">
                     {isBn ? c.nameBn : c.nameEn}
                   </span>

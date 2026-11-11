@@ -136,7 +136,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--brass)] cursor-pointer"
+            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
             aria-label="Back to Game Home"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -169,10 +169,10 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       </div>
 
       {/* Cadet Profile Card */}
-      <div className="p-6 rounded-3xl bg-gradient-to-br from-blue-950/30 via-[var(--panel)] to-amber-950/20 border-2 border-[var(--brass)]/50 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+      <div className="p-6 rounded-3xl bg-gradient-to-br from-blue-950/30 via-[var(--panel)] to-amber-950/20 border-2 border-[var(--signal)]/50 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
         <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
           <div className="relative">
-            <div className="w-20 h-20 rounded-3xl bg-[var(--brass)]/20 border-2 border-[var(--brass)] flex items-center justify-center shadow-lg">
+            <div className="w-20 h-20 rounded-3xl bg-[var(--signal)]/20 border-2 border-[var(--signal)] flex items-center justify-center shadow-lg">
               <span className="text-4xl">🧑‍🚀</span>
             </div>
             <span className="absolute -bottom-1 -right-1 p-1 rounded-full bg-emerald-500 text-black">
@@ -188,7 +188,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
                   defaultValue={callsign}
                   onBlur={(e) => handleSaveCallsign(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSaveCallsign((e.target as HTMLInputElement).value)}
-                  className="bg-black/60 border border-[var(--brass)] rounded-xl px-2.5 py-1 text-sm font-semibold text-white"
+                  className="bg-black/60 border border-[var(--signal)] rounded-xl px-2.5 py-1 text-sm font-semibold text-white"
                   autoFocus
                 />
               ) : (
@@ -197,7 +197,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
                   className="flex items-center gap-1.5 cursor-pointer group"
                   title="Click to edit call sign"
                 >
-                  <h3 className="text-xl sm:text-2xl font-display font-bold text-[var(--ink)] group-hover:text-[var(--brass)] transition">
+                  <h3 className="text-xl sm:text-2xl font-display font-bold text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                     {callsign}
                   </h3>
                   <span className="text-3xs text-[var(--ink-3)] font-mono opacity-60 group-hover:opacity-100">
@@ -205,7 +205,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
                   </span>
                 </div>
               )}
-              <span className="chip bg-[var(--abyss)] border-[var(--line)] text-2xs font-mono text-[var(--brass)]">
+              <span className="chip bg-[var(--abyss)] border-[var(--line)] text-2xs font-mono text-[var(--signal)]">
                 Level {cadetLevel}
               </span>
             </div>
@@ -233,7 +233,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
           </div>
           <div className="w-full h-2 rounded-full bg-black/60 overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[var(--brass)] to-emerald-400"
+              className="h-full bg-gradient-to-r from-[var(--signal)] to-emerald-400"
               style={{ width: `${Math.min(100, ((xpEarned % 300) / 300) * 100)}%` }}
             />
           </div>
@@ -246,7 +246,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       {/* Badges Grid */}
       <div className="flex flex-col gap-3">
         <h3 className="text-base font-display font-bold text-[var(--ink)] flex items-center gap-2">
-          <Award className="w-5 h-5 text-[var(--brass)]" />
+          <Award className="w-5 h-5 text-[var(--signal)]" />
           <span>{isBn ? 'অর্জিত ব্যাজ ও মেডেল গ্যালারি' : 'Mission Badges & Accomplishments'}</span>
         </h3>
 
@@ -305,10 +305,10 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       {/* Printable Certificate Modal */}
       {showCertificate && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
-          <div className="relative max-w-2xl w-full bg-[var(--panel)] border-4 border-[var(--brass)] rounded-3xl p-8 sm:p-10 shadow-2xl flex flex-col gap-6 text-center my-8">
+          <div className="relative max-w-2xl w-full bg-[var(--panel)] border-4 border-[var(--signal)] rounded-3xl p-8 sm:p-10 shadow-2xl flex flex-col gap-6 text-center my-8">
             <button
               onClick={() => setShowCertificate(false)}
-              className="absolute top-4 right-4 p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--brass)] cursor-pointer"
+              className="absolute top-4 right-4 p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
               aria-label="Close Certificate"
             >
               <X className="w-4 h-4" />
@@ -316,10 +316,10 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
 
             {/* Official Seal */}
             <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 rounded-full bg-[var(--brass)]/20 border-2 border-[var(--brass)] flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-[var(--signal)]/20 border-2 border-[var(--signal)] flex items-center justify-center">
                 <span className="text-3xl">🌍</span>
               </div>
-              <span className="text-2xs font-mono uppercase tracking-widest text-[var(--brass)] font-semibold">
+              <span className="text-2xs font-mono uppercase tracking-widest text-[var(--signal)] font-semibold">
                 NASA SPACE APPS CHALLENGE 2026 · THE EARTH INFORMATION JUKEBOX
               </span>
               <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
@@ -331,8 +331,8 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
             </div>
 
             {/* Cadet Name */}
-            <div className="border-y-2 border-[var(--brass)]/40 py-4 my-1">
-              <span className="text-3xl sm:text-4xl font-display font-bold text-[var(--brass)] tracking-wide">
+            <div className="border-y-2 border-[var(--signal)]/40 py-4 my-1">
+              <span className="text-3xl sm:text-4xl font-display font-bold text-[var(--signal)] tracking-wide">
                 {callsign}
               </span>
               <div className="text-xs font-mono text-[var(--ink-2)] mt-1">

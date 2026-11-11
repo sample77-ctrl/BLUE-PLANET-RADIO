@@ -122,7 +122,7 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
           <button onClick={onExit} className="btn btn-ghost text-xs px-2.5 py-1">
             ← {isBn ? 'ম্যাপে ফেরত' : 'Exit Mission'}
           </button>
-          <div className="chip border-[var(--brass)] text-[var(--brass)] font-semibold text-xs py-1 px-3">
+          <div className="chip border-[var(--signal)] text-[var(--signal)] font-semibold text-xs py-1 px-3">
             🛰️ {isBn ? 'স্যাটেলাইট সামঞ্জস্য:' : 'Aligned:'} {beams.filter((b) => b.aligned).length} / 4
           </div>
         </div>
@@ -133,10 +133,10 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
       </div>
 
       {/* Main Orbital Harmonizer Console */}
-      <div className="p-6 sm:p-10 rounded-3xl border-2 border-[var(--brass)]/40 relative bg-gradient-to-b from-[#030712] via-[#0b1926] to-[#040810] shadow-2xl flex flex-col items-center gap-8">
+      <div className="p-6 sm:p-10 rounded-3xl border-2 border-[var(--signal)]/40 relative bg-gradient-to-b from-[#030712] via-[#0b1926] to-[#040810] shadow-2xl flex flex-col items-center gap-8">
         {/* Radio Dialogue with Eco-Ninja Cadet Portrait */}
-        <div className="w-full max-w-lg p-2.5 rounded-2xl glass-pop border border-[var(--brass)] flex items-center gap-3 text-xs sm:text-sm font-semibold text-[var(--ink)] shadow-xl">
-          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-10 h-10 rounded-xl border border-[var(--brass)] shrink-0 object-cover shadow-sm" />
+        <div className="w-full max-w-lg p-2.5 rounded-2xl glass-pop border border-[var(--signal)] flex items-center gap-3 text-xs sm:text-sm font-semibold text-[var(--ink)] shadow-xl">
+          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-10 h-10 rounded-xl border border-[var(--signal)] shrink-0 object-cover shadow-sm" />
           <span className="leading-snug">{radioMsg}</span>
         </div>
 
@@ -153,7 +153,7 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
               b.aligned ? (
                 <div
                   key={b.id}
-                  className="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-[var(--brass)] to-transparent"
+                  className="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-[var(--signal)] to-transparent"
                   style={{ transform: `rotate(${b.targetAngle}deg)` }}
                 />
               ) : null
@@ -169,7 +169,7 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
               className={`p-4 rounded-2xl border-2 transition-all flex items-center justify-between gap-3 ${
                 b.aligned
                   ? 'border-emerald-500 bg-emerald-950/20 shadow-lg'
-                  : 'border-[var(--line)] bg-[var(--panel)] hover:border-[var(--brass)]'
+                  : 'border-[var(--line)] bg-[var(--panel)] hover:border-[var(--signal)]'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -207,14 +207,14 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
         {levelWon && (
           <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in rounded-3xl">
             <div className="flex items-center gap-3">
-              <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[var(--brass)] shadow-2xl">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[var(--signal)] shadow-2xl">
                 <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-full h-full object-cover" />
               </div>
               <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-slate-950 shadow-2xl animate-bounce">
                 <Award className="w-10 h-10" />
               </div>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--signal)]">
               {isBn ? 'পৃথিবীর মহাশিবির সিম্ফনি সফল! ⭐⭐⭐' : 'Earth Symphony Harmonized! ⭐⭐⭐'}
             </h2>
             <p className="text-xs sm:text-sm text-[var(--ink-2)] max-w-md">

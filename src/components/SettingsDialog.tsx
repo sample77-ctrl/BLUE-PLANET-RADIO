@@ -34,7 +34,7 @@ const SHORTCUTS: [string, string, string][] = [
 const Toggle: React.FC<{ label: string; on: boolean; onClick: () => void; note?: string }> = ({ label, on, onClick, note }) => (
   <button role="switch" aria-checked={on} onClick={onClick} className="w-full flex items-center justify-between gap-3 py-2.5 cursor-pointer text-left">
     <span>{label}{note && <span className="block text-xs text-[var(--ink-3)] mt-0.5">{note}</span>}</span>
-    <span className={`w-11 h-6 shrink-0 rounded-full p-0.5 transition ${on ? 'bg-[var(--brass)]' : 'bg-[var(--line)]'}`}><span className={`block w-5 h-5 rounded-full bg-white transition ${on ? 'translate-x-5' : ''}`} /></span>
+    <span className={`w-11 h-6 shrink-0 rounded-full p-0.5 transition ${on ? 'bg-[var(--signal)]' : 'bg-[var(--line)]'}`}><span className={`block w-5 h-5 rounded-full bg-white transition ${on ? 'translate-x-5' : ''}`} /></span>
   </button>
 );
 
@@ -74,7 +74,7 @@ export const SettingsDialog: React.FC<Props> = ({ open, onClose, volume, onVolum
 
         <label className="block mt-5">
           <span className="label">{p.t('volume')}: <span className="tnum">{Math.round(volume * 100)}%</span></span>
-          <input type="range" min={0} max={1.2} step={0.05} value={volume} onChange={(e) => onVolume(+e.target.value)} className="w-full mt-2 accent-[var(--brass)]" />
+          <input type="range" min={0} max={1.2} step={0.05} value={volume} onChange={(e) => onVolume(+e.target.value)} className="w-full mt-2 accent-[var(--signal)]" />
         </label>
 
         <h3 className="font-display text-lg font-semibold mt-6">{p.t('shortcuts')}</h3>

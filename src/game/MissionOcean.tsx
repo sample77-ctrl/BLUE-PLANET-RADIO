@@ -390,8 +390,8 @@ export const MissionOcean: React.FC<Props> = ({ onComplete, onExit, audioReady: 
         <canvas ref={canvasRef} width={900} height={460} className="block w-full h-[460px]" />
 
         {/* Radio Dialogue with Eco-Ninja Cadet Portrait */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 max-w-xl w-11/12 p-2.5 rounded-2xl glass-pop border border-[var(--brass)] flex items-center gap-3 text-xs sm:text-sm font-semibold pointer-events-none text-[var(--ink)] shadow-xl">
-          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-9 h-9 rounded-xl border border-[var(--brass)] shrink-0 object-cover shadow-sm" />
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 max-w-xl w-11/12 p-2.5 rounded-2xl glass-pop border border-[var(--signal)] flex items-center gap-3 text-xs sm:text-sm font-semibold pointer-events-none text-[var(--ink)] shadow-xl">
+          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-9 h-9 rounded-xl border border-[var(--signal)] shrink-0 object-cover shadow-sm" />
           <span className="leading-snug">{radioMsg}</span>
         </div>
 
@@ -399,14 +399,14 @@ export const MissionOcean: React.FC<Props> = ({ onComplete, onExit, audioReady: 
         {levelWon && (
           <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in">
             <div className="flex items-center gap-3">
-              <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-[var(--brass)] shadow-2xl">
+              <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-[var(--signal)] shadow-2xl">
                 <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-full h-full object-cover" />
               </div>
               <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-slate-950 shadow-2xl animate-bounce">
                 <Award className="w-8 h-8" />
               </div>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--signal)]">
               {isBn ? 'সাগরের সাবমেরিন মিশন সম্পন্ন! ⭐⭐⭐' : 'Ocean Submarine Mission Complete! ⭐⭐⭐'}
             </h2>
             <p className="text-xs sm:text-sm text-[var(--ink-2)] max-w-md">
@@ -441,7 +441,7 @@ export const MissionOcean: React.FC<Props> = ({ onComplete, onExit, audioReady: 
               onTouchEnd={() => (keysRef.current.up = false)}
               onMouseDown={() => (keysRef.current.up = true)}
               onMouseUp={() => (keysRef.current.up = false)}
-              className="w-11 h-11 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-center cursor-pointer shadow-md active:bg-[var(--brass)]"
+              className="w-11 h-11 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-center cursor-pointer shadow-md active:bg-[var(--signal)]"
               aria-label="Sub Up"
             >
               <ArrowUp className="w-5 h-5" />
@@ -452,7 +452,7 @@ export const MissionOcean: React.FC<Props> = ({ onComplete, onExit, audioReady: 
               onTouchEnd={() => (keysRef.current.left = false)}
               onMouseDown={() => (keysRef.current.left = true)}
               onMouseUp={() => (keysRef.current.left = false)}
-              className="w-11 h-11 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-center cursor-pointer shadow-md active:bg-[var(--brass)]"
+              className="w-11 h-11 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-center cursor-pointer shadow-md active:bg-[var(--signal)]"
               aria-label="Sub Left"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -462,7 +462,7 @@ export const MissionOcean: React.FC<Props> = ({ onComplete, onExit, audioReady: 
               onTouchEnd={() => (keysRef.current.down = false)}
               onMouseDown={() => (keysRef.current.down = true)}
               onMouseUp={() => (keysRef.current.down = false)}
-              className="w-11 h-11 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-center cursor-pointer shadow-md active:bg-[var(--brass)]"
+              className="w-11 h-11 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-center cursor-pointer shadow-md active:bg-[var(--signal)]"
               aria-label="Sub Down"
             >
               <ArrowDown className="w-5 h-5" />
@@ -472,7 +472,7 @@ export const MissionOcean: React.FC<Props> = ({ onComplete, onExit, audioReady: 
               onTouchEnd={() => (keysRef.current.right = false)}
               onMouseDown={() => (keysRef.current.right = true)}
               onMouseUp={() => (keysRef.current.right = false)}
-              className="w-11 h-11 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-center cursor-pointer shadow-md active:bg-[var(--brass)]"
+              className="w-11 h-11 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-center cursor-pointer shadow-md active:bg-[var(--signal)]"
               aria-label="Sub Right"
             >
               <ArrowRight className="w-5 h-5" />

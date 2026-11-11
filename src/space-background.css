@@ -1,43 +1,15 @@
-/* The only definition of the page backdrop: html/body are transparent, #space-bg paints behind everything (see also index.css tokens). */
-html { background: var(--abyss, #071019); }
+/* v5 "Instrument": the page is the near-black ground (--ground) with a faint grain and one soft field of the signal colour.
+   Stars (#stars) exist only behind the landing hero (html.landing-open); every other view has no starfield. */
+html { background: var(--ground, #0a0a0a); }
 body { background: transparent; }
 
-#space-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-  background: radial-gradient(ellipse at 60% 35%, #0f2a3d 0%, #0a1a28 40%, #060d15 100%);
-}
+#space-bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; background: var(--ground, #0a0a0a); }
+/* The signal field: follows what is playing (--signal), a corner glow, no animation */
+#space-bg::before { content: ""; position: absolute; inset: 0; background: radial-gradient(62% 48% at 92% -10%, color-mix(in oklch, var(--signal, #baed3f) 15%, transparent), transparent 74%), radial-gradient(48% 36% at -8% 108%, color-mix(in oklch, var(--signal, #baed3f) 7%, transparent), transparent 72%); }
+/* Grain: one tiny SVG noise tile (~0.5 kB) */
+#space-bg::after { content: ""; position: absolute; inset: 0; opacity: .07; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E"); }
+html.hc #space-bg::before, html.hc #space-bg::after { display: none; }
+@media (forced-colors: active), (prefers-contrast: more) { #space-bg::before, #space-bg::after { display: none; } }
 
-/* Milky Way band */
-#space-bg::before {
-  content: "";
-  position: absolute;
-  left: -25%; top: 25%;
-  width: 150%; height: 55%;
-  transform: translate3d(0, var(--par-milky, 0px), 0) rotate(-32deg);
-  will-change: transform;
-  background: radial-gradient(ellipse at center,
-    rgba(190,170,230,.24) 0%,
-    rgba(120,100,200,.13) 35%,
-    rgba(40,60,140,.06) 60%,
-    transparent 75%);
-  filter: blur(30px);
-  opacity: .35;
-}
-
-/* Nebula tints */
-#space-bg::after {
-  content: "";
-  position: absolute;
-  inset: -240px 0; /* room for the parallax shift */
-  transform: translate3d(0, var(--par-nebula, 0px), 0);
-  will-change: transform;
-  background:
-    radial-gradient(circle at 20% 72%, rgba(168,85,247,.14), transparent 40%),
-    radial-gradient(circle at 80% 25%, rgba(56,189,248,.11), transparent 40%);
-}
-
-#stars { position: absolute; inset: 0 0 -80px 0; width: 100%; height: calc(100% + 80px); transform: translate3d(0, var(--par-stars, 0px), 0); will-change: transform; }
+#stars { position: absolute; inset: 0 0 -80px 0; width: 100%; height: calc(100% + 80px); transform: translate3d(0, var(--par-stars, 0px), 0); will-change: transform; display: none; }
+html.landing-open #stars { display: block; }
