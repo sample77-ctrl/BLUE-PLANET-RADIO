@@ -43,6 +43,7 @@
   --space-12: 3rem;
   --ease-out: cubic-bezier(.22, 1, .36, 1);
   --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ease-spring: linear(0, .009, .035 2.1%, .141, .281 6.7%, .723 12.9%, .938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%, 1.159, 1.163, 1.161, 1.154 29.9%, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, .991, .977 51%, .974 53.8%, .975 57.1%, .997 69.8%, 1.003 76.9%, 1); /* a real spring: a small overshoot that settles */
   --dur-fast: 150ms;
   --dur-med: 300ms;
   --dur-slow: 600ms;
@@ -130,6 +131,13 @@ html[lang='bn'] .readout { text-transform: none; letter-spacing: .02em; }
 .glass-strong { background: var(--glass-bg-strong); -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(140%); backdrop-filter: blur(var(--glass-blur-strong)) saturate(140%); }
 /* Behind dialogs and sheets: a light dim, so the glass panel on top still shows the page through its blur */
 .scrim { background: rgb(0 0 0 / .5); }
+@supports not (transition-timing-function: linear(0, 1)) { :root { --ease-spring: var(--ease-out); } } /* no linear() easing: the plain ease-out (the two rules never both apply, so their order does not matter) */
+/* Dialogs, menus and sheets arrive with a spring instead of appearing (@starting-style; the durations are 0 under reduced motion, so nothing moves then). Opacity and scale only: Tailwind's translate classes on tooltips stay untouched. */
+.scrim { transition: opacity var(--dur-fast) var(--ease-out); }
+.glass-pop { transition: opacity var(--dur-fast) var(--ease-out), scale var(--dur-med) var(--ease-spring); transform-origin: 50% 100%; }
+@starting-style { .scrim { opacity: 0; } .glass-pop { opacity: 0; scale: .96; } }
+.scrim > .glass-pop.rounded-t-2xl { transition: opacity var(--dur-fast) var(--ease-out), translate var(--dur-slow) var(--ease-spring); }
+@starting-style { .scrim > .glass-pop.rounded-t-2xl { scale: 1; translate: 0 6rem; } }
 @supports not (backdrop-filter: blur(1px)) { .glass, .glass-strong, .glass-pop { background: var(--panel); } .scrim { background: rgb(0 0 0 / .7); } }
 .glass-pop { background: var(--glass-bg-pop); border: 1px solid var(--glass-border); box-shadow: var(--glass-hi), 0 18px 48px -12px rgb(0 0 0 / .75); border-radius: var(--radius-lg); -webkit-backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); }
 @media (max-width: 640px) { :root { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28px; } }
