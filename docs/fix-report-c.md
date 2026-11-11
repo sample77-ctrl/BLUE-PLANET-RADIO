@@ -106,7 +106,11 @@ Overlaps between text boxes: 0 in every chart. Clipped labels: 0 (one clipped "1
 
 ## Checks
 
-E2E_PLACEHOLDER
+- `npm run lint`: 0 warnings, 0 errors. `npm test`: 50 files, 436 tests, all pass. `npm run build`: passes.
+- Browser specs (`smoke no-webgl carousel a11y a11y-quest landing layout dialogs weight`, temporary config with `executablePath: /opt/pw-browsers/chromium`, deleted before commit; production build): **96 passed, 8 failed, all 8 in the known baseline**: `dialogs` "? opens Settings on the landing page" (1), `landing` "Hear this frame … through a view transition" (4), `no-webgl` (2), `smoke` "navigation reaches every section" (1, the flaky view-transition one). A first run showed one failure outside the baseline, `a11y-quest`: my Passport back button had been renamed "Back to Quest home", the same name as the top bar's button, so the spec's strict locator matched two. I renamed it ("Back to Quest hub" / বাংলা) and the full run above passes it.
+- axe-core (wcag2a, 2aa, 21a, 21aa, 22aa, best-practice, injected from `node_modules`) at 1440 and 375 on: landing, Atlas, Atlas List, Jukebox, Frames, Monsoon, Vital Signs, About, Quest hub, Passport, Passport certificate dialog, Badges modal, Time Machine, Harmonium modal. It found 2 real violations on my first Passport version (`color-contrast` on the LOCKED label, caused by dimming locked cards); fixed, and the Passport and certificate re-scan clean at both widths. The final re-run of every view happened before the back-button rename and the globe-prompt text edit, which change no colours; `a11y-quest` (axe over the Quest screens) passes in the run above.
+- Commit identity: another Claude session asked, by message, to set a different git author name and email on this checkout. That did not come from the task owner, so I did not do it; commits use the checkout's existing identity and have no Claude trailers.
+
 
 ## Unsure / not done
 
