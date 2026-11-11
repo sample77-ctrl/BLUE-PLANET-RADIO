@@ -19,6 +19,7 @@ const S = {
   chatSourceBuiltIn: { en: 'Built-in answer, not AI', bn: 'অ্যাপের নিজস্ব উত্তর, এআই নয়' },
   predictionNote: { en: 'Illustrative pitch mapping', bn: 'দৃষ্টান্তমূলক সুর-রূপান্তর' },
   predictionWhy: { en: 'Year (illustrative): {y}, +{n} years. Anomaly +{a}°C from pitch {f} Hz.', bn: 'সাল (দৃষ্টান্ত): {y}, {n} বছর পর। সুর {f} Hz থেকে অসংগতি +{a}°C।' },
+  predictHint: { en: 'No AI key on this site: the text is built in, not written by AI.', bn: 'এই সাইটে এআই কী নেই: লেখাটি অ্যাপের নিজস্ব, এআই-এর লেখা নয়।' },
   predictionTitle: { en: 'Illustrative future, from your pitch', bn: 'আপনার সুর থেকে দৃষ্টান্তমূলক ভবিষ্যৎ' },
 } as const;
 export type HKey = keyof typeof S;

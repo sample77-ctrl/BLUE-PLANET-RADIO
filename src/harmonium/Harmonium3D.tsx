@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { HARMONIUM_KEYS, harmoniumAudio, type HarmoniumNote } from './harmoniumAudio';
-import { Volume2, VolumeX, Wind, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, Wind, Keyboard } from 'lucide-react';
+import '../game/quest.css';
 
 interface Props {
   onNotePlayed?: (note: HarmoniumNote) => void;
@@ -12,7 +13,6 @@ export const Harmonium3D: React.FC<Props> = ({ onNotePlayed, isBn = false }) => 
   const [droneOn, setDroneOn] = useState(false);
   const [bellowsPumping, setBellowsPumping] = useState(false);
   const [bellowsLevel, setBellowsLevel] = useState(85);
-  const [couplerOn, setCouplerOn] = useState(true);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -98,21 +98,24 @@ export const Harmonium3D: React.FC<Props> = ({ onNotePlayed, isBn = false }) => 
 
     let animId = 0;
     let phase = 0;
+    const tok = (n: string) => getComputedStyle(document.documentElement).getPropertyValue(n).trim() || '#baed3f';
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const isSounding = activeKeys.size > 0 || droneOn;
 
+      // idle: a flat line, so the strip never looks broken
+      ctx.beginPath(); ctx.lineWidth = 1; ctx.strokeStyle = tok('--hair'); ctx.moveTo(0, canvas.height / 2); ctx.lineTo(canvas.width, canvas.height / 2); ctx.stroke();
       if (isSounding) {
         phase += 0.08;
         const width = canvas.width;
         const height = canvas.height;
         const centerY = height / 2;
 
-        // Golden acoustic harmonium reed harmonics wave
+        // Reed harmonics wave: the signal colour, read live from the theme
         ctx.beginPath();
         ctx.lineWidth = 2.5;
-        ctx.strokeStyle = '#f59e0b'; // Amber-500
+        ctx.strokeStyle = tok('--signal');
         for (let x = 0; x < width; x += 4) {
           const freqFactor = activeKeys.size > 0 ? 0.04 : 0.02;
           const amp = isSounding ? 14 : 2;
@@ -125,7 +128,7 @@ export const Harmonium3D: React.FC<Props> = ({ onNotePlayed, isBn = false }) => 
         // Shimmering second wave (female reed)
         ctx.beginPath();
         ctx.lineWidth = 1.5;
-        ctx.strokeStyle = 'rgba(251, 191, 36, 0.6)'; // Amber-400
+        ctx.strokeStyle = tok('--ink-3');
         for (let x = 0; x < width; x += 4) {
           const y = centerY + Math.cos(x * 0.05 - phase * 1.2) * 10;
           if (x === 0) ctx.moveTo(x, y);
@@ -156,269 +159,91 @@ export const Harmonium3D: React.FC<Props> = ({ onNotePlayed, isBn = false }) => 
   // Split keys into white and black keys layout
   const whiteKeys = HARMONIUM_KEYS.filter((k) => !k.isBlack);
   const blackKeys = HARMONIUM_KEYS.filter((k) => k.isBlack);
+  // a black key sits on the seam after the white key it follows (the chromatic order of HARMONIUM_KEYS)
+  const blackLeft = (k: HarmoniumNote) => {
+    const i = HARMONIUM_KEYS.indexOf(k);
+    const whitesBefore = HARMONIUM_KEYS.slice(0, i).filter((n) => !n.isBlack).length;
+    return `calc(${(whitesBefore / whiteKeys.length) * 100}% - 3.1%)`;
+  };
+  const keyProps = (k: HarmoniumNote, on: boolean) => ({
+    type: 'button' as const,
+    'aria-pressed': on,
+    'aria-label': `${isBn ? k.swaraBn : k.swara}, ${Math.round(k.freq)} Hz, ${isBn ? 'কীবোর্ড' : 'keyboard'} ${k.keyboardShortcut}`,
+    'data-on': on,
+    onMouseDown: () => handleNoteStart(k.key),
+    onMouseUp: () => handleNoteEnd(k.key),
+    onMouseLeave: () => on && handleNoteEnd(k.key),
+    onTouchStart: (e: React.TouchEvent) => { e.preventDefault(); handleNoteStart(k.key); },
+    onTouchEnd: (e: React.TouchEvent) => { e.preventDefault(); handleNoteEnd(k.key); },
+    // Enter / Space on a focused key plays it too (the letter keys already do)
+    onKeyDown: (e: React.KeyboardEvent) => { if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) { e.preventDefault(); e.stopPropagation(); if (!on) handleNoteStart(k.key); } },
+    onKeyUp: (e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); handleNoteEnd(k.key); } },
+  });
 
   return (
-    <div className="w-full flex flex-col items-center gap-4 select-none" role="region" aria-label="3D Interactive Harmonium">
-      {/* 3D Harmonium Cabinet Housing */}
-      <div className="relative w-full max-w-3xl rounded-3xl p-5 sm:p-7 bg-gradient-to-b from-[#451e11] via-[#2d120a] to-[#1a0805] border-4 border-[#8b4513] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] flex flex-col gap-4">
-        {/* Brass corner brackets decoration */}
-        <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-amber-400/80 rounded-tl pointer-events-none" />
-        <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-amber-400/80 rounded-tr pointer-events-none" />
-        <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-amber-400/80 rounded-bl pointer-events-none" />
-        <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-amber-400/80 rounded-br pointer-events-none" />
-
-        {/* Top Control Bar: Bellows Pump, Drone Stops, Coupler & Inlay Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-amber-900/60 pb-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-600 to-amber-800 p-0.5 shadow-md flex items-center justify-center border border-amber-400/40">
-              <span className="text-xl">🪗</span>
-            </div>
-            <div>
-              <h3 className="font-display font-bold text-sm sm:text-base text-amber-200 tracking-wide flex items-center gap-2">
-                <span>{isBn ? 'ঐতিহ্যবাহী ক্লাসিক্যাল হারমোনিয়াম' : 'Classical Indian Teakwood Harmonium'}</span>
-                <span className="chip border-amber-400/40 bg-amber-950/60 text-amber-300 text-3xs font-mono font-semibold uppercase">
-                  FREE REED
-                </span>
-              </h3>
-              <p className="text-2xs text-amber-300/70 font-mono">
-                Dual Reeds (Male + Female) · Bellows Air Modulation · A4 = 440 Hz
-              </p>
-            </div>
+    <div className="w-full flex flex-col gap-3 select-none" role="region" aria-label={isBn ? 'ইন্টার‍্যাক্টিভ হারমোনিয়াম' : 'Interactive harmonium'}>
+      <div className="hm-case p-4 sm:p-5 flex flex-col gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="font-display font-bold text-base text-[var(--ink)] flex flex-wrap items-center gap-2">
+              <span>{isBn ? 'হারমোনিয়াম' : 'Harmonium'}</span>
+              <span className="chip">{isBn ? 'ফ্রি রিড' : 'FREE REED'}</span>
+            </h3>
+            <p className="q-label mt-1">{isBn ? 'দুই রিড · হাওয়ার চাপ · A4 = 440 Hz' : 'Two reeds · bellows pressure · A4 = 440 Hz'}</p>
           </div>
-
-          {/* Knobs and Drone Switch */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleToggleDrone}
-              className={`text-2xs font-semibold py-1.5 px-3 rounded-xl border flex items-center gap-1.5 transition cursor-pointer shadow-md ${
-                droneOn
-                  ? 'bg-amber-500 text-black border-amber-300 shadow-amber-500/20'
-                  : 'bg-black/50 border-amber-800/60 text-amber-300 hover:border-amber-400'
-              }`}
-              title="Continuous Sa (Root) Drone"
-            >
-              {droneOn ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-              <span>{isBn ? 'সুর/ড্রোন (Sur)' : 'Sa Drone'}</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <button type="button" onClick={handleToggleDrone} aria-pressed={droneOn} className="btn text-sm" title={isBn ? 'অবিরাম সা (মূল সুর) ড্রোন' : 'Continuous Sa (root) drone'}>
+              {droneOn ? <Volume2 className="w-4 h-4" aria-hidden="true" /> : <VolumeX className="w-4 h-4" aria-hidden="true" />}
+              <span>{isBn ? 'সা ড্রোন' : 'Sa drone'}</span>
             </button>
-
-            <button
-              onClick={() => setCouplerOn(!couplerOn)}
-              className={`text-2xs font-semibold py-1.5 px-3 rounded-xl border flex items-center gap-1 transition cursor-pointer ${
-                couplerOn
-                  ? 'bg-amber-950/80 border-amber-400 text-amber-200'
-                  : 'bg-black/50 border-amber-900/40 text-amber-400/50'
-              }`}
-            >
-              <span>{isBn ? 'কাপলার' : 'Octave Coupler'}</span>
-            </button>
-
-            {/* Manual Bellows Pump Button */}
-            <button
-              onClick={handleManualPump}
-              className={`text-2xs font-semibold py-1.5 px-3 rounded-xl border flex items-center gap-1.5 transition cursor-pointer shadow-md ${
-                bellowsPumping
-                  ? 'bg-amber-400 text-black border-white scale-95'
-                  : 'bg-gradient-to-r from-amber-700 to-amber-900 text-amber-100 border-amber-500 hover:scale-105'
-              }`}
-              title="Pump Bellows to charge air (or press Spacebar)"
-            >
-              <Wind className="w-3.5 h-3.5" />
-              <span>{isBn ? 'হাওয়া দিন (Pump)' : 'Pump Bellows (Space)'}</span>
+            <button type="button" onClick={handleManualPump} aria-pressed={bellowsPumping} className="btn text-sm" title={isBn ? 'হাওয়া দিন (বা স্পেসবার চাপুন)' : 'Pump the bellows (or press Space)'}>
+              <Wind className="w-4 h-4" aria-hidden="true" />
+              <span>{isBn ? 'হাওয়া দিন' : 'Pump bellows'}</span>
             </button>
           </div>
         </div>
 
-        {/* Animated Bellows Folds Visual (Expanding / Contracting on air pump) */}
-        <div className="w-full h-4 rounded-full bg-black/60 border border-amber-900/50 overflow-hidden flex items-center px-1">
-          <div
-            className={`h-2 rounded-full transition-all duration-300 ${
-              bellowsPumping
-                ? 'bg-gradient-to-r from-amber-300 via-amber-400 to-emerald-400 shadow-[0_0_10px_#f59e0b]'
-                : 'bg-amber-600/70'
-            }`}
-            style={{ width: `${bellowsLevel}%` }}
-          />
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between q-label"><span id="bellows-label">{isBn ? 'বেলোজ চাপ' : 'Bellows pressure'}</span><span className="tnum">{bellowsLevel}%</span></div>
+          <div className="q-bar" role="meter" aria-labelledby="bellows-label" aria-valuemin={0} aria-valuemax={100} aria-valuenow={bellowsLevel}><i style={{ width: `${bellowsLevel}%` }} /></div>
         </div>
 
-        {/* Sound Grille with Acoustic Wave Visualizer */}
-        <div className="relative w-full h-10 rounded-2xl bg-[#1e0a05] border border-amber-900/60 overflow-hidden flex items-center justify-center px-4">
-          <canvas ref={canvasRef} width={640} height={40} className="w-full h-full block" />
-          <div className="absolute inset-0 flex items-center justify-between px-3 pointer-events-none text-3xs font-mono text-amber-400/40">
-            <span>◄ BELLOWS AIR PRESSURE: {bellowsLevel}%</span>
-            <span>ACOUSTIC RESONANCE CHAMBER ►</span>
+        <div className="h-10 bg-[var(--ground)] border border-[var(--hair)] rounded-lg overflow-hidden">
+          <canvas ref={canvasRef} width={640} height={40} className="w-full h-full block" aria-hidden="true" />
+        </div>
+
+        <div className="hm-keybed">
+          <div className="hm-keys" role="group" aria-label={isBn ? 'হারমোনিয়ামের চাবি' : 'Harmonium keys'}>
+            {whiteKeys.map((k) => (
+              <button key={k.key} {...keyProps(k, activeKeys.has(k.key))} className="hm-white">
+                <span className="hm-note">{isBn ? k.swaraBn : k.swara}</span>
+                <span className="hm-sub">{k.keyboardShortcut}</span>
+                <span className="hm-sub">{Math.round(k.freq)}</span>
+              </button>
+            ))}
+            {blackKeys.map((k) => (
+              <button key={k.key} {...keyProps(k, activeKeys.has(k.key))} className="hm-black" style={{ left: blackLeft(k) }}>
+                <span className="hm-note">{isBn ? k.swaraBn.split(' ')[0] : k.swara}</span>
+                <span className="hm-sub">{k.keyboardShortcut}</span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* 3D Realistic Keybed (White and Black Keys) */}
-        <div className="relative w-full pt-1 pb-3 px-2 rounded-2xl bg-gradient-to-b from-[#2a1208] to-[#120603] border-2 border-amber-900/80 shadow-inner flex justify-center overflow-x-auto scroll-thin">
-          <div className="relative flex min-w-[540px] max-w-full justify-between items-start pt-1 pb-1">
-            {/* White Keys */}
-            <div className="flex gap-1 w-full justify-between">
-              {whiteKeys.map((k) => {
-                const isActive = activeKeys.has(k.key);
-                return (
-                  <button
-                    key={k.key}
-                    onMouseDown={() => handleNoteStart(k.key)}
-                    onMouseUp={() => handleNoteEnd(k.key)}
-                    onMouseLeave={() => isActive && handleNoteEnd(k.key)}
-                    onTouchStart={(e) => {
-                      e.preventDefault();
-                      handleNoteStart(k.key);
-                    }}
-                    onTouchEnd={(e) => {
-                      e.preventDefault();
-                      handleNoteEnd(k.key);
-                    }}
-                    className={`relative flex-1 min-w-[34px] sm:min-w-[48px] h-36 sm:h-44 rounded-b-xl border-x border-b border-stone-400/60 flex flex-col justify-end items-center pb-2 cursor-pointer transition-all duration-75 ${
-                      isActive
-                        ? 'bg-gradient-to-b from-amber-200 via-amber-300 to-amber-400 shadow-[inset_0_6px_12px_rgba(0,0,0,0.6)] translate-y-1'
-                        : 'bg-gradient-to-b from-[#faf6ef] via-[#f5ede0] to-[#e8decb] hover:from-white shadow-[0_6px_8px_rgba(0,0,0,0.7)]'
-                    }`}
-                    aria-label={`${k.swara} (${k.key}) - Shortcut: ${k.keyboardShortcut}`}
-                  >
-                    <span className="text-3xs font-bold font-display text-amber-950 block">
-                      {isBn ? k.swaraBn : k.swara}
-                    </span>
-                    <span className="text-3xs font-mono text-stone-600 block mt-0.5">
-                      {k.keyboardShortcut}
-                    </span>
-                    <span className="text-4xs font-mono text-stone-500 block">
-                      {Math.round(k.freq)}Hz
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Black Keys (Overlay placed on exact swara positions) */}
-            <div className="absolute top-1 left-0 right-0 flex pointer-events-none px-1">
-              {/* C#4 */}
-              <div className="flex w-full">
-                <div className="w-[6.5%]" />
-                <BlackKey
-                  note={blackKeys[0]}
-                  isActive={activeKeys.has(blackKeys[0].key)}
-                  onStart={() => handleNoteStart(blackKeys[0].key)}
-                  onEnd={() => handleNoteEnd(blackKeys[0].key)}
-                  isBn={isBn}
-                />
-                <div className="w-[4%]" />
-                {/* D#4 */}
-                <BlackKey
-                  note={blackKeys[1]}
-                  isActive={activeKeys.has(blackKeys[1].key)}
-                  onStart={() => handleNoteStart(blackKeys[1].key)}
-                  onEnd={() => handleNoteEnd(blackKeys[1].key)}
-                  isBn={isBn}
-                />
-                <div className="w-[14.5%]" />
-                {/* F#4 */}
-                <BlackKey
-                  note={blackKeys[2]}
-                  isActive={activeKeys.has(blackKeys[2].key)}
-                  onStart={() => handleNoteStart(blackKeys[2].key)}
-                  onEnd={() => handleNoteEnd(blackKeys[2].key)}
-                  isBn={isBn}
-                />
-                <div className="w-[4%]" />
-                {/* G#4 */}
-                <BlackKey
-                  note={blackKeys[3]}
-                  isActive={activeKeys.has(blackKeys[3].key)}
-                  onStart={() => handleNoteStart(blackKeys[3].key)}
-                  onEnd={() => handleNoteEnd(blackKeys[3].key)}
-                  isBn={isBn}
-                />
-                <div className="w-[4%]" />
-                {/* A#4 */}
-                <BlackKey
-                  note={blackKeys[4]}
-                  isActive={activeKeys.has(blackKeys[4].key)}
-                  onStart={() => handleNoteStart(blackKeys[4].key)}
-                  onEnd={() => handleNoteEnd(blackKeys[4].key)}
-                  isBn={isBn}
-                />
-                <div className="w-[14.5%]" />
-                {/* C#5 */}
-                {blackKeys[5] && (
-                  <BlackKey
-                    note={blackKeys[5]}
-                    isActive={activeKeys.has(blackKeys[5].key)}
-                    onStart={() => handleNoteStart(blackKeys[5].key)}
-                    onEnd={() => handleNoteEnd(blackKeys[5].key)}
-                    isBn={isBn}
-                  />
-                )}
-                <div className="w-[4%]" />
-                {/* D#5 */}
-                {blackKeys[6] && (
-                  <BlackKey
-                    note={blackKeys[6]}
-                    isActive={activeKeys.has(blackKeys[6].key)}
-                    onStart={() => handleNoteStart(blackKeys[6].key)}
-                    onEnd={() => handleNoteEnd(blackKeys[6].key)}
-                    isBn={isBn}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Keyboard Helper Footer */}
-        <div className="flex flex-wrap items-center justify-between gap-2 text-3xs font-mono text-amber-300/70 border-t border-amber-900/40 pt-2 px-1">
-          <div className="flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+        <div className="flex flex-wrap items-center justify-between gap-2 text-[var(--ink-2)] border-t border-[var(--hair)] pt-3 text-xs">
+          <p className="flex items-start gap-2 min-w-0">
+            <Keyboard className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
             <span>
               {isBn
-                ? 'কীবোর্ড দিয়ে বাজান: সাদা কি (A, S, D, F, G, H, J, K, L, ;) | কালো কি (W, E, T, Y, U, O, P) | স্পেসবার = হাওয়া দেওয়া'
-                : 'Computer Keys: White (A, S, D, F, G, H, J, K, L, ;) | Black (W, E, T, Y, U, O, P) | Spacebar = Bellows Pump'}
+                ? 'কীবোর্ড: সাদা চাবি A S D F G H J K L ; · কালো চাবি W E T Y U O P · স্পেসবার = হাওয়া দেওয়া'
+                : 'Keyboard: white A S D F G H J K L ; · black W E T Y U O P · Space = pump bellows'}
             </span>
-          </div>
-          <span className="text-amber-400 font-semibold">
-            {activeKeys.size > 0 ? `♪ Playing: ${Array.from(activeKeys).join(', ')}` : 'Ready to Play'}
+          </p>
+          <span className="font-mono text-[var(--ink)]" role="status">
+            {activeKeys.size > 0 ? `${isBn ? 'বাজছে' : 'Playing'}: ${Array.from(activeKeys).join(', ')}` : (isBn ? 'বাজাতে প্রস্তুত' : 'Ready to play')}
           </span>
         </div>
       </div>
     </div>
-  );
-};
-
-// Sub-component for individual black key
-const BlackKey: React.FC<{
-  note: HarmoniumNote;
-  isActive: boolean;
-  onStart: () => void;
-  onEnd: () => void;
-  isBn: boolean;
-}> = ({ note, isActive, onStart, onEnd, isBn }) => {
-  return (
-    <button
-      onMouseDown={onStart}
-      onMouseUp={onEnd}
-      onMouseLeave={() => isActive && onEnd()}
-      onTouchStart={(e) => {
-        e.preventDefault();
-        onStart();
-      }}
-      onTouchEnd={(e) => {
-        e.preventDefault();
-        onEnd();
-      }}
-      className={`pointer-events-auto w-[6.8%] min-w-[22px] sm:min-w-[30px] h-24 sm:h-28 rounded-b-lg border-x border-b border-black flex flex-col justify-end items-center pb-2 cursor-pointer transition-all duration-75 z-10 ${
-        isActive
-          ? 'bg-gradient-to-b from-amber-600 via-amber-700 to-amber-900 shadow-[inset_0_4px_8px_rgba(0,0,0,0.9)] translate-y-1'
-          : 'bg-gradient-to-b from-[#2e1a12] via-[#1c0f0a] to-[#0a0503] hover:from-[#3d2319] shadow-[0_5px_8px_rgba(0,0,0,0.9)]'
-      }`}
-      aria-label={`${note.swara} (${note.key}) - Shortcut: ${note.keyboardShortcut}`}
-    >
-      <span className="text-4xs font-bold font-display text-amber-300 block">
-        {isBn ? note.swaraBn : note.swara}
-      </span>
-      <span className="text-4xs font-mono text-amber-400/80 block mt-0.5">
-        {note.keyboardShortcut}
-      </span>
-    </button>
   );
 };
