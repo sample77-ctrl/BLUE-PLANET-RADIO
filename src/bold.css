@@ -328,6 +328,25 @@ html.hc .stage-big { color: var(--signal); } html.hc .stage-meter i { background
 .stage-series-big { font-family: var(--font-display); font-stretch: var(--wide); font-weight: 800; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1; letter-spacing: -.02em; }
 html.hc .stage-series-read { background: #000; color: var(--ink); border: 1px solid var(--line); } html.hc .stage-series-big { color: var(--signal); } html.hc .stage-series-read .readout { color: var(--ink-2); }
 .stage-series .stage-facts { margin-top: 1rem; } .stage-series .stage-ctl { margin-top: .9rem; }
+/* V4: the score (a picture's notes under its thumbnail; a series' piano roll) and the share card */
+.stage-score { margin-top: 1.25rem; padding: 1rem clamp(.75rem, 2vw, 1.5rem) 1.25rem; border: 1px solid var(--hair); background: var(--panel); }
+.score-set { display: grid; gap: .5rem 1.5rem; } .score-set[data-pair='true'] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+.score { margin: .75rem 0 0; width: min(100%, calc(var(--ar, 2) * 15rem)); } .score.roll { width: 100%; }
+.score-head { margin-bottom: .3rem; }
+.score-box { position: relative; background: #000; border: 1px solid var(--hair); overflow: hidden; }
+.score-thumb { display: block; width: 100%; height: auto; background: #000; }
+.score-svg { display: block; width: 100%; height: 7rem; background: #000; border-top: 1px solid var(--hair); } .score-thumb + .score-svg { border-top-color: var(--hair); }
+.roll-svg { height: 8rem; border-top: 0; }
+.roll-lane { stroke: var(--hair); stroke-width: 1; }
+.roll-n { fill: var(--signal); } .roll-warm { fill: var(--fire); } .roll-soft { fill: var(--cold); }
+.score-play { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--signal); pointer-events: none; }
+.score-cap { display: flex; justify-content: space-between; gap: .25rem 1rem; flex-wrap: wrap; margin-top: .35rem; }
+.stage-roll { margin-top: .9rem; } .stage-roll[data-ab='true'] .score + .score { margin-top: .6rem; }
+.stage-card { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 1rem 1.5rem; align-items: start; margin-top: 1rem; padding: 1rem; border: 1px solid var(--hair); background: var(--panel); }
+.stage-card img { display: block; width: 100%; height: auto; border: 1px solid var(--hair); background: #000; }
+.stage-card-side .stage-ctl { margin-top: .6rem; }
+@media (max-width: 640px) { .stage-card { grid-template-columns: minmax(0, 1fr); } .stage-card img { max-width: 15rem; } }
+html.hc .score-svg, html.hc .score-box { border-color: var(--line); } html.hc .roll-warm, html.hc .roll-soft { fill: var(--signal); }
 
 /* ===== V3: landing hero + four chapters (one EIC frame each). The hero holds the headline over the ocean-heat frame; each chapter is the frame full width over a band flooded with its data colour.
    Motion: a needle that follows the scroll (animation-timeline: view(), else an IntersectionObserver sets data-in and CSS transitions do the same). No sound here. Static under reduced motion. ===== */

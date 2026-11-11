@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Play, Square, ImagePlus, Loader2, AlertTriangle, Repeat, BookOpen, Link2, ChevronLeft, ChevronRight, Headphones } from 'lucide-react';
+import { Play, Square, ImagePlus, Loader2, AlertTriangle, Repeat, BookOpen, Link2, ChevronLeft, ChevronRight, Headphones, Share2, Music2, Download, X } from 'lucide-react';
 import { FRAMES, gibsUrl, loadFileCanvases, loadFrameCanvases, type NasaFrame } from '../lib/gibs';
 import { EIC_FRAMES, EIC_STORY } from '../lib/eicFrames';
 import { decodeLocation, encodeShare } from '../lib/shareLink';
-import { activeColumns, colAt, nextColumn, noteName, orderRange, rowAt, stepMs, timbreWord } from '../lib/frameSweep';
+import { activeColumns, bandHz, colAt, nextColumn, noteName, orderRange, rowAt, stepMs, timbreWord } from '../lib/frameSweep';
 import { AudioContextManager } from '../audio/audioContext';
 import { usePrefs, speak } from '../lib/prefs';
 import { usePlaybackReport } from '../lib/playbackContext';
@@ -13,12 +13,14 @@ import { applySignal, type RGB } from '../lib/signal';
 import { axisValueAt, columnColor, mixRgb, RELATED_STORY } from '../lib/frameStage';
 import { digits } from '../jukebox/format';
 import { SeriesUnderFrame } from './SeriesUnderFrame';
+import { FrameScore } from './ScoreView';
+import { dominantBand, frameScore, type ScoreNote } from '../lib/score';
+import { cardFileName, renderShareCard } from '../lib/shareCard';
 
 const ALL_FRAMES: NasaFrame[] = [...EIC_FRAMES, ...FRAMES];
 const COLS = 128, ROWS = 12, SWEEP_SEC = 20;
-const PENTA = [0, 2, 4, 7, 9];
 // Top row (north) is the highest pitch, like the globe's latitude tilt.
-const rowHz = (row: number) => { const i = ROWS - 1 - row; return 130.81 * Math.pow(2, (PENTA[i % 5] + 12 * Math.floor(i / 5)) / 12); };
+const rowHz = (row: number) => bandHz(row, ROWS);
 
 interface Grid { lum: Float32Array; warm: Float32Array; green: Float32Array; rgb: Uint8ClampedArray }
 function toGrid(cv: HTMLCanvasElement): Grid {
@@ -81,6 +83,10 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
   const [more, setMore] = useState(false);
   const [dataOpen, setDataOpen] = useState(false); // the series behind the frame, played under it
   const [ar, setAr] = useState(2); // width / height of what is on stage, for the frame's size
+  const [score, setScore] = useState<{ a: ScoreNote[]; b: ScoreNote[] | null } | null>(null); // the notes of the picture(s) on stage, for the score view and the share card
+  const [scoreOpen, setScoreOpen] = useState(true);
+  const [card, setCard] = useState<{ url: string; blob: Blob; name: string; link: string; title: string } | null>(null); // the share card, once made
+  const [cardMsg, setCardMsg] = useState('');
   // A shared link (#v1&track=frames&...) restores the picture, the comparison and the needle.
   const [share] = useState(() => {
     const s = decodeLocation(window.location.pathname, window.location.search, window.location.hash, { frames: ALL_FRAMES.map((f) => f.id), pairs: [...PAIRS.map((p) => p.id), 'custom'] });
@@ -147,7 +153,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
   const [prevSel, setPrevSel] = useState<{ key: string; file: File | null }>({ key: selKey, file: userFile });
   if (prevSel.key !== selKey || prevSel.file !== userFile) {
     setPrevSel({ key: selKey, file: userFile });
-    setPlaying(false); setStatus('loading'); setCol(0); setRegionState(null); setReadout(''); setSrText(''); setHeard(null);
+    setPlaying(false); setStatus('loading'); setCol(0); setRegionState(null); setReadout(''); setSrText(''); setHeard(null); setScore(null); setCard(null); setCardMsg('');
   }
 
   useEffect(() => {
@@ -174,6 +180,8 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
           paint(viewA.current, a.display); paint(viewB.current, b.display); setAr((a.display.width / a.display.height) * 2);
           grids.current = { a: toGrid(a.sound), b: toGrid(b.sound) };
         }
+        const g = grids.current;
+        setScore({ a: frameScore(g.a!.lum, g.a!.rgb, COLS, ROWS), b: g.b ? frameScore(g.b.lum, g.b.rgb, COLS, ROWS) : null });
         setStatus('ready');
         setLoadedFor(mode === 'single' && !userFile ? frame.id : '');
         if (pendingCol.current !== null) { colRef.current = pendingCol.current; setCol(pendingCol.current); pendingCol.current = null; }
@@ -185,6 +193,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
   }, [mode, frameId, pairId, userFile, frame, pair, silence]);
 
   useEffect(() => () => stop(), [stop]);
+  useEffect(() => () => { if (card) URL.revokeObjectURL(card.url); }, [card]);
   useEffect(() => () => applySignal(null), []); // leaving the view gives the interface back its dataset colour
 
   const geo = mode === 'pair' ? !pair.a.src : (!!userFile || !frame.src);
@@ -334,6 +343,32 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
     window.setTimeout(() => setCopied(null), 4000);
   };
 
+  /** Draws the share card (1080 x 1350 PNG) for the frame on stage with the needle where it is now. Nothing leaves the device until the user shares or saves it. */
+  const makeCard = async () => {
+    const ga = grids.current.a, cv = viewA.current;
+    if (!ga || !cv || !score || mode !== 'single' || userFile) return;
+    setCardMsg(t('scMaking'));
+    const link = `${window.location.origin}${window.location.pathname}#${encodeShare({ track: 'frames', frame: frameId, col, lang })}`;
+    const cs = getComputedStyle(document.documentElement), v = (n: string, d: string) => cs.getPropertyValue(n).trim() || d;
+    const dom = dominantBand(ga.lum, col, COLS, ROWS), ttl = lang === 'bn' ? frame.titleBn : frame.title;
+    const blob = await renderShareCard({
+      frame: cv, frameW: cv.width, frameH: cv.height, kicker: t('scCardKicker'), title: ttl,
+      notes: score.a, cols: COLS, rows: ROWS, col, bigLabel, bigValue, pitch: dom ? `${dom.note} · ${digits(dom.hz, lang)} Hz` : null,
+      source: `${t('stSource')}: ${frame.credit}`, method: t('scCardMethod'), url: link,
+      signal: v('--signal', '#baed3f'), onSignal: v('--on-signal', '#0a0a0a'),
+      fonts: { display: v('--font-display', 'sans-serif'), body: v('--font-body', 'sans-serif'), mono: v('--font-mono', 'monospace') },
+    });
+    if (!blob) { setCardMsg(t('scCardFail')); return; }
+    setCard({ url: URL.createObjectURL(blob), blob, name: cardFileName(frame.id), link, title: ttl });
+    setCardMsg(t('scCardReady'));
+  };
+  const canShareFile = () => { try { return typeof navigator.share === 'function' && !!navigator.canShare?.({ files: [new File([], 'a.png', { type: 'image/png' })] }); } catch { return false; } };
+  const shareCard = async () => {
+    if (!card) return;
+    try { await navigator.share({ files: [new File([card.blob], card.name, { type: 'image/png' })], title: card.title, text: `${card.title}: ${t('scShareText')}`, url: card.link }); setCardMsg(t('scShared')); }
+    catch (e) { if ((e as Error).name !== 'AbortError') setCardMsg(t('scCardFail')); }
+  };
+
   const fractionIn = (e: React.PointerEvent) => {
     const r = frameBox.current!.getBoundingClientRect();
     const fx = (e.clientX - r.left) / r.width;
@@ -476,6 +511,17 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
         <span className="sr-only" aria-live="polite">{srText}</span>
         {audioBlocked && <p role="alert" className="mt-3 text-sm text-[var(--signal)] max-w-[70ch]">{t('audioBlocked')}</p>}
 
+        {scoreOpen && score && status === 'ready' && (
+          <section id="stage-score" className="stage-score" aria-label={t('scTitle')}>
+            <p className="readout">{t('scTitle')}</p>
+            <p className="stage-note">{mode === 'pair' ? t('scNotePair') : t('scNote')}</p>
+            <div className="score-set" data-pair={mode === 'pair'}>
+              <FrameScore source={viewA} token={score} ar={mode === 'pair' ? ar / 2 : ar} notes={score.a} cols={COLS} rows={ROWS} col={col} heading={mode === 'pair' ? `${t('stSideA')} · ${pair.a.title}` : undefined} />
+              {mode === 'pair' && score.b && <FrameScore source={viewB} token={score} ar={ar / 2} notes={score.b} cols={COLS} rows={ROWS} col={col} heading={`${t('stSideB')} · ${pair.b.title}`} />}
+            </div>
+          </section>
+        )}
+
         <div className="stage-ctl stage-ctl2">
           {related && <button className="btn btn-brass" aria-expanded={dataOpen} onClick={() => setDataOpen(!dataOpen)}><Headphones className="w-4 h-4" /> {lang === 'bn' ? related.bn : related.en}</button>}
           {mode === 'single' && (
@@ -489,6 +535,8 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
             ? <button className="btn" disabled={status !== 'ready' && story === null} onClick={() => goStory(0)}><BookOpen className="w-4 h-4" /> {t('story')}</button>
             : <button className="btn" onClick={endStory}>{t('storyStop')}</button>)}
           <button className="btn" onClick={copyLink}><Link2 className="w-4 h-4" /> {t('shareLink')}</button>
+          <button className="btn" aria-pressed={scoreOpen} aria-controls="stage-score" onClick={() => setScoreOpen(!scoreOpen)}><Music2 className="w-4 h-4" /> {t('scToggle')}</button>
+          {mode === 'single' && !userFile && <button className="btn" disabled={status !== 'ready' || !score} onClick={makeCard}><Share2 className="w-4 h-4" /> {t('scMake')}</button>}
           <button className="btn" disabled={status !== 'ready'} onClick={() => { const [, hi] = regionRef.current ?? [0, COLS - 1]; setRegion(orderRange(col, Math.max(hi, col), COLS)); }}>{t('loopStart')}</button>
           <button className="btn" disabled={status !== 'ready'} onClick={() => { const [lo] = regionRef.current ?? [0, COLS - 1]; setRegion(orderRange(Math.min(lo, col), col, COLS)); }}>{t('loopEnd')}</button>
           {region && <button className="btn" onClick={() => setRegion(null)}>{t('clearRegion')}</button>}
@@ -497,6 +545,22 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
         {related && dataOpen && <SeriesUnderFrame key={related.story} storyId={related.story} related={related.related} framePlaying={playing} onStart={stop} onOpenStory={(id) => onOpenStory?.(id)} onClose={() => setDataOpen(false)} />}
 
         {copied && <p role="status" className="mt-2 text-sm text-[var(--ink-2)] max-w-[70ch] break-all">{copied.startsWith('http') ? <input readOnly value={copied} onFocus={(e) => e.currentTarget.select()} aria-label={t('shareLink')} className="w-full bg-transparent border border-[var(--line)] rounded px-2 py-1" /> : copied}</p>}
+        {(card || cardMsg) && (
+          <section className="stage-card" aria-label={t('scCardTitle')}>
+            {card && <img src={card.url} alt={t('scCardAlt', { title: card.title })} width={1080} height={1350} />}
+            <div className="stage-card-side">
+              <p role="status" className="stage-note">{cardMsg}</p>
+              {card && (
+                <div className="stage-ctl">
+                  {canShareFile() && <button className="btn btn-brass" onClick={shareCard}><Share2 className="w-4 h-4" /> {t('scShare')}</button>}
+                  <a className={`btn${canShareFile() ? '' : ' btn-brass'}`} href={card.url} download={card.name}><Download className="w-4 h-4" /> {t('scSave')}</a>
+                  <button className="btn btn-icon" onClick={() => { setCard(null); setCardMsg(''); }} aria-label={t('close')}><X className="w-4 h-4" /></button>
+                </div>
+              )}
+              {card && <p className="stage-note break-all">{card.link}</p>}
+            </div>
+          </section>
+        )}
         {story !== null && (
           <div className="mt-3 panel p-3 max-w-[70ch]" aria-live="polite">
             <div className="label">{story + 1} / {EIC_STORY.length}</div>

@@ -7,6 +7,7 @@ import { specFor } from '../sonification/series/specs';
 import { mapSeries } from '../sonification/series/mapping';
 import { linePaths } from '../jukebox/linePaths';
 import { digits, timeLabel, valueLabel } from '../jukebox/format';
+import { SeriesRoll } from './ScoreView';
 import { GLOBAL_STORIES } from '../stories/stories';
 import { loadStorySeries } from '../stories/loadStory';
 import type { DataSeries } from '../datasets/series';
@@ -52,6 +53,7 @@ export function SeriesUnderFrame({ storyId, related, framePlaying, onStart, onOp
   const bPts = useAb ? pts.slice(pts.length - third) : null;
   const spec = useMemo(() => (series ? specFor(series.id, series.points.map((p) => p.v)) : null), [series]);
   const mapped = useMemo(() => (spec ? mapSeries(aPts, spec) : []), [spec, aPts]);
+  const mappedB = useMemo(() => (spec && bPts ? mapSeries(bPts, spec) : null), [spec, bPts]);
 
   useEffect(() => { if (spec && aPts.length) { player.load({ points: aPts, spec, compare: bPts ? { b: bPts, layout: 'split' } : null }); } }, [spec, useAb, series]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => player.listen({ cursor: setCursor }), [player]);
@@ -99,6 +101,12 @@ export function SeriesUnderFrame({ storyId, related, framePlaying, onStart, onOp
               {useAb && bPts && p && <line x1={x(pts.length - third + idxA)} x2={x(pts.length - third + idxA)} y1={0} y2={H} stroke="var(--signal)" strokeWidth={3} strokeDasharray="6 4" vectorEffect="non-scaling-stroke" />}
             </svg>
             {useAb && <><span className="stage-side chip ab-lbl-a">{t('stSideA')} · {t('stLeftEar')} · {timeLabel(pts[0].t, lang)}–{timeLabel(pts[third - 1].t, lang)}</span><span className="stage-side chip ab-lbl-b">{t('stSideB')} · {t('stRightEar')} · {timeLabel(pts[pts.length - third].t, lang)}–{timeLabel(pts[pts.length - 1].t, lang)}</span></>}
+          </div>
+          <div className="stage-roll" data-ab={useAb}>
+            <p className="readout">{t('scRollTitle')}</p>
+            <p className="stage-note">{t('scRollNote')}</p>
+            <SeriesRoll mapped={mapped} cursor={cursor} title={title} heading={useAb ? `${t('stSideA')} · ${timeLabel(pts[0].t, lang)}–${timeLabel(pts[third - 1].t, lang)}` : undefined} />
+            {useAb && mappedB && <SeriesRoll mapped={mappedB} cursor={cursor} title={title} heading={`${t('stSideB')} · ${timeLabel(pts[pts.length - third].t, lang)}–${timeLabel(pts[pts.length - 1].t, lang)}`} />}
           </div>
           <div className="stage-series-read">
             <div><span className="readout">{t('jbRdWhen')}</span><div className="stage-series-big">{p ? timeLabel(p.t, lang) : '–'}</div></div>
