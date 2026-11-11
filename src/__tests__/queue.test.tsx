@@ -4,10 +4,11 @@ import { render, screen, fireEvent, cleanup, act } from '@testing-library/react'
 import { PrefsProvider } from '../lib/prefs';
 import { NowPlayingBar } from '../player/NowPlayingBar';
 import { publishNowPlaying, type NowPlaying } from '../player/nowPlaying';
+import { setFullPlayer } from '../player/ui';
 import { getQueue, setQueue, enqueue, playNext, dequeue, shiftQueue, clearQueue } from '../player/queue';
 import { buildUrl, decodeLocation, encodeShare, decodeShare, parseQueue } from '../lib/shareLink';
 
-afterEach(() => { cleanup(); act(() => { publishNowPlaying(null); clearQueue(); }); localStorage.clear(); });
+afterEach(() => { cleanup(); setFullPlayer(false, 'next'); act(() => { publishNowPlaying(null); clearQueue(); }); localStorage.clear(); });
 
 describe('queue store', () => {
   it('keeps order, ignores duplicates, puts "play next" first and shifts the head', () => {

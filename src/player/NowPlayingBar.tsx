@@ -1,19 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Pause, Play, SkipForward, Square, Volume2, VolumeX, X } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 import { digits } from '../jukebox/format';
 import { DataScrubber } from './DataScrubber';
 import { useNowPlaying, type NowPlaying } from './nowPlaying';
+import { setFullTab, toggleFullPlayer, useFullPlayer, type FullTab } from './ui';
+import { useReactiveGlow } from './reactive';
 
 const SPEEDS = [0.5, 1, 2, 4];
 
 /** The one transport, pinned at the bottom whenever a player has published itself. Hidden on the landing page. */
-type Tab = 'next' | 'narration' | 'how';
+type Tab = FullTab;
 
 /** The full player: Up next, Narration (the "lyrics" of the data) and How it sounds. Opens above the bar. */
 function FullPlayer({ np }: { np: NowPlaying }) {
   const { t } = usePrefs();
-  const [tab, setTab] = useState<Tab>('next');
+  const { tab } = useFullPlayer(), setTab = setFullTab;
   const tabs: { id: Tab; key: 'npTabUpNext' | 'npTabNarration' | 'npTabHow' }[] = [{ id: 'next', key: 'npTabUpNext' }, { id: 'narration', key: 'npTabNarration' }, { id: 'how', key: 'npTabHow' }];
   return (
     <div id="np-full" className="np-full glass-strong" role="region" aria-label={t('npExpand')}>
@@ -36,7 +38,10 @@ function FullPlayer({ np }: { np: NowPlaying }) {
 export function NowPlayingBar({ hidden }: { hidden?: boolean }) {
   const np = useNowPlaying();
   const { t, lang } = usePrefs();
-  const [open, setOpen] = useState(false);
+  const { open } = useFullPlayer();
+  const { reduceMotion } = usePrefs();
+  const barRef = useRef<HTMLElement>(null);
+  useReactiveGlow(barRef, !!np && !hidden && np.state === 'playing', reduceMotion);
   const theme = hidden ? undefined : np?.dataset;
   useEffect(() => { // the accent follows what is playing
     const el = document.documentElement;
@@ -48,7 +53,7 @@ export function NowPlayingBar({ hidden }: { hidden?: boolean }) {
   const c = np.controls;
   const toggleKey = playing ? (np.pauses === false ? 'plStop' : 'plPause') : np.state === 'paused' ? 'plResume' : 'plPlay';
   return (
-    <section className="np-bar glass-strong safe-pb" aria-label={t('npLabel')} data-player-state={np.state}>
+    <section ref={barRef} className="np-bar glass-strong safe-pb" aria-label={t('npLabel')} data-player-state={np.state}>
       <div className="np-meta min-w-0">
         <p className="np-title truncate">{np.title}</p>
         <p className="np-sub truncate">
@@ -73,7 +78,7 @@ export function NowPlayingBar({ hidden }: { hidden?: boolean }) {
         {c.setSpeed && <select className="btn min-h-[40px]" value={np.speed ?? 1} aria-label={t('plSpeed')} onChange={(e) => c.setSpeed!(+e.target.value)}>
           {SPEEDS.map((x) => <option key={x} value={x}>{digits(x, lang)}×</option>)}</select>}
       </div>
-      <button type="button" className="btn btn-icon np-expand" aria-expanded={open} aria-controls="np-full" aria-label={t(open ? 'npCollapse' : 'npExpand')} onClick={() => setOpen((o) => !o)}>{open ? <ChevronDown className="w-4 h-4" aria-hidden="true" /> : <ChevronUp className="w-4 h-4" aria-hidden="true" />}</button>
+      <button type="button" className="btn btn-icon np-expand" aria-expanded={open} aria-controls="np-full" aria-label={t(open ? 'npCollapse' : 'npExpand')} onClick={toggleFullPlayer}>{open ? <ChevronDown className="w-4 h-4" aria-hidden="true" /> : <ChevronUp className="w-4 h-4" aria-hidden="true" />}</button>
       {open && <FullPlayer np={np} />}
       <p className="sr-only" role="status" aria-live="polite">{playing ? t('npNowPlaying', { title: np.title }) : ''}</p>
     </section>

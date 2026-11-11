@@ -236,3 +236,6 @@ html.rm .np-full { animation: none; }
 .tune-reticle::before, .tune-reticle::after { content: ''; position: absolute; background: var(--accent); }
 .tune-reticle::before { left: 50%; top: -10px; bottom: -10px; width: 1.5px; margin-left: -.75px; }
 .tune-reticle::after { top: 50%; left: -10px; right: -10px; height: 1.5px; margin-top: -.75px; }
+
+/* Audio-reactive edge: transform and opacity only, driven by --np-* set from a ref (src/player/reactive.ts) */
+.np-bar::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--accent, var(--brass)); transform-origin: 50% 50%; transform: scaleX(calc(.15 + var(--np-amp, 0) * .85)); opacity: calc(.3 + var(--np-amp, 0) * .7); pointer-events: none; }

@@ -24,6 +24,11 @@ import { NowPlayingBar } from './player/NowPlayingBar';
 import { usePublishNowPlaying } from './player/nowPlaying';
 import { setQueue } from './player/queue';
 import { installMediaSession } from './player/mediaSession';
+import { getNowPlaying } from './player/nowPlaying';
+import { setFullPlayer, toggleFullPlayer } from './player/ui';
+import { CommandPalette, type Command } from './components/CommandPalette';
+import { storiesFor } from './stories/stories';
+import { countryLabel } from './lib/placesBn';
 import { formatDay } from './atlas/formatDay';
 import { usePrefs } from './lib/prefs';
 import { useCountry } from './countries/useCountry';
@@ -50,7 +55,7 @@ const angleBetween = (la1: number, lo1: number, la2: number, lo2: number) => {
 };
 
 export function App() {
-  const { t, lang, set } = usePrefs();
+  const { t, lang, set, keyShortcuts } = usePrefs();
   const [initialShare] = useState(() => { const d = decodeLocation(window.location.pathname, window.location.search, window.location.hash, { frames: [], pairs: [] }); if (d?.q) setQueue(d.q); return d; });
   const [showHero, setShowHero] = useState(!initialShare?.track);
   const [autoListen, setAutoListen] = useState(false);
@@ -86,6 +91,7 @@ export function App() {
   const [diagnostics, setDiagnostics] = useState(false);
   const [sheet, setSheet] = useState<'layers' | 'hearing' | 'country' | null>(null);
   const [harmoniumOpen, setHarmoniumOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const cty = useCountry(initialShare?.c, !showHero);
 
   useEffect(() => { if (initialShare?.lang && initialShare.lang !== lang) set({ lang: initialShare.lang }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -195,14 +201,49 @@ export function App() {
     if (cty.list.length) cty.select(cty.list[Math.floor(Math.random() * cty.list.length)]);
     if (slices.length) setDay(Math.floor(Math.random() * slices.length));
   };
+  const commands = ((): Command[] => {
+    const view = (id: string, label: string, run: () => void): Command => ({ id: `v-${id}`, label, group: t('paletteViews'), run });
+    return [
+      view('atlas', t('navExplore'), () => { navigate('atlas'); setShowHero(false); }),
+      view('jukebox', t('navJukebox'), () => openJukebox()),
+      view('quest', t('navQuest'), () => { void pickTrack('quest'); }),
+      view('about', t('navAbout'), goAbout),
+      view('frames', t('track2'), () => { void pickTrack('frames'); }),
+      view('monsoon', t('track3'), () => { void pickTrack('monsoon'); }),
+      view('pulse', t('track4'), () => { void pickTrack('pulse'); }),
+      { id: 'a-sound', label: t(audioReady ? 'soundOff' : 'soundOn'), group: t('paletteAction'), run: () => (audioReady ? soundOff() : soundOn()) },
+      { id: 'a-tour', label: t('tour'), group: t('paletteAction'), run: startTour },
+      { id: 'a-settings', label: t('settings'), group: t('paletteAction'), run: () => setSettingsOpen(true) },
+      ...storiesFor(null).filter((s) => s.visual === 'chart').map((s): Command => ({ id: `s-${s.id}`, label: lang === 'bn' ? s.titleBn : s.title, group: t('paletteStory'), run: () => openJukebox(s.id) })),
+      ...cty.list.map((c): Command => ({ id: `c-${c.id}`, label: countryLabel(c.id, c.name, lang), group: t('paletteCountry'), run: () => { cty.select(c); navigate('atlas'); setShowHero(false); } })),
+    ];
+  })();
+
   // Keyboard shortcuts (ignored while typing in a field).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
+      if ((e.metaKey || e.ctrlKey) && !e.altKey && e.key.toLowerCase() === 'k') { // the one shortcut that is not a single key, so it stays on
+        if (document.querySelector('[aria-modal="true"]')) return;
+        e.preventDefault(); setPaletteOpen(true); return;
+      }
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.metaKey || e.ctrlKey || e.altKey) return;
       if (document.querySelector('[aria-modal="true"]')) return; // a dialog is open: it owns the keyboard
+      if (!keyShortcuts) return; // WCAG 2.1.4: single-key shortcuts can be turned off in Settings
       const k = e.key.toLowerCase();
-      if (k === '?') { setSettingsOpen(true); return; }
+      if (k === '?' || k === ',') { setSettingsOpen(true); return; }
+      if (k === '/') { e.preventDefault(); setPaletteOpen(true); return; }
+      const np = getNowPlaying();
+      if (np && !showHero) { // the shared transport: whatever is published to the Now-Playing bar
+        const c = np.controls;
+        if ((e.key === ' ' && tag !== 'BUTTON' && tag !== 'A') || k === 'k') { e.preventDefault(); c.toggle(); return; }
+        if (e.shiftKey && (e.key === 'ArrowRight' || e.key === 'ArrowLeft') && c.seek && np.count > 0) { e.preventDefault(); c.seek(Math.max(0, Math.min(np.count - 1, np.index + (e.key === 'ArrowRight' ? 10 : -10)))); return; }
+        if (!e.shiftKey && k === 'n' && (c.nextStory && np.upNext?.length ? (c.nextStory(), true) : c.step ? (c.step(1), true) : false)) return;
+        if (!e.shiftKey && k === 'p' && c.step) { c.step(-1); return; }
+        if (e.shiftKey && k === 'm' && c.setMuted) { c.setMuted(!np.muted); return; }
+        if (!e.shiftKey && k === 'e') { toggleFullPlayer(); return; }
+        if (!e.shiftKey && k === 'q') { setFullPlayer(true, 'next'); return; }
+      }
       if (k === 'h') { setHarmoniumOpen((o) => !o); return; }
       if (showHero) return;
       if (k === 's') { if (audioReady) soundOff(); else soundOn(); return; }
@@ -363,6 +404,7 @@ export function App() {
       </main>
 
       <NowPlayingBar hidden={showHero} />
+      {paletteOpen && <CommandPalette open onClose={() => setPaletteOpen(false)} commands={commands} />}
 
       <InspectLocationModal observation={selected} onClose={() => setSelected(null)} />
       <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} volume={volume} onVolume={setVolume} spatialMode={spatialMode}

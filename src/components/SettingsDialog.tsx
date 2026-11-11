@@ -16,13 +16,19 @@ interface Props {
 }
 
 const SHORTCUTS: [string, string, string][] = [
-  ['Space', 'Play or pause the current track', 'চলমান ট্র্যাক চালান/থামান'],
+  ['Space  K', 'Play or pause what is playing (any view)', 'যা বাজছে তা চালান/থামান (যেকোনো পেজে)'],
+  ['⇧ ← →', 'Jump 10 steps back or forward', '১০ ধাপ পিছনে বা সামনে যান'],
+  ['N  P', 'Next (queued story, else step) / previous', 'পরের (সারির গল্প, নয়তো ধাপ) / আগের'],
+  ['⇧ M', 'Mute or unmute', 'নিঃশব্দ বা শব্দ চালু'],
+  ['E  Q', 'Open the full player / its queue', 'পূর্ণ প্লেয়ার / তার সারি খুলুন'],
+  ['⇧ 1 2 3', 'Solo fires, rain or ocean (Atlas)', 'শুধু আগুন, বৃষ্টি বা সমুদ্র শুনুন (Atlas)'],
+  ['/  ⌘K', 'Search and jump anywhere', 'যেকোনো জায়গায় খুঁজে যান'],
   ['← →', 'Previous / next day (Atlas)', 'আগের / পরের দিন'],
   ['1  2  3', 'Toggle fires, rain, ocean', 'আগুন, বৃষ্টি, সমুদ্র চালু/বন্ধ'],
   ['S', 'Sound on or off', 'শব্দ চালু/বন্ধ'],
   ['G  M  L', 'Globe, map or list view', 'গ্লোব, মানচিত্র বা তালিকা'],
   ['T', 'Start the guided tour', 'ট্যুর শুরু'],
-  ['?', 'Open this panel', 'এই প্যানেল খুলুন'],
+  ['?  ,', 'Open this panel', 'এই প্যানেল খুলুন'],
 ];
 
 const Toggle: React.FC<{ label: string; on: boolean; onClick: () => void; note?: string }> = ({ label, on, onClick, note }) => (
@@ -58,6 +64,7 @@ export const SettingsDialog: React.FC<Props> = ({ open, onClose, volume, onVolum
         <div className="mt-5 divide-y divide-[var(--line)]">
           <Toggle label={p.t('narration')} on={p.narration} onClick={() => p.set({ narration: !p.narration })} />
           <Toggle label={p.t('reduceMotion')} on={p.reduceMotion} onClick={() => p.set({ reduceMotion: !p.reduceMotion })} />
+          <Toggle label={p.t('keyShortcuts')} on={p.keyShortcuts} note={p.t('keyShortcutsNote')} onClick={() => p.set({ keyShortcuts: !p.keyShortcuts })} />
           <Toggle label={p.t('autoplayNext')} on={p.autoplayNext} note={p.t('autoplayNextNote')} onClick={() => p.set({ autoplayNext: !p.autoplayNext })} />
           <Toggle label={p.t('calmBackground')} on={p.calmBackground} note={p.t('calmBackgroundNote')} onClick={() => p.set({ calmBackground: !p.calmBackground })} />
           <Toggle label={p.t('highContrast')} on={p.highContrast} onClick={() => p.set({ highContrast: !p.highContrast })} />
