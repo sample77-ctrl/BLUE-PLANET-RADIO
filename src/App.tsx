@@ -119,7 +119,7 @@ export function App() {
 
   useEffect(() => installMediaSession(), []);
   usePublishNowPlaying('atlas', track === 'atlas' && !showHero && view !== '2d-map' && slices.length > 0 ? {
-    id: 'atlas', title: t('track1'), subtitle: `${t('npAtlasSub')} · ${formatDay(slices[0].dateLabel, lang)}–${formatDay(slices[slices.length - 1].dateLabel, lang)}`, badge: 'snapshot', state: playing ? 'playing' : 'ready',
+    id: 'atlas', dataset: enabled.fire ? 'fire' : enabled.precipitation ? 'rain' : enabled.sst ? 'teal' : undefined, title: t('track1'), subtitle: `${t('npAtlasSub')} · ${formatDay(slices[0].dateLabel, lang)}–${formatDay(slices[slices.length - 1].dateLabel, lang)}`, badge: 'snapshot', state: playing ? 'playing' : 'ready',
     index: day, count: slices.length, label: formatDay(slices[day]?.dateLabel ?? slices[0].dateLabel, lang), valueText: '', spark: [],
     controls: { toggle: () => setPlaying((p) => !p), stop: () => setPlaying(false), step: (by) => setDay((d) => (d + by + slices.length) % slices.length), seek: setDay },
   } : null);

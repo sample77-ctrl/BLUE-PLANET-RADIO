@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Pause, Play, SkipForward, Square, Volume2, VolumeX, X } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 import { digits } from '../jukebox/format';
@@ -37,6 +37,12 @@ export function NowPlayingBar({ hidden }: { hidden?: boolean }) {
   const np = useNowPlaying();
   const { t, lang } = usePrefs();
   const [open, setOpen] = useState(false);
+  const theme = hidden ? undefined : np?.dataset;
+  useEffect(() => { // the accent follows what is playing
+    const el = document.documentElement;
+    if (theme) el.dataset.dataset = theme; else delete el.dataset.dataset;
+    return () => { delete el.dataset.dataset; };
+  }, [theme]);
   if (!np || hidden) return null;
   const playing = np.state === 'playing', busy = np.state === 'busy';
   const c = np.controls;

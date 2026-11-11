@@ -1,4 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react';
+import type { DatasetTheme } from '../lib/datasetTheme';
 
 /** One shared "now playing" record. A player publishes its state and controls; the bar reads it. Engines stay inside each track. */
 export interface NowPlaying {
@@ -10,6 +11,7 @@ export interface NowPlaying {
   index: number; count: number; // count 0 = no position to show
   label: string; valueText: string; // current position, e.g. "1998" / "+0.61 °C"
   spark: number[]; // the series, for the scrubber backdrop
+  dataset?: DatasetTheme; // tints the interface accent while this plays
   /** Shown in the full player. */
   details?: { narration: string; mapping: string[] };
   upNext?: { id: string; title: string }[];

@@ -106,9 +106,9 @@ export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, on
 
         {/* Sonic Quest invite for kids and learners */}
         <section className="reveal max-w-6xl mx-auto px-5 sm:px-10 pb-12" aria-labelledby="quest-banner-title">
-          <div className="glass-flat p-6 sm:p-8 rounded-2xl border border-[var(--brass)]/50 bg-gradient-to-r from-amber-950/20 via-[var(--panel)] to-cyan-950/20 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="glass-flat p-6 sm:p-8 rounded-2xl border border-[var(--brass)]/50 bg-[var(--accent-surface)] flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--brass)] shrink-0 overflow-hidden">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[var(--teal)] p-0.5 shadow-xl border-2 border-[var(--brass)] shrink-0 overflow-hidden">
                 <img src="/images/ninja_cadet_avatar_sm.jpg" width={96} height={96} loading="lazy" decoding="async" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
               </div>
               <div className="flex flex-col gap-2">
@@ -128,7 +128,7 @@ export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, on
               {onOpenHarmonium && (
                 <button
                   onClick={onOpenHarmonium}
-                  className="btn bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white shrink-0 text-base font-semibold px-6 py-3.5 rounded-full flex items-center gap-2 shadow-lg hover:scale-105 cursor-pointer border border-red-400"
+                  className="btn shrink-0 text-base font-semibold px-6 py-3.5 rounded-full flex items-center gap-2 shadow-lg cursor-pointer border border-[var(--fire)]"
                 >
                   <span aria-hidden="true">🪗</span>
                   <span>{lang === 'bn' ? 'হারমোনিয়াম চ্যাট' : 'Harmonium Chat'}</span>
@@ -136,7 +136,7 @@ export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, on
               )}
               <button
                 onClick={() => onPick('quest')}
-                className="btn btn-brass shrink-0 text-base font-semibold px-7 py-3.5 rounded-full flex items-center gap-2 shadow-lg hover:scale-105 cursor-pointer"
+                className="btn btn-brass shrink-0 text-base font-semibold px-7 py-3.5 rounded-full flex items-center gap-2 shadow-lg cursor-pointer"
               >
                 <span>{lang === 'bn' ? 'গেম শুরু করুন (Start Game)' : 'Start Game (Sonic Earth Adventure)'}</span>
                 <ArrowRight className="w-4 h-4" />

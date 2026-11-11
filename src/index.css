@@ -130,7 +130,7 @@ html.calm { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28p
 .dot { width: .6rem; height: .6rem; border-radius: 999px; display: inline-block; flex: none; }
 .nav-link { height: 2.25rem; padding: 0 .75rem; border-radius: var(--radius-md); font-size: var(--fs-sm); display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; white-space: nowrap; color: var(--ink-2); border: 1px solid transparent; transition: color var(--dur-fast), background var(--dur-fast); }
 .nav-link:hover { color: var(--ink); }
-.nav-link[aria-current='page'] { color: var(--ink); background: var(--panel-2); border-color: var(--line); box-shadow: inset 0 -2px 0 var(--brass); }
+.nav-link[aria-current='page'] { color: var(--ink); background: rgb(255 255 255 / .07); border-color: rgb(255 255 255 / .08); box-shadow: inset 0 -2px 0 var(--brass), 0 0 18px -8px rgb(233 196 106 / .6); }
 .prose-sea p { line-height: 1.65; color: var(--ink-2); max-width: 72ch; }
 .prose-sea a, a.link { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 }
@@ -151,10 +151,10 @@ html.calm { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28p
 [dir=rtl] .fade-x { -webkit-mask-image: none; mask-image: none; }
 
 /* Glass header: fixed, content scrolls under it; denser once the page has scrolled */
-.site-header { position: fixed; inset-inline: 0; top: 0; background: color-mix(in srgb, var(--abyss) 55%, transparent); border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(28px) saturate(150%); -webkit-backdrop-filter: blur(28px) saturate(150%); transition: background var(--dur-med), box-shadow var(--dur-med); }
-.site-header[data-scrolled='true'] { background: color-mix(in srgb, var(--abyss) 78%, transparent); box-shadow: 0 8px 24px -14px rgb(0 0 0 / .7); }
-@supports not (backdrop-filter: blur(1px)) { .site-header { background: color-mix(in srgb, var(--abyss) 92%, transparent); } }
-html.hc .site-header { background: #000; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: var(--line); }
+.site-header { position: fixed; inset-inline: .75rem; top: 10px; background: color-mix(in srgb, var(--panel) 62%, transparent); border: 1px solid var(--glass-border); border-radius: 18px; box-shadow: var(--glass-hi), 0 18px 40px -22px rgb(0 0 0 / .8); backdrop-filter: blur(28px) saturate(150%); -webkit-backdrop-filter: blur(28px) saturate(150%); transition: background var(--dur-med), box-shadow var(--dur-med); }
+.site-header[data-scrolled='true'] { background: color-mix(in srgb, var(--panel) 82%, transparent); box-shadow: 0 8px 24px -14px rgb(0 0 0 / .7); }
+@supports not (backdrop-filter: blur(1px)) { .site-header { background: color-mix(in srgb, var(--panel) 92%, transparent); } }
+html.hc .site-header { background: #000; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--line); border-radius: 0; inset-inline: 0; top: 0; }
 
 /* ===== Landing world carousel (Phase 9): three levels; only transform and opacity move ===== */
 .font-serif { font-family: var(--font-serif); font-weight: 500; letter-spacing: .02em; }
@@ -310,6 +310,22 @@ html.rm .topic-stage { animation-name: topic-fade; }
 
 /* High contrast mode */
 html.hc { --panel: #000; --panel-2: #0b0b0b; --line: #f5f5f5; --ink: #fff; --ink-2: #fff; --ink-3: #e5e5e5; --brass: #ffd60a; }
+/* Dataset theme: the accent follows what is playing (set on <html data-dataset>). Colours come from the data tokens above, so high contrast still overrides them. */
+@property --accent { syntax: '<color>'; inherits: true; initial-value: #4cc3ff; }
+:root { transition: --accent var(--dur-med) var(--ease-out); --accent-soft: color-mix(in oklch, var(--accent) 22%, transparent); --accent-surface: color-mix(in oklch, var(--accent) 12%, var(--panel)); }
+html[data-dataset='fire'] { --accent: var(--fire); }
+html[data-dataset='rain'] { --accent: var(--rain); }
+html[data-dataset='warm'] { --accent: var(--warm); }
+html[data-dataset='cold'] { --accent: var(--cold); }
+html[data-dataset='teal'] { --accent: var(--teal); }
+html[data-dataset='brass'] { --accent: var(--brass); }
+/* Glass is the default. These people asked for less see-through (or the browser forces colours): solid surfaces, no blur. Safari and Firefox do not report
+   prefers-reduced-transparency, so the in-app high contrast switch below is the fallback for them. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+  .glass-flat, .glass, .glass-strong, .panel, .panel-solid, .glass-pop, .site-header, .np-bar, .np-full { background: var(--panel); backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--line); box-shadow: none; }
+}
+@media (forced-colors: active) { .glass-flat, .glass, .glass-strong, .panel, .panel-solid, .glass-pop, .site-header, .np-bar, .np-full { background: Canvas; border: 1px solid CanvasText; } }
+html.hc .np-full { background: #000; backdrop-filter: none; }
 html.hc .glass-flat, html.hc .glass, html.hc .glass-strong, html.hc .panel, html.hc .panel-solid, html.hc .glass-pop { background: #000; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--line); box-shadow: none; }
 html.hc .scrim { background: rgb(0 0 0 / .8); }
 

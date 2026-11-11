@@ -124,7 +124,7 @@ export const VitalSigns: React.FC = () => {
 
   const vYear = view?.kind === 'one' ? view.s.points[i]?.year : view?.kind === 'all' ? view.years[i] : undefined;
   usePublishNowPlaying('pulse', data && view ? {
-    id: 'pulse', title: t('track4'), subtitle: t('npVitalSub'), badge: 'snapshot', state: playing ? 'playing' : 'ready', pauses: false,
+    id: 'pulse', dataset: 'warm', title: t('track4'), subtitle: t('npVitalSub'), badge: 'snapshot', state: playing ? 'playing' : 'ready', pauses: false,
     index: i, count: 0, label: vYear != null ? String(vYear) : '', valueText: '', spark: [],
     controls: { toggle: () => { if (playing) stop(); else void start(); }, stop },
   } : null);

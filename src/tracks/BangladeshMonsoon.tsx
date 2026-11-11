@@ -145,7 +145,7 @@ export const BangladeshMonsoon: React.FC = () => {
   };
 
   usePublishNowPlaying('monsoon', data ? {
-    id: 'monsoon', title: t('track3'), subtitle: t('npMonsoonSub'), badge: 'snapshot', state: playing ? 'playing' : 'ready', pauses: false,
+    id: 'monsoon', dataset: 'rain', title: t('track3'), subtitle: t('npMonsoonSub'), badge: 'snapshot', state: playing ? 'playing' : 'ready', pauses: false,
     index: day, count: 0, label: dates[day] ? fmtDate(dates[day]) : '', valueText: '', spark: [],
     controls: { toggle: () => { if (playing) stop(); else void start(); }, stop },
   } : null);

@@ -21,6 +21,7 @@ import { TimelineView } from './TimelineView';
 import { StoryPanel, type StoryLoad } from './StoryPanel';
 import { digits, timeLabel, valueLabel } from './format';
 import { publishNowPlaying } from '../player/nowPlaying';
+import { THEME_OF_TOPIC } from '../lib/datasetTheme';
 import { useQueue, enqueue, playNext, dequeue, clearQueue, shiftQueue } from '../player/queue';
 import { captionFor } from './caption';
 import { useSeriesPlayer } from './useSeriesPlayer';
@@ -185,7 +186,7 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
     if (!story || isPictureStory(story) || !series || vt.length === 0) { publishNowPlaying(null, 'jukebox'); return; }
     const cp = ci >= 0 ? points.find((p) => p.t === s.cursor) : undefined;
     publishNowPlaying({
-      id: 'jukebox', title: lang === 'bn' ? story.titleBn : story.title,
+      id: 'jukebox', dataset: THEME_OF_TOPIC[story.topic], title: lang === 'bn' ? story.titleBn : story.title,
       subtitle: [series.source, digits(series.period, lang), series.unit].filter(Boolean).join(' · '), badge: series.isSample ? 'sample' : 'snapshot',
       state: pstate === 'playing' ? 'playing' : pstate === 'paused' ? 'paused' : pstate === 'loading' || pstate === 'idle' ? 'busy' : 'ready',
       index: ci, count: vt.length, label: ci >= 0 ? timeLabel(vt[ci], lang) : '', valueText: cp && cp.v != null ? valueLabel(cp.v, series.unit, lang) : '',
