@@ -322,3 +322,6 @@ Removed: Bricolage Grotesque, Cormorant Garamond, IBM Plex Sans (two files) and 
 - Push the branches (`visual/v1-identity` to `visual/v6-polish`) with the `sample77-ctrl` token and open PRs against `main`; nothing is pushed yet.
 - Not verified: the element-scoped view transition (no browser here has it), Safari and Firefox, real-device `navigator.share`, listening.
 - Not built: Black Marble night side and bloom (V5 extras).
+
+### Groq key removed from the code and history (before the first push)
+GitHub secret scanning blocked the first push: the Groq key was hardcoded in `src/harmonium/groqPredictor.ts` since the first commit. All 8 local branches were rewritten (`git filter-branch`, only that one line changed: it now reads `import.meta.env.VITE_GROQ_API_KEY ?? ''`; `git diff` between the old and new tip of `visual/v6-polish` is that one line). The old commits are kept locally under `refs/backup/*` (not branches, never pushed; they still contain the key: delete with `git for-each-ref --format='%(refname)' refs/backup | xargs -n1 git update-ref -d` once you are happy). Commit hashes quoted earlier in this log are from before the rewrite. **The old key still has to be revoked at Groq.** Not verified: the Harmonium chat with a new key (no key was available), and what the chat does without one beyond the existing error handling.

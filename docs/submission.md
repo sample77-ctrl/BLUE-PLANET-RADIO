@@ -59,7 +59,7 @@ Record with sound on in a normal (GPU) Chrome, not headless. No voice-over is ne
 
 ## Before you submit (not done by this build)
 - Deploy `main` to Vercel and paste the live URL and the repository URL into the project page (they are not recorded in the repository).
-- **Revoke the Groq API key in `src/harmonium/groqPredictor.ts` at Groq** before the demo goes public. The key is still in the source.
+- **Revoke the old Groq API key at Groq.** It was hardcoded in `src/harmonium/groqPredictor.ts`; it has been removed from the source and from all branch history (the code now reads `VITE_GROQ_API_KEY`, see `.env.example`), but it was exposed locally, so treat it as burned. A new key set as a `VITE_` variable is bundled into the public site: give it a low limit, or put a small server proxy in front. Without a key the Harmonium chat's requests fail and it falls back as before.
 - Record the video and take the final six screenshots on a real GPU.
 - Read the official Judging & Awards Guide (published 13 Nov) and adjust the wording above to it.
 - Freeze is 14 Nov 09:00.
