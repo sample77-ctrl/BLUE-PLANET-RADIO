@@ -3,6 +3,7 @@ import { Play, Square, Loader2, Upload } from 'lucide-react';
 import { AudioContextManager } from '../audio/audioContext';
 import { usePrefs, speak } from '../lib/prefs';
 import { usePlaybackReport } from '../lib/playbackContext';
+import { usePublishNowPlaying } from '../player/nowPlaying';
 
 interface Pt { year: number; value: number }
 interface Series { id: string; unit: string; source: string; points: Pt[]; baseline?: number }
@@ -121,6 +122,12 @@ export const VitalSigns: React.FC = () => {
     }
   };
 
+  const vYear = view?.kind === 'one' ? view.s.points[i]?.year : view?.kind === 'all' ? view.years[i] : undefined;
+  usePublishNowPlaying('pulse', data && view ? {
+    id: 'pulse', title: t('track4'), subtitle: t('npVitalSub'), badge: 'snapshot', state: playing ? 'playing' : 'ready', pauses: false,
+    index: i, count: 0, label: vYear != null ? String(vYear) : '', valueText: '', spark: [],
+    controls: { toggle: () => { if (playing) stop(); else void start(); }, stop },
+  } : null);
   if (!data) return <div className="h-full grid place-items-center"><Loader2 className="w-5 h-5 animate-spin" /></div>;
 
   const W = 900, H = 240, pad = 34;

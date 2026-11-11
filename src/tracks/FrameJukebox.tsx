@@ -7,6 +7,7 @@ import { activeColumns, colAt, nextColumn, noteName, orderRange, rowAt, stepMs, 
 import { AudioContextManager } from '../audio/audioContext';
 import { usePrefs, speak } from '../lib/prefs';
 import { usePlaybackReport } from '../lib/playbackContext';
+import { usePublishNowPlaying } from '../player/nowPlaying';
 
 const ALL_FRAMES: NasaFrame[] = [...EIC_FRAMES, ...FRAMES];
 const COLS = 128, ROWS = 12, SWEEP_SEC = 20;
@@ -348,6 +349,12 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
 
   const needle = `${((col + 0.5) / COLS) * 100}%`;
   const meta = mode === 'single' ? (userFile ? { title: userFile.name, what: 'Your image', credit: 'Uploaded by you', url: undefined } : { title: lang === 'bn' ? frame.titleBn : frame.title, what: frame.what, credit: frame.credit, url: frame.sourceUrl }) : null;
+
+  usePublishNowPlaying('frames', {
+    id: 'frames', title: t('track2'), subtitle: t('npFramesSub'), badge: 'snapshot', state: status !== 'ready' ? 'busy' : playing ? 'playing' : 'ready', pauses: false,
+    index: col, count: 0, label: '', valueText: readout, spark: [], speed,
+    controls: { toggle: () => { if (playing) stop(); else void start(); }, stop, setSpeed },
+  });
 
   return (
     <section className="h-full overflow-y-auto px-4 sm:px-8 pb-6 pt-[calc(var(--header-h)+1.5rem)]" aria-labelledby="frames-title">

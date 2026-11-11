@@ -187,7 +187,7 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
 
   return (
     <div className="h-full overflow-y-auto overflow-x-hidden scroll-thin pt-[var(--header-h)]">
-      <div className="max-w-[1600px] mx-auto px-3 sm:px-5 pt-4 pb-28 space-y-4">
+      <div className="max-w-[1600px] mx-auto px-3 sm:px-5 pt-4 pb-6 space-y-4">
         <header className="flex flex-wrap items-end justify-between gap-2">
           <div>
             <h1 className="font-display text-2xl sm:text-3xl font-bold">{t('navJukebox')}</h1>

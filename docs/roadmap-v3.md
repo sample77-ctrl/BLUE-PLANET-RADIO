@@ -391,7 +391,11 @@ Results are reported as actually run. Failures are listed, not suppressed.
 | Phase | Status | Notes |
 |---|---|---|
 | P0 Housekeeping | ✅ | React 19.3.1, `@tailwindcss/vite` to devDependencies. Groq key in `src/harmonium/groqPredictor.ts` left in place by decision; **still needs revoking**. |
-| P1 Player core + Now-Playing bar | 🟡 Jukebox only | `src/player/` store, bar and sparkline scrubber; Jukebox publishes to it; header chip hidden while the bar shows; EN·বাংলা toggle in header; Jukebox hash no longer adds a history entry per step. Atlas, FrameJukebox, Monsoon, VitalSigns not yet wired. |
+| P1 Player core + Now-Playing bar | ✅ (see notes) | `src/player/` store, bar and sparkline scrubber; Jukebox publishes to it; header chip hidden while the bar shows; EN·বাংলা toggle in header; Jukebox hash no longer adds a history entry per step. Atlas, FrameJukebox, Monsoon, VitalSigns not yet wired. |
 
 P1 checks: `npm run lint` clean, `npm test` 262 passed, `npm run build` ok, size budget ok (main JS 157.7 kB of 175, CSS 26.1 kB of 32). Playwright e2e/axe not run. Jukebox bar seen in the dev preview at 800 px width only.
 Next safe action: wire the Atlas `TimelineBar` and the other three tracks as adapters. The Jukebox engine is owned by `JukeboxView`, so the bar disappears when the user leaves the Jukebox; keeping audio playing across views needs the player hoisted, which is an architecture change to confirm first.
+
+P1 follow-up: Atlas, FrameJukebox, Monsoon and VitalSigns now publish to the bar (`usePublishNowPlaying`). The bar is an in-flow flex sibling after `<main>`, so views shrink above it instead of being covered. Controls are optional per player: Atlas has step/seek/play; Frames has play/stop and speed; Monsoon and Vital have play/stop only (their engines can't pause or seek, so the bar says Stop and hides the scrubber).
+Checks: lint clean, 263 tests passed, build ok, size ok (main JS 158.0 kB of 175, CSS 26.2 kB of 32). Playwright could not run: its Chromium isn't installed on this machine (`npx playwright install` needed), so e2e and axe are **not run**. Checked Atlas and Jukebox in the dev preview at ~800 px; Frames, Monsoon, Vital not looked at in a browser.
+Known gaps: Atlas still shows its own `TimelineBar` as well as the bar (duplicate transport until P4 merges them); audio stops when leaving a view (player not hoisted).

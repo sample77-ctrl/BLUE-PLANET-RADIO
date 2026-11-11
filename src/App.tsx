@@ -21,6 +21,8 @@ import { HearingPanel } from './atlas/HearingPanel';
 import { TimelineBar } from './atlas/TimelineBar';
 import { TourBar } from './demo/TourBar';
 import { NowPlayingBar } from './player/NowPlayingBar';
+import { usePublishNowPlaying } from './player/nowPlaying';
+import { formatDay } from './atlas/formatDay';
 import { usePrefs } from './lib/prefs';
 import { useCountry } from './countries/useCountry';
 import { CountryPanel } from './countries/CountryPanel';
@@ -113,6 +115,11 @@ export function App() {
   // The landing page is laid out for a 90% type scale on desktop (see html.landing-open in index.css)
   useEffect(() => { document.documentElement.classList.toggle('landing-open', showHero); return () => document.documentElement.classList.remove('landing-open'); }, [showHero]);
 
+  usePublishNowPlaying('atlas', track === 'atlas' && !showHero && view !== '2d-map' && slices.length > 0 ? {
+    id: 'atlas', title: t('track1'), subtitle: `${t('npAtlasSub')} · ${formatDay(slices[0].dateLabel, lang)}–${formatDay(slices[slices.length - 1].dateLabel, lang)}`, badge: 'snapshot', state: playing ? 'playing' : 'ready',
+    index: day, count: slices.length, label: formatDay(slices[day]?.dateLabel ?? slices[0].dateLabel, lang), valueText: '', spark: [],
+    controls: { toggle: () => setPlaying((p) => !p), stop: () => setPlaying(false), step: (by) => setDay((d) => (d + by + slices.length) % slices.length), seek: setDay },
+  } : null);
   usePlaybackReport('atlas', t('track1'), playing && track === 'atlas' && !showHero, () => setPlaying(false));
 
   useEffect(() => { AudioContextManager.setMasterVolume(volume); }, [volume, audioReady]);
@@ -218,8 +225,6 @@ export function App() {
         audioReady={audioReady} soundState={soundState} onToggleAudio={() => (audioReady ? soundOff() : soundOn())} onListen={listenNow}
         onHome={() => { setShowHero(true); setTourOpen(false); }} onTour={startTour} onData={() => setDataOpen(true)} onSettings={() => setSettingsOpen(true)} settingsOpen={settingsOpen} onOpenHarmonium={() => setHarmoniumOpen(true)} />
 
-      <NowPlayingBar hidden={showHero} />
-
       <p className="sr-only" role="status" aria-live="polite">{soundState === 'on' ? t('soundOn') : soundState === 'starting' ? t('soundStarting') : soundState === 'blocked' ? t('audioBlocked') : ''}</p>
       {soundState === 'blocked' && (
         <div role="alert" className="sound-alert glass-pop">
@@ -320,6 +325,8 @@ export function App() {
           </>
         )}
       </main>
+
+      <NowPlayingBar hidden={showHero} />
 
       <InspectLocationModal observation={selected} onClose={() => setSelected(null)} />
       <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} volume={volume} onVolume={setVolume} spatialMode={spatialMode}

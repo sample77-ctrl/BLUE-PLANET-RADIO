@@ -207,7 +207,7 @@ html.rm .sound-btn svg { animation: none !important; }
 .cc-metric:not([data-layer]) .cc-big { color: var(--warm); }
 
 /* Now-Playing bar (src/player) */
-.np-bar { position: fixed; inset: auto 0 0 0; z-index: 30; display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; padding: .5rem .75rem; border-radius: 0; border-inline: 0; border-bottom: 0; }
+.np-bar { position: relative; flex: none; z-index: 30; display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; padding: .5rem .75rem; border-radius: 0; border-inline: 0; border-bottom: 0; }
 .np-title { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sm, .875rem); }
 .np-sub { font-size: .75rem; color: var(--ink-3); display: flex; gap: .4rem; align-items: center; }
 .np-badge { min-height: 0; padding: 0 .4rem; font-size: .7rem; }
@@ -224,3 +224,6 @@ html.rm .sound-btn svg { animation: none !important; }
 .np-scrub input:focus-visible { opacity: 1; background: transparent; outline: 2px solid var(--brass); outline-offset: 2px; }
 @media (min-width: 900px) { .np-bar { grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr) auto; align-items: center; gap: 1rem; padding-inline: 1.25rem; } }
 html.hc .np-bar { background: #000; backdrop-filter: none; }
+
+.np-scrub::before { content: ''; position: absolute; inset: calc(50% - 1px) 0 auto 0; height: 2px; background: var(--line); border-radius: 1px; }
+.np-scrub::after { content: ''; position: absolute; inset: calc(50% - 1px) calc(100% - var(--np-pct, 0%)) auto 0; height: 2px; background: var(--accent, var(--brass)); border-radius: 1px; }

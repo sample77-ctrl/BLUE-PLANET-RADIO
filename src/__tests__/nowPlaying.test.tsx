@@ -48,4 +48,14 @@ describe('Now-Playing bar', () => {
     expect((screen.getByRole('button', { name: 'Play' }) as HTMLButtonElement).disabled).toBe(true);
     expect((screen.getByRole('button', { name: /previous|prev/i }) as HTMLButtonElement).disabled).toBe(true);
   });
+  it('shows only the controls a start/stop player supports, with Stop instead of Pause', () => {
+    render(ui());
+    act(() => publishNowPlaying(mk({ id: 'monsoon', state: 'playing', pauses: false, count: 0, index: 0, volume: undefined, speed: undefined,
+      controls: { toggle: () => {}, stop: () => {} } })));
+    expect(screen.getByRole('button', { name: 'Stop' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Pause' })).toBeNull();
+    expect(screen.queryByRole('slider')).toBeNull();
+    expect(screen.queryByRole('combobox', { name: 'Speed' })).toBeNull();
+    expect(screen.queryByRole('button', { name: /next/i })).toBeNull();
+  });
 });

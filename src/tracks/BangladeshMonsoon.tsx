@@ -3,6 +3,7 @@ import { Play, Square, Loader2, Calendar, Droplets, Info, ChevronLeft, ChevronRi
 import { AudioContextManager } from '../audio/audioContext';
 import { usePrefs, speak } from '../lib/prefs';
 import { usePlaybackReport } from '../lib/playbackContext';
+import { usePublishNowPlaying } from '../player/nowPlaying';
 
 interface City {
   name: string;
@@ -143,6 +144,11 @@ export const BangladeshMonsoon: React.FC = () => {
     timer.current = window.setInterval(tick, STEP_MS);
   };
 
+  usePublishNowPlaying('monsoon', data ? {
+    id: 'monsoon', title: t('track3'), subtitle: t('npMonsoonSub'), badge: 'snapshot', state: playing ? 'playing' : 'ready', pauses: false,
+    index: day, count: 0, label: dates[day] ? fmtDate(dates[day]) : '', valueText: '', spark: [],
+    controls: { toggle: () => { if (playing) stop(); else void start(); }, stop },
+  } : null);
   if (err) return <p className="p-8 text-[var(--warm)]">{t('bdLoadFail')}</p>;
   if (!data) return <div className="h-full grid place-items-center"><Loader2 className="w-6 h-6 animate-spin text-[var(--brass)]" /></div>;
 
