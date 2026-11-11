@@ -3,7 +3,7 @@ export type CsvError = 'columns' | 'rows' | 'unreadable';
 
 /** Two numeric columns (year, value) per line; anything else is skipped. `error` is set when fewer than 2 rows are usable. */
 export function parseCsv(text: string): { points: Pt[]; error?: CsvError } {
-  if (/[\u0000\uFFFD]/.test(text)) return { points: [], error: 'unreadable' }; // binary, or not valid text
+  if (text.includes('\0') || text.includes('\uFFFD')) return { points: [], error: 'unreadable' }; // binary, or not valid text
   const pts: Pt[] = [];
   for (const line of text.split(/\r?\n/)) {
     const cells = line.split(/[,;\t ]+/).map((c) => c.trim()).filter(Boolean);
