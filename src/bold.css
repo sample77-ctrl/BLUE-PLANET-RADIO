@@ -328,3 +328,84 @@ html.hc .stage-big { color: var(--signal); } html.hc .stage-meter i { background
 .stage-series-big { font-family: var(--font-display); font-stretch: var(--wide); font-weight: 800; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1; letter-spacing: -.02em; }
 html.hc .stage-series-read { background: #000; color: var(--ink); border: 1px solid var(--line); } html.hc .stage-series-big { color: var(--signal); } html.hc .stage-series-read .readout { color: var(--ink-2); }
 .stage-series .stage-facts { margin-top: 1rem; } .stage-series .stage-ctl { margin-top: .9rem; }
+
+/* ===== V3: landing hero + four chapters (one EIC frame each). The hero holds the headline over the ocean-heat frame; each chapter is the frame full width over a band flooded with its data colour.
+   Motion: a needle that follows the scroll (animation-timeline: view(), else an IntersectionObserver sets data-in and CSS transitions do the same). No sound here. Static under reduced motion. ===== */
+.lh { position: relative; isolation: isolate; min-height: 100dvh; display: flex; flex-direction: column; justify-content: flex-end; background: var(--ground); overflow: hidden; padding: calc(var(--header-h) + 5rem) clamp(1.25rem, 4vw, 3rem) clamp(1.75rem, 4vw, 2.75rem); }
+.lh-pic { position: absolute; inset: 0; z-index: -2; background: #000; }
+.lh-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; opacity: .62; }
+.lh-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, var(--ground) 0%, rgb(10 10 10 / .86) 38%, rgb(10 10 10 / .28) 72%, rgb(10 10 10 / .5) 100%); opacity: calc(1 - var(--np-bass, 0) * .22); }
+.lh-sweep { position: absolute; inset: 0; overflow: hidden; }
+.lh-sweep i, .lc-sweep i { position: absolute; inset: 0; border-right: 2px solid var(--c, var(--signal)); background: linear-gradient(90deg, transparent 90%, color-mix(in srgb, var(--c, var(--signal)) 24%, transparent)); translate: -100% 0; }
+@keyframes lh-sweep { to { translate: 0 0; } }
+.lh-sweep i { animation: lh-sweep 38s linear infinite; }
+.lh-id { position: absolute; z-index: 1; top: calc(var(--header-h) + .6rem); inset-inline-end: clamp(1.25rem, 4vw, 3rem); display: flex; align-items: center; gap: .9rem; }
+.lh-id img { height: 2.6rem; width: auto; }
+.lh-id p { font-size: var(--fs-2xs); letter-spacing: .06em; text-transform: uppercase; max-width: 34ch; color: var(--ink-3); }
+html[lang='bn'] .lh-id p { text-transform: none; letter-spacing: .02em; }
+.lh-copy { display: flex; flex-direction: column; align-items: flex-start; max-width: 100%; }
+.lh-title { font-family: var(--font-display); font-weight: calc(740 + var(--np-amp, 0) * 160); font-stretch: var(--wide); font-size: clamp(3rem, 12.4vw, 14rem); line-height: .86; letter-spacing: -.025em; text-transform: uppercase; text-wrap: balance; text-box: trim-both cap alphabetic; margin-top: .7rem; max-width: 100%; text-shadow: 0 6px 40px rgb(0 0 0 / .55); }
+.lh-w { display: inline-block; }
+html[lang='bn'] .lh-title { text-transform: none; line-height: 1.12; letter-spacing: 0; font-size: clamp(2.6rem, 7.2vw, 7.5rem); text-box: none; }
+.lh-cue { position: absolute; inset-inline-end: clamp(1.25rem, 4vw, 3rem); bottom: clamp(1.75rem, 4vw, 2.75rem); font-size: var(--fs-2xs); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
+html[lang='bn'] .lh-cue { text-transform: none; letter-spacing: .02em; }
+@media (max-width: 767px) { .lh-id, .lh-cue { display: none; } .lh { padding-top: calc(var(--header-h) + 2.5rem); } .lh .hero-tele { display: none; } }
+@media (max-width: 639px) { .lh-title { font-size: 17.4vw; line-height: .88; } .lh-w { display: block; } html[lang='bn'] .lh-title { font-size: 10.5vw; } html[lang='bn'] .lh-w { display: inline-block; } }
+.lh .hero-lead { max-width: 40rem; }
+
+.lands { position: relative; z-index: 1; background: var(--ground); }
+.lc { --c: var(--brass); position: relative; background: var(--ground); border-top: 1px solid var(--hair); }
+.lc[data-c='teal'] { --c: var(--teal); } .lc[data-c='rain'] { --c: var(--rain); } .lc[data-c='fire'] { --c: var(--fire); }
+.lc-pic { --ph: clamp(14rem, 60svh, 42rem); background: #000; display: flex; justify-content: center; overflow: clip; }
+.lc-img { position: relative; width: min(100%, calc(var(--ph) * var(--ar, 2))); aspect-ratio: var(--ar, 2); }
+.lc-img img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.lc-sweep { position: absolute; top: 0; bottom: 0; overflow: clip; pointer-events: none; } /* clip, not hidden: hidden would make it the scroll container that view() measures against */
+.lc-band { background: var(--c); color: var(--on-signal-default); display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem 3rem; padding: clamp(1.25rem, 3.2vw, 2.5rem) clamp(1.25rem, 4vw, 3rem) clamp(1.75rem, 4vw, 3rem); }
+@media (min-width: 900px) { .lc-band { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); align-items: end; } }
+.lc-kicker { color: inherit; font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: .16em; text-transform: uppercase; font-weight: 600; }
+html[lang='bn'] .lc-kicker { text-transform: none; letter-spacing: .03em; }
+.lc-title { font-family: var(--font-display); font-weight: 800; font-stretch: var(--wide); font-size: clamp(2.1rem, 4.8vw, 4.4rem); line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-top: .5rem; text-wrap: balance; }
+html[lang='bn'] .lc-title { text-transform: none; line-height: 1.2; letter-spacing: 0; }
+.lc-body { max-width: 38rem; margin-top: .9rem; font-size: clamp(1rem, 1.35vw, 1.2rem); line-height: 1.5; font-weight: 500; }
+.lc-num dt { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: .04em; font-weight: 600; max-width: 34rem; line-height: 1.35; }
+.lc-num dd { margin: 0; }
+.lc-big { font-family: var(--font-display); font-weight: 800; font-stretch: var(--wide); font-size: clamp(3.2rem, 8vw, 7rem); line-height: .95; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+html[lang='bn'] .lc-big { line-height: 1.15; letter-spacing: 0; }
+.lc-unit { font-family: var(--font-mono); font-size: var(--fs-lg); font-weight: 600; }
+.lc-meta { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .15rem 1rem; margin-top: .6rem; font-family: var(--font-mono); font-size: var(--fs-xs); }
+.lc-meta dt { font-weight: 600; max-width: none; letter-spacing: .04em; text-transform: uppercase; } .lc-meta dd { font-weight: 500; }
+html[lang='bn'] .lc-meta dt { text-transform: none; }
+.lc-meta a, .lc-note a { text-decoration: underline; text-underline-offset: 2px; color: inherit; }
+.lc-badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .75rem; }
+.lc-badge { border: 1.5px solid currentColor; padding: .15rem .5rem; font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+html[lang='bn'] .lc-badge { text-transform: none; }
+.lc-note { font-family: var(--font-mono); font-size: var(--fs-sm); font-weight: 600; }
+.lc-hear { margin-top: 1.1rem; display: inline-flex; align-items: center; gap: .6rem; min-height: 52px; padding: 0 1.5rem 0 1.2rem; background: var(--on-signal-default); color: var(--c); border: 2px solid var(--on-signal-default); border-radius: var(--radius-md); font-weight: 700; font-size: 1rem; cursor: pointer; transition: background var(--dur-fast), color var(--dur-fast); }
+.lc-hear:hover { background: transparent; color: var(--on-signal-default); }
+html:not(.hc) .lc-band :focus-visible { outline: 3px solid var(--on-signal-default) !important; outline-offset: 3px; }
+
+/* Scroll-driven: the needle crosses the picture while it scrolls through the screen, and the colour band wipes in as it enters */
+@keyframes lc-needle { from { translate: -100% 0; } to { translate: 0 0; } }
+@keyframes lc-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+.lands[data-st] .lc-sweep i { animation: lc-needle linear both; animation-timeline: view(); animation-range: entry 25% exit 25%; }
+.lands[data-st] .lc-band { animation: lc-wipe linear both; animation-timeline: view(); animation-range: entry 0% entry 50%; }
+/* Fallback: an IntersectionObserver sets data-in once a chapter is a quarter on screen; the same moves as transitions */
+.lands:not([data-st]):not([data-static]) .lc-band { clip-path: inset(0 100% 0 0); transition: clip-path 900ms var(--ease-out); }
+.lands:not([data-st]):not([data-static]) .lc[data-in='true'] .lc-band { clip-path: inset(0); }
+.lands:not([data-st]):not([data-static]) .lc-sweep i { transition: translate 3200ms var(--ease-in-out); }
+.lands:not([data-st]):not([data-static]) .lc[data-in='true'] .lc-sweep i { translate: 0 0; }
+/* Reduced motion, calm mode and "no motion" browsers: everything is static and fully drawn; no sweep at all */
+html.rm .lh-sweep, html.calm .lh-sweep, html.rm .lc-sweep, html.calm .lc-sweep, .lands[data-static] .lc-sweep { display: none; }
+html.rm .lands .lc-band, html.rm .lands .lc-sweep i { animation: none !important; transition: none !important; clip-path: none; }
+@media (prefers-reduced-motion: reduce) { .lh-sweep, .lc-sweep { display: none; } .lands .lc-band { animation: none !important; transition: none !important; clip-path: none !important; } }
+
+/* High contrast: black ground, the data colour only as text and lines. Forced colors / reduced transparency: no picture behind text, no glass. */
+html.hc .lh-pic, html.hc .lh-shade, html.hc .lh-sweep { display: none; }
+html.hc .lc-band { background: #000; color: var(--ink); border-top: 3px solid var(--c); }
+html.hc .lc-big, html.hc .lc-kicker, html.hc .lc-unit { color: var(--c); }
+html.hc .lc-hear { background: #000; color: var(--c); border-color: var(--c); } html.hc .lc-hear:hover { color: #fff; border-color: #fff; }
+@media (forced-colors: active) { .lh-pic, .lh-shade, .lh-sweep { display: none; } .lc-band { border-top: 3px solid CanvasText; } .lc-hear { border: 2px solid ButtonText; } }
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) { .hero-tele { background: var(--panel); -webkit-backdrop-filter: none; backdrop-filter: none; border-color: var(--line); } }
+/* the carousel's own level-1 headline is now a section title, not the page headline */
+.world-stage .lv1 .hero-title { font-size: clamp(2rem, 4.8vw, 4.4rem); }
+@media (max-width: 767px) { .world-stage .lv1 .hero-title { font-size: clamp(2rem, 9vw, 3rem); } }

@@ -130,8 +130,6 @@ export const WorldCarousel: React.FC<Props> = ({ data, onOpen, onTour, onListen,
     <section ref={root} id="world-carousel" className="world-stage" data-level={level} data-gl={gl} data-ready={!gl || sceneReady} aria-roledescription="carousel" aria-label={t('carouselLabel')} onKeyDown={onKey}
       onPointerDown={(e) => { swipe.current = level < 3 && e.pointerType !== 'mouse' ? e.clientX : null; }}
       onPointerUp={(e) => { const x0 = swipe.current; swipe.current = null; if (x0 !== null && Math.abs(e.clientX - x0) > 40) go(e.clientX < x0 ? 1 : -1); }}>
-      <h1 className="sr-only">{t('heroHeadline')}</h1>
-
       {gl && <Suspense fallback={null}><WorldScene stage={root} dots={sceneDots} onFail={onGlFail} onReady={onSceneReady} /></Suspense>}
       {/* Planet anchors: CSS places them for each level (the active one centred, its neighbours peeking in at the edges); the 3D planets follow them. Without WebGL they draw a CSS Earth themselves. */}
       {WORLDS.map((w, i) => {
@@ -151,23 +149,12 @@ export const WorldCarousel: React.FC<Props> = ({ data, onOpen, onTour, onListen,
         </div>
       )}
 
-      {/* team identity, level 1 only */}
-      <div className="world-id lv" {...lv(1)}>
-        <img src="/images/space-apps-logo.png" alt={t('spaceAppsLogoAlt')} width={440} height={172} className="h-8 sm:h-12 w-auto" />
-        <p className="text-xs sm:text-sm text-[var(--ink-3)] max-w-[60ch]">{t('heroKicker')}</p>
-      </div>
-
-      {/* level 1: one headline, one primary action (press play), real numbers */}
+      {/* level 1: the four Earths (the landing hero above holds the headline and the one primary action) */}
       <div className="world-copy lv lv1" {...lv(1)} key={`l1-${world.id}`}>
         <p className="world-kicker hero-eyebrow">{label('Kicker')}</p>
         <h2 ref={(el) => { heads.current[0] = el; }} tabIndex={-1} className="hero-title font-display outline-none">{t('heroTitle')}</h2>
         <p className="hero-lead">{label('Line')}</p>
         <div className="hero-actions">
-          <button onClick={() => onOpen('frames')} className="btn btn-brass hero-cta">
-            <span className="hero-cta-icon" aria-hidden="true"><Play className="w-4 h-4" /></span>
-            <span>{t('heroFrame')}</span>
-          </button>
-          <button onClick={() => onOpen('atlas')} className="btn hero-secondary"><Globe2 className="w-4 h-4" />{t('heroExplore')}</button>
           <button onClick={togglePreview} aria-pressed={playing} className="btn hero-secondary">
             {playing ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             <span>{playing ? t('ctaStopPreview') : t('heroPlay', { name: name(world) })}</span>

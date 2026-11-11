@@ -9,6 +9,7 @@ import { applyParallax } from './parallax';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { WorldCarousel, type WorldData } from './WorldCarousel';
 import type { WorldId } from './worlds';
+import { LandingHero, LandingChapters } from './Chapters';
 
 const TopicCarousel = lazy(() => import('../stories/TopicCarousel').then((m) => ({ default: m.TopicCarousel })));
 
@@ -35,14 +36,17 @@ interface Props {
   onAbout: () => void;
   onTopic: (storyId: string) => void;
   onOpenHarmonium?: () => void;
+  /** Opens the Frame Stage on this EIC frame. */
+  onFrame: (frameId: string) => void;
 }
 
 /**
- * Landing page. (1) The world carousel: four Earths, one per track, with three levels of depth (overview → detail → immersive);
+ * Landing page. (0) The hero ("Hear Earth change" over the ocean-heat EIC frame) and four chapters, one EIC frame each (roadmap v5, V3);
+ * (1) the world carousel: four Earths, one per track, with three levels of depth (overview → detail → immersive);
  * (2) the topic carousel and how data becomes sound; (3) the footer. The 3D planets are the carousel's own scene (WorldScene); the Atlas globe is not loaded here.
  * Only the starfield layers move with the scroll (parallax). The 3D Earth stays pinned behind the sections below as their backdrop.
  */
-export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, onSilent, onAbout, onTopic, onOpenHarmonium }) => {
+export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, onSilent, onAbout, onTopic, onOpenHarmonium, onFrame }) => {
   const { t, lang, reduceMotion } = usePrefs();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -81,10 +85,14 @@ export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, on
     return { fireDots: fireObs.map((o) => ({ lat: o.latitude, lon: o.longitude, w: o.normalizedValue })), cityDots: rain.cityDots, melody, metrics };
   }, [fireObs, rain, gis, t, lang]);
 
+  const heroMetrics = useMemo(() => [...(data.metrics.frames ?? []), ...(data.metrics.pulse?.slice(0, 1) ?? [])], [data.metrics]);
+  const years = useMemo(() => (gis.length ? { from: fmtNum(gis[0].year, lang, { useGrouping: false }), to: fmtNum(gis[gis.length - 1].year, lang, { useGrouping: false }) } : null), [gis, lang]);
   const scrollDown = () => document.getElementById('landing-more')?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
 
   return (
     <div ref={ref} id="landing" tabIndex={-1} className="hero-layer landing outline-none fixed inset-x-0 bottom-0 top-0 z-30 overflow-y-auto overflow-x-hidden">
+      <LandingHero metrics={heroMetrics} melody={data.melody.pulse ?? []} years={years} onFrame={onFrame} onGlobe={() => onPick('atlas')} />
+      <LandingChapters onFrame={onFrame} />
       <WorldCarousel data={data} onOpen={onPick} onTour={onTour} onListen={onListen} onSilent={onSilent} onDown={scrollDown} onOpenHarmonium={onOpenHarmonium}>
       <div id="landing-more" data-cover className="landing-more">
         {/* Topic carousel (Feature D), then how data becomes sound */}
