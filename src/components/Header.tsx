@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Volume2, VolumeX, Settings, Database, Compass, Menu, X, Pause, Play } from 'lucide-react';
+import { Volume2, VolumeX, Settings, Database, Compass, Menu, X, Pause, Play, Piano } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 import { usePlayback } from '../lib/playbackContext';
 import { useNowPlaying } from '../player/nowPlaying';
@@ -124,7 +124,7 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
               aria-label="Harmonium Chat"
               title="3D Harmonium & AI Climate Chat"
             >
-              <span className="text-base" aria-hidden="true">🪗</span>
+              <Piano className="w-4 h-4" aria-hidden="true" />
               <span className="hidden xl:inline font-semibold">Harmonium</span>
             </button>
           )}
@@ -174,7 +174,7 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
                 className="btn flex items-center gap-2"
                 onClick={() => { setMenu(false); onOpenHarmonium(); }}
               >
-                <span aria-hidden="true">🪗</span>
+                <Piano className="w-4 h-4" aria-hidden="true" />
                 <span>Harmonium Chat</span>
               </button>
             )}
