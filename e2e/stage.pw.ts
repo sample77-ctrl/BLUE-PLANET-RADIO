@@ -101,15 +101,38 @@ test('"Describe" gives the picture\'s long description, and the image alt is tha
   expect(errors).toEqual([]);
 });
 
-test('"Hear the data behind it" opens the matching series and says so when it is only related', async ({ page }) => {
+test('"Hear the data behind it" plays the real series under the frame, with a score line, Side A / Side B, and its source', async ({ page }) => {
   const errors = await offline(page);
   await page.setViewportSize({ width: 1400, height: 900 });
   await open(page, 'track=frames&frame=eic-ghg');
   await page.getByRole('button', { name: /CO₂ record behind it/ }).click();
-  await expect(page).toHaveURL(/track=jukebox/);
+  const panel = page.getByRole('region', { name: 'The data behind it' });
+  await expect(panel).toBeVisible();
+  await expect(page.locator('.stage-frame canvas')).toBeVisible(); // the picture stays on screen
+  await expect(panel.locator('.stage-chart svg path').first()).toBeVisible(); // the score line
+  await expect(panel).toContainText('NOAA');
+  await expect(panel).toContainText('Snapshot');
+  const when = panel.locator('.stage-series-big');
+  const t0 = await when.textContent();
+  await panel.getByRole('button', { name: 'Play' }).click();
+  await expect(panel.getByRole('button', { name: 'Pause' })).toBeVisible();
+  await expect.poll(() => when.textContent(), { timeout: 8000 }).not.toBe(t0); // the cursor moves with the sound
+  await panel.getByRole('button', { name: 'Pause' }).click();
+  // the picture's own sweep and the series never sound together
+  await page.locator('.stage-play').first().click();
+  await expect(panel.getByRole('button', { name: 'Play' })).toBeVisible();
+  await page.locator('.stage-play').first().click();
+  // Side A / Side B on the series
+  await panel.getByRole('button', { name: 'Side A / Side B' }).click();
+  await expect(panel.locator('.stage-side').nth(0)).toContainText('Side A');
+  await expect(panel.locator('.stage-side').nth(1)).toContainText('right ear');
+  // the Jukebox link still goes to the story
+  await panel.getByRole('button', { name: 'Open in the Data Jukebox' }).click();
   await expect(page).toHaveURL(/story=co2/);
   await open(page, 'track=frames&frame=eic-ocean-heat');
   await expect(page.getByText(/Related, not identical data/)).toBeVisible();
+  await page.getByRole('button', { name: /related data/i }).click();
+  await expect(page.getByRole('region', { name: 'The data behind it' })).toContainText('not the numbers drawn in the picture');
   expect(errors).toEqual([]);
 });
 

@@ -12,6 +12,7 @@ import { useReactiveGlow } from '../player/reactive';
 import { applySignal, type RGB } from '../lib/signal';
 import { axisValueAt, columnColor, mixRgb, RELATED_STORY } from '../lib/frameStage';
 import { digits } from '../jukebox/format';
+import { SeriesUnderFrame } from './SeriesUnderFrame';
 
 const ALL_FRAMES: NasaFrame[] = [...EIC_FRAMES, ...FRAMES];
 const COLS = 128, ROWS = 12, SWEEP_SEC = 20;
@@ -78,6 +79,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
   const sigRef = useRef<RGB | null>(null); // the signal colour, smoothed
   const readRef = useRef<HTMLDivElement>(null);
   const [more, setMore] = useState(false);
+  const [dataOpen, setDataOpen] = useState(false); // the series behind the frame, played under it
   const [ar, setAr] = useState(2); // width / height of what is on stage, for the frame's size
   // A shared link (#v1&track=frames&...) restores the picture, the comparison and the needle.
   const [share] = useState(() => {
@@ -475,7 +477,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
         {audioBlocked && <p role="alert" className="mt-3 text-sm text-[var(--signal)] max-w-[70ch]">{t('audioBlocked')}</p>}
 
         <div className="stage-ctl stage-ctl2">
-          {related && <button className="btn btn-brass" onClick={() => onOpenStory?.(related.story)}><Headphones className="w-4 h-4" /> {lang === 'bn' ? related.bn : related.en}</button>}
+          {related && <button className="btn btn-brass" aria-expanded={dataOpen} onClick={() => setDataOpen(!dataOpen)}><Headphones className="w-4 h-4" /> {lang === 'bn' ? related.bn : related.en}</button>}
           {mode === 'single' && (
             <label className="btn cursor-pointer">
               <ImagePlus className="w-4 h-4" /> {t('loadOwn')}
@@ -492,6 +494,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
           {region && <button className="btn" onClick={() => setRegion(null)}>{t('clearRegion')}</button>}
         </div>
         {related?.related && <p className="stage-note">{t('stRelated')} {lang === 'bn' ? related.bn : related.en}</p>}
+        {related && dataOpen && <SeriesUnderFrame key={related.story} storyId={related.story} related={related.related} framePlaying={playing} onStart={stop} onOpenStory={(id) => onOpenStory?.(id)} onClose={() => setDataOpen(false)} />}
 
         {copied && <p role="status" className="mt-2 text-sm text-[var(--ink-2)] max-w-[70ch] break-all">{copied.startsWith('http') ? <input readOnly value={copied} onFocus={(e) => e.currentTarget.select()} aria-label={t('shareLink')} className="w-full bg-transparent border border-[var(--line)] rounded px-2 py-1" /> : copied}</p>}
         {story !== null && (
