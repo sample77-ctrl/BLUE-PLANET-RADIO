@@ -1,6 +1,6 @@
 import { useElementWidth } from '../lib/useElementWidth';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Play, Square, Loader2, Calendar, Droplets, Info, ChevronLeft, ChevronRight, Award, Compass } from 'lucide-react';
+import { Play, Square, Loader2, Calendar, Droplets, Info, ChevronLeft, ChevronRight, Award, Compass, Target, Globe } from 'lucide-react';
 import { AudioContextManager } from '../audio/audioContext';
 import { usePrefs, speak } from '../lib/prefs';
 import { usePlaybackReport } from '../lib/playbackContext';
@@ -239,7 +239,7 @@ export const BangladeshMonsoon: React.FC = () => {
                   onClick={() => setPlayScope('focus')}
                   title={lang === 'bn' ? `শুধুমাত্র ${cityName(fc)} এর শব্দ শুনুন` : `Play audio for ${cityName(fc)} only`}
                 >
-                  <span>🎯</span>
+                  <Target className="w-4 h-4" aria-hidden="true" />
                   <span>{lang === 'bn' ? `${cityName(fc)} (শুধুমাত্র)` : `${cityName(fc)} Only`}</span>
                 </button>
                 <button
@@ -249,7 +249,7 @@ export const BangladeshMonsoon: React.FC = () => {
                   onClick={() => setPlayScope('all')}
                   title={lang === 'bn' ? 'সকল ৮টি বিভাগের সমন্বিত শব্দ শুনুন' : 'Play spatial audio for all 8 divisions'}
                 >
-                  <span>🌐</span>
+                  <Globe className="w-4 h-4" aria-hidden="true" />
                   <span>{lang === 'bn' ? 'সকল ৮ বিভাগ' : 'All 8 Divisions'}</span>
                 </button>
               </div>
