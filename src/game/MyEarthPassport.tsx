@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Award,
   ArrowLeft,
@@ -15,6 +15,8 @@ import {
   X,
 } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
+import { Overlay } from '../components/Overlay';
+import { useDialog } from '../lib/useDialog';
 
 interface Props {
   onBack: () => void;
@@ -41,6 +43,8 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
   });
   const [isEditingCallsign, setIsEditingCallsign] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
+  const certRef = useRef<HTMLDivElement>(null);
+  useDialog(showCertificate, () => setShowCertificate(false), certRef);
   const [issueDate] = useState(() => new Date().toLocaleDateString());
 
   const handleSaveCallsign = (name: string) => {
@@ -304,8 +308,8 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
 
       {/* Printable Certificate Modal */}
       {showCertificate && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
-          <div className="relative max-w-2xl w-full bg-[var(--panel)] border-4 border-[var(--signal)] rounded-3xl p-8 sm:p-10 shadow-2xl flex flex-col gap-6 text-center my-8">
+        <Overlay><div className="fixed inset-0 z-[70] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fade-in" onClick={() => setShowCertificate(false)}>
+          <div ref={certRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="certificate-title" onClick={(e) => e.stopPropagation()} className="relative max-w-2xl w-full bg-[var(--panel)] border-4 border-[var(--signal)] rounded-3xl p-8 sm:p-10 shadow-2xl flex flex-col gap-6 text-center my-8">
             <button
               onClick={() => setShowCertificate(false)}
               className="absolute top-4 right-4 p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
@@ -322,7 +326,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
               <span className="text-2xs font-mono uppercase tracking-widest text-[var(--signal)] font-semibold">
                 NASA SPACE APPS CHALLENGE 2026 · THE EARTH INFORMATION JUKEBOX
               </span>
-              <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+              <h2 id="certificate-title" className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
                 CERTIFICATE OF COMPLETION
               </h2>
               <p className="text-xs text-[var(--ink-2)] max-w-md">
@@ -379,7 +383,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
               </button>
             </div>
           </div>
-        </div>
+        </div></Overlay>
       )}
     </div>
   );
