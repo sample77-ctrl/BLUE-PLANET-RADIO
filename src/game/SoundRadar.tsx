@@ -19,16 +19,16 @@ export const SoundRadar: React.FC<Props> = ({ pan, activeSound, intensity }) => 
   };
 
   const soundNameMap = {
-    fire: '🔥 Wildfire Crackle',
-    rain: '🌧️ Monsoon Droplets',
-    ocean: '🐳 Ocean Bass Drone',
-    none: '🎧 Silence',
+    fire: 'Wildfire Crackle',
+    rain: 'Monsoon Droplets',
+    ocean: 'Ocean Bass Drone',
+    none: 'Silence',
   };
 
   const activeColor = colorMap[activeSound];
 
   return (
-    <div className="flex items-center gap-3 px-3 py-1.5 rounded-2xl glass border border-[var(--line)] shadow-lg select-none">
+    <div className="flex items-center gap-3 px-3 py-1.5 rounded-lg glass border border-[var(--line)] select-none">
       {/* Left Ear Wave */}
       <div className="flex items-center gap-1">
         <span className="text-2xs font-mono font-semibold text-[var(--ink-3)]">L</span>
