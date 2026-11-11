@@ -18,6 +18,18 @@ describe('layer solo and mute', () => {
     fireEvent.click(fireMute); expect(onMute).toHaveBeenCalledWith('fire');
     expect((screen.getByRole('button', { name: 'Solo Ocean heat' }) as HTMLButtonElement).disabled).toBe(true);
   });
+  it('explains why a disabled Mute/Solo is disabled, and exposes solo with aria-pressed', () => {
+    const on = { fire: true, precipitation: true, sst: false };
+    const { rerender } = render(<PrefsProvider><LayersPanel {...base} enabled={on} muted={{ fire: false, precipitation: false, sst: false }} onSolo={() => {}} onMute={() => {}} /></PrefsProvider>);
+    const off = screen.getByRole('button', { name: 'Solo Ocean heat' });
+    expect(off.getAttribute('title')).toBe('Ocean heat is off. Switch it on from its card first.');
+    expect(document.getElementById(off.getAttribute('aria-describedby')!)?.textContent).toBe('Ocean heat is off. Switch it on from its card first.');
+    expect(screen.getByRole('button', { name: 'Solo Rain' }).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByRole('button', { name: 'Solo Rain' }).getAttribute('aria-describedby')).toBeNull();
+    rerender(<PrefsProvider><LayersPanel {...base} enabled={on} muted={{ fire: true, precipitation: false, sst: false }} onSolo={() => {}} onMute={() => {}} /></PrefsProvider>);
+    expect(screen.getByRole('button', { name: 'Solo Rain' }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('button', { name: 'Solo Wildfires' }).getAttribute('aria-pressed')).toBe('false');
+  });
   it('is unchanged without the new props', () => {
     render(<PrefsProvider><LayersPanel {...base} /></PrefsProvider>);
     expect(screen.queryByRole('button', { name: /^Solo/ })).toBeNull();
