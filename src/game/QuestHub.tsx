@@ -1,7 +1,7 @@
 import React from 'react';
 import { Lock, Play, Rocket } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
-import type { MissionInfo } from './WorldMapHub';
+import type { MissionInfo } from './types';
 import type { ScreenMode } from './SonicRangersGame';
 
 interface Props {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, Music, Flame, CloudRain, Waves, Play, Pause, RotateCcw } from 'lucide-react';
 import { GameAudioEngine } from './gameAudio';
 import { usePrefs } from '../lib/prefs';
+import { markMode } from './progress';
 
 interface Props {
   onBackToMissions: () => void;
@@ -38,6 +39,11 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
   ];
 
   const [activePad, setActivePad] = useState<string | null>(null);
+
+  // Two layers sounding together is what earns the Master Earth DJ badge
+  useEffect(() => {
+    if ([fireActive, rainActive, oceanActive].filter(Boolean).length >= 2) markMode('dj');
+  }, [fireActive, rainActive, oceanActive]);
 
   useEffect(() => {
     return () => {

@@ -57,7 +57,7 @@ describe('overlay dialog semantics', () => {
   });
 
   it('MyEarthPassport: the view is not a dialog; the certificate overlay is', () => {
-    render(<PrefsProvider><MyEarthPassport onBack={() => {}} totalStars={12} /></PrefsProvider>, { container: document.getElementById('root')! });
+    render(<PrefsProvider><MyEarthPassport onBack={() => {}} stars={{ 1: 3, 2: 3, 3: 3, 4: 3 }} /></PrefsProvider>, { container: document.getElementById('root')! });
     expect(screen.queryByRole('dialog')).toBeNull();
     const opener = screen.getByText(/certificate/i, { selector: 'button *, button' }).closest('button') as HTMLElement;
     opener.focus(); fireEvent.click(opener);

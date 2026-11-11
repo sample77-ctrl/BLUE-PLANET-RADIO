@@ -20,7 +20,7 @@ export const Footer: React.FC<{ onAbout?: () => void }> = ({ onAbout }) => {
         <div>
           <h2 className="label uppercase tracking-wider">{t('footerSources')}</h2>
           <ul className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5">
-            {SOURCE_LINKS.map((s) => <li key={s.url}><a className="link" href={s.url} target="_blank" rel="noreferrer">{s.name}</a></li>)}
+            {SOURCE_LINKS.map((s) => <li key={s.url}><a className="link tap-link" href={s.url} target="_blank" rel="noreferrer">{s.name}</a></li>)}
           </ul>
         </div>
       </div>

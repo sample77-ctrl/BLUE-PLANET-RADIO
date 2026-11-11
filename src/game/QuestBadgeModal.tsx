@@ -1,19 +1,31 @@
 import React, { useRef, useState } from 'react';
-import { Award, Sparkles, X, Globe, Music, CheckCircle2 } from 'lucide-react';
+import { Award, Sparkles, X, Globe, Music, CheckCircle2, Lock } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 import { Overlay } from '../components/Overlay';
 import { useDialog } from '../lib/useDialog';
+import { readStars, type Stars } from './progress';
 
 interface Props {
   onClose: () => void;
   onExploreGlobe: () => void;
   onOpenDJ: () => void;
+  /** Stars per mission; read from storage when omitted. */
+  stars?: Stars;
 }
 
-export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOpenDJ }) => {
+export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOpenDJ, stars }) => {
   const { lang } = usePrefs();
   const isBn = lang === 'bn';
   const [cadetName, setCadetName] = useState(isBn ? 'ক্যাডেট অভিযাত্রী' : 'Cadet Explorer');
+
+  const st = stars ?? readStars();
+  const tiles = [
+    { id: 1, en: 'Fire & Nature', bn: 'আগুন ও প্রকৃতি' },
+    { id: 2, en: 'Monsoon Rain', bn: 'বর্ষার বৃষ্টি' },
+    { id: 3, en: 'Ocean Heat', bn: 'সাগরের তাপ' },
+    { id: 4, en: 'Climate Singer', bn: 'জলবায়ুর সুর' },
+  ].map((t) => ({ ...t, done: (st[t.id] ?? 0) > 0 }));
+  const doneCount = tiles.filter((t) => t.done).length;
 
   const ref = useRef<HTMLDivElement>(null);
   useDialog(true, onClose, ref);
@@ -44,15 +56,15 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
 
         <div className="text-center">
           <span className="text-xs uppercase tracking-widest text-[var(--signal)] font-semibold font-mono">
-            NASA SPACE APPS CHALLENGE 2026
+            {isBn ? 'সনিক আর্থ অ্যাটলাস' : 'SONIC EARTH ATLAS'}
           </span>
           <h2 id="quest-badge-title" className="text-2xl sm:text-3xl font-extrabold font-display text-[var(--ink)] mt-1">
-            {isBn ? 'নাসা জুনিয়র সাউন্ড ক্যাডেট' : 'NASA Junior Sonic Cadet'}
+            {isBn ? 'সনিক ক্যাডেট ব্যাজ' : 'Sonic Cadet badge'}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--ink-2)] mt-1">
             {isBn
-              ? 'সার্টিফিকেট অফ আর্থ সোনফিকেশন এক্সিলেন্স'
-              : 'Certificate of Earth Sonification Mastery'}
+              ? `${doneCount} / ৪টি মিশন শেষ। এই অ্যাপ দিচ্ছে, নাসা নয়।`
+              : `${doneCount} / 4 missions finished. Given by this app, not by NASA.`}
           </p>
         </div>
 
@@ -70,28 +82,16 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
           />
         </div>
 
-        {/* 4 Badges Earned */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full my-1">
-          <div className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
-                        <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'আগুন ও প্রকৃতি' : 'Fire & Nature'}</span>
-            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" />
-          </div>
-
-          <div className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
-                        <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'শব্দের কম্পাস' : 'Ear Compass'}</span>
-            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" />
-          </div>
-
-          <div className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
-                        <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'আবহাওয়া গোয়েন্দা' : 'Weather Scout'}</span>
-            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" />
-          </div>
-
-          <div className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
-                        <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'জলবায়ুর সুর' : 'Climate Singer'}</span>
-            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" />
-          </div>
-        </div>
+        {/* One tile per mission: ticked only when that mission has at least one saved star */}
+        <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full my-1">
+          {tiles.map((t) => (
+            <li key={t.id} data-done={t.done ? 'true' : 'false'} className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
+              <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? t.bn : t.en}</span>
+              {t.done ? <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" aria-hidden="true" /> : <Lock className="w-3.5 h-3.5 text-[var(--ink-3)]" aria-hidden="true" />}
+              <span className="text-2xs font-mono text-[var(--ink-3)]">{t.done ? (isBn ? 'শেষ' : 'done') : (isBn ? 'বাকি' : 'to do')}</span>
+            </li>
+          ))}
+        </ul>
 
         <p className="text-xs text-center text-[var(--ink-2)] leading-relaxed px-2">
           {isBn
@@ -109,7 +109,7 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
             className="btn btn-brass w-full justify-center text-sm font-semibold py-3 flex items-center gap-2 "
           >
             <Globe className="w-4 h-4" />
-            <span>{isBn ? 'লাইভ গ্লোব এক্সপ্লোর করো!' : 'Explore Live 3D Globe!'}</span>
+            <span>{isBn ? '৩ডি গ্লোব এক্সপ্লোর করো' : 'Explore the 3D globe'}</span>
           </button>
 
           <button

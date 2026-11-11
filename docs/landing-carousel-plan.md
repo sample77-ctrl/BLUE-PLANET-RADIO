@@ -59,7 +59,7 @@ Carousel arrows are disabled in L2/L3 (the reference only browses at L1); changi
 | 9D | Clean-up: delete landing signal / framing / scroll-stage code, update e2e + a11y, বাংলা, high contrast, reduced motion | S–M |
 | 9E | `npm run lint && npm test && npm run build`, `test:e2e`, `test:a11y`; screenshots 320 / 768 / 1280 EN + বাংলা; roadmap §5/§7 + `plan.md`; PR | S |
 
-**Gate:** no WebGL context is created on the landing page; all three levels work by mouse, touch and keyboard; every existing check green.
+**Gate (as written for 9A–9E; superseded by 9F, which added the 3D `WorldScene`, so the landing now makes 2 WebGL contexts when WebGL exists, none when it does not; see roadmap-v3 Phase 9):** no WebGL context is created on the landing page; all three levels work by mouse, touch and keyboard; every existing check green.
 
 ## 5. Open questions for the team (answered with the recommended defaults)
 

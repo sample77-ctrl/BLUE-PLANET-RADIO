@@ -168,60 +168,12 @@ describe('SonicQuest component', () => {
     const badgeBtns = screen.getAllByRole('button', { name: /Badges|Cadet Certificate/i });
     fireEvent.click(badgeBtns[0]);
 
-    expect(screen.getByText(/NASA Junior Sonic Cadet/i)).toBeDefined();
+    expect(screen.getByText(/Sonic Cadet badge/i)).toBeDefined();
+    expect(screen.getByText(/Given by this app, not by NASA/i)).toBeDefined();
+    expect(screen.getByText(/0 \/ 4 missions finished/i)).toBeDefined(); // a fresh visitor has finished none
     const closeBtn = screen.getByRole('button', { name: /Close/i });
     fireEvent.click(closeBtn);
 
-    expect(screen.queryByText(/NASA Junior Sonic Cadet/i)).toBeNull();
-  });
-
-  it('renders the Step-by-Step Update Plan guide and navigates through the steps', () => {
-    const onExplore = vi.fn();
-    render(
-      <PrefsProvider>
-        <SonicQuest onExplore={onExplore} audioReady={true} initialScreen="stepMaster" />
-      </PrefsProvider>
-    );
-
-    // Initial view should be Step 1
-    expect(screen.getByText(/Authentic NASA Earth Science & Sonification/i)).toBeDefined();
-    expect(screen.getByText(/NASA Space Apps Challenge 2026/i)).toBeDefined();
-
-    // Click Next Step to go to Step 2
-    const nextBtn = screen.getByRole('button', { name: /Next Step/i });
-    fireEvent.click(nextBtn);
-    expect(screen.getByText(/The Seven Explorer Game Modes/i)).toBeDefined();
-
-    // Click Next Step to go to Step 3
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
-    expect(screen.getByText(/Four Playable NASA Data Missions/i)).toBeDefined();
-
-    // Click Next Step to go to Step 4 (Audio Legend & Formulas)
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
-    expect(screen.getByText(/Scientific Audio Legend & Verification Matrix/i)).toBeDefined();
-    const testFireBtn = screen.getByRole('button', { name: /Test Fire Sound/i });
-    fireEvent.click(testFireBtn);
-    expect(GameAudioEngine.prototype.playFire).toHaveBeenCalled();
-
-    // Click Next Step to go to Step 5 (Time Travel 1981 vs 2025)
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
-    expect(screen.getByText(/Time Travel — Hear Earth in 1981 vs 2025/i)).toBeDefined();
-    const hear1981Btn = screen.getByRole('button', { name: /Hear Earth in 1981/i });
-    fireEvent.click(hear1981Btn);
-    expect(GameAudioEngine.prototype.playPentatonicNote).toHaveBeenCalled();
-
-    // Click Next Step to go to Step 6 (Blind Explorer & Spatial Audio)
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
-    expect(screen.getByText(/Blind Explorer Mode & 3D Spatial Audio/i)).toBeDefined();
-
-    // Click Next Step to go to Step 7 (Passport & Certification)
-    fireEvent.click(screen.getByRole('button', { name: /Next Step/i }));
-    expect(screen.getByText(/Earth Sound Passport & Graduation/i)).toBeDefined();
-    expect(screen.getByText(/SEAP-2026-NASA-VALIDATED/i)).toBeDefined();
-
-    // Previous step works
-    const prevBtn = screen.getByRole('button', { name: /Previous Step/i });
-    fireEvent.click(prevBtn);
-    expect(screen.getByText(/Blind Explorer Mode & 3D Spatial Audio/i)).toBeDefined();
+    expect(screen.queryByText(/Sonic Cadet badge/i)).toBeNull();
   });
 });

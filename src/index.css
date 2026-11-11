@@ -147,6 +147,10 @@ html.calm { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28p
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 40px; padding: 0 .9rem; border-radius: var(--radius-md); border: 1px solid var(--hair); background: transparent; color: var(--ink); font-weight: 500; font-size: var(--fs-sm); line-height: var(--lh-ui); cursor: pointer; white-space: nowrap; transition: background var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast); }
 .btn:hover { border-color: var(--ink-3); background: var(--panel-2); }
 .btn[aria-pressed='true'] { border-color: var(--signal); color: var(--signal); }
+/* aria-disabled keeps the button focusable so its reason (title / aria-describedby) can be reached by keyboard; it must look and act inert */
+.btn[aria-disabled='true'] { opacity: .45; cursor: not-allowed; }
+.btn[aria-disabled='true']:hover { background: transparent; border-color: var(--hair); }
+.btn-ghost[aria-disabled='true']:hover { border-color: transparent; color: var(--ink-2); }
 /* .btn-brass is the primary button: a field of the signal colour (name kept for the many call sites) */
 .btn-brass { background: var(--signal); color: var(--on-signal); border-color: var(--signal); font-weight: 650; }
 .btn-brass:hover { background: color-mix(in oklch, var(--signal) 86%, white); border-color: color-mix(in oklch, var(--signal) 86%, white); }
@@ -375,3 +379,14 @@ html.rm *, html.rm *::before, html.rm *::after { animation-duration: 0.001ms !im
 
 .sr-only-focusable:not(:focus) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .scroll-thin::-webkit-scrollbar { width: 6px; }
+
+/* Outside any @layer on purpose: these must beat the min-h-* / h-* utilities on individual controls. */
+/* a link that stands on its own line (a list of sources), not one inside a sentence: 24px always, 44px on touch */
+.tap-link { display: inline-flex; align-items: center; min-height: 24px; }
+/* Touch targets: 44x44 for every pointer control on coarse pointers (the decorative aria-hidden vinyl button and sr-only skip links excepted); the 24px floor (WCAG 2.5.8) is set below for all pointers. Inline links inside a sentence are exempt. */
+@media (pointer: coarse) {
+  button:not(.sr-only):not([aria-hidden='true']), summary, select, [role='button']:not([aria-hidden='true']), [role='tab'], [role='switch'], .tap { min-height: 44px; min-width: 44px; }
+  .tap-link, input[type='range'] { min-height: 44px; }
+  label:has(> input[type='checkbox']:not(.sr-only)), label:has(> input[type='radio']:not(.sr-only)) { min-height: 44px; }
+  input[type='checkbox']:not(.sr-only), input[type='radio']:not(.sr-only) { min-width: 24px; min-height: 24px; }
+}

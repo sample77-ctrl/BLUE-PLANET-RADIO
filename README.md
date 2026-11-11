@@ -29,8 +29,8 @@
 ## 🌟 Highlights & Key Innovations
 
 * 🎧 **Zero-Dependency Live Sonification:** Generates all audio procedurally in real-time via the browser's native **Web Audio API**—no static MP3 loops or artificial sound files.
-* 🛰️ **100% Authentic NASA Datasets:** Direct integrations with NASA FIRMS active fires, NASA POWER 45-year climate history, JPL MUR Sea Surface Temperature, GISS GISTEMP v4, and NOAA/NSIDC Vital Signs.
-* 🎮 **Sonic Quest Adventure Game:** A fun cartoon learning adventure featuring a 3D animated **Eco-Ninja Cadet**, 4 NASA audio missions, an Earth DJ Studio, and printable NASA Junior Cadet Certification.
+* 🛰️ **Real NASA data, labelled honestly:** Snapshots bundled with the app and labelled as such (some views can also request NASA POWER or GIBS live and say so) of NASA FIRMS active fires, NASA POWER 45-year climate history, JPL MUR Sea Surface Temperature, GISS GISTEMP v4, and NOAA/NSIDC Vital Signs.
+* 🎮 **Sonic Quest Adventure Game:** A fun cartoon learning adventure featuring a 3D animated **Eco-Ninja Cadet**, 4 audio missions built on those snapshots, an Earth DJ Studio, and a printable certificate of completion that the app issues itself (not issued or endorsed by NASA).
 * 🌐 **Interactive 3D & 2D Cartography:** Seamless Three.js 3D globe with Blue Marble textures and atmospheric scattering, plus an accessible 2D vector fallback with complete country climate profiles.
 * ♿ **Universal Accessibility (WCAG 2.1 AAA):** Screen-reader optimized semantics, full keyboard navigation with hotkeys (`?`), high-contrast themes, reduced motion options, and spoken voice synthesis.
 * 🌐 **Fully Bilingual (English & বাংলা):** Native bilingual interface, complete dataset explanations, and audio narration in both English and Bangla.
@@ -47,7 +47,7 @@
 │ • Interactive 3D Three.js Globe│ • Multi-decade synchronized UI │ • 3D Animated Eco-Ninja Cadet  │
 │ • 2D Accessible Vector Map    │ • Harmonic pentatonic scales   │ • 4 NASA audio rescue missions │
 │ • 200+ Country Climate Records│ • Mauna Loa CO₂ & Sea Ice Extent│ • Earth DJ Studio loop remixer │
-│ • Localized NASA POWER feeds  │ • EIC West-to-East audio sweep │ • Junior Cadet Certification   │
+│ • Localized NASA POWER feeds  │ • EIC West-to-East audio sweep │ • Certificate of completion    │
 └───────────────────────────────┴────────────────────────────────┴────────────────────────────────┘
 ```
 
@@ -72,8 +72,8 @@
   2. 🌧️ **Bengal Monsoon Flood Rescue:** Navigate emergency drones through heavy rainfall audio gradients to rescue stranded wildlife.
   3. 🌊 **Pacific Ocean Submarine Dive:** Sonar-track marine heatwaves and identify positive thermal anomalies.
   4. 🛰️ **NASA Orbital Harmonizer:** Tune satellite sensor frequencies to harmonize Earth's vital signs.
-* **Earth DJ Studio:** Allows kids to remix authentic environmental sound loops (Rain, Fire, Ocean, Melodies) into ambient tracks.
-* **NASA Junior Sonic Cadet Badge:** Earn an official, shareable badge and certificate upon completing all missions.
+* **Earth DJ Studio:** Allows kids to remix environmental sound loops (Rain, Fire, Ocean, Melodies) into ambient tracks.
+* **Passport badges and certificate of completion:** Badges unlock from your saved progress (mission stars and finished modes; a fresh browser starts with none). The certificate is issued by this app, lists the bundled snapshot sources and their periods, and is not issued or endorsed by NASA.
 
 ### 4. 🔬 About the Science (Methodology & Transparency)
 * Comprehensive documentation explaining the exact mathematical formulas, scaling algorithms, sensor limits, and accessibility standards powering the platform.

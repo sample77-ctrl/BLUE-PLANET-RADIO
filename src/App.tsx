@@ -365,13 +365,13 @@ export function App() {
               onApply={(layers, d, change, f) => { setEnabled(layers); setDay(Math.min(d, Math.max(0, slices.length - 1))); setHearChange(change); setFocus(f); if (view !== '3d-globe') setView('3d-globe'); }} />
 
             {/* Desktop side column */}
-            <div className={`${leftOpen ? "hidden lg:flex" : "hidden"} flex-col gap-3 absolute left-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-4`}>
+            <div className={`${leftOpen ? "hidden lg:flex" : "hidden"} flex-col gap-3 absolute left-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-9 [mask-image:linear-gradient(to_bottom,#000_calc(100%-28px),transparent)]`}>
               {view !== 'audio-first' && countryPanel}
               {layersPanel}
             </div>
 
             {/* Desktop right rail: what you are hearing (live waveform, spectrum, stereo position) */}
-            <div className={`${rightOpen ? "hidden lg:flex" : "hidden"} flex-col gap-3 absolute right-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-4`} data-ctl="hearing">
+            <div className={`${rightOpen ? "hidden lg:flex" : "hidden"} flex-col gap-3 absolute right-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-9 [mask-image:linear-gradient(to_bottom,#000_calc(100%-28px),transparent)]`} data-ctl="hearing">
               {hearingPanel}
             </div>
             <button type="button" className="btn btn-icon hidden lg:inline-flex absolute z-30 top-[calc(var(--header-h)+.75rem)] transition-[left] duration-200" style={{ left: leftOpen ? 360 : 12 }} aria-expanded={leftOpen} aria-label={t(leftOpen ? 'collapseLeft' : 'openLeft')} title={t(leftOpen ? 'collapseLeft' : 'openLeft')} onClick={() => setLeftOpen((o) => !o)}>{leftOpen ? <PanelLeftClose className="w-4 h-4" aria-hidden="true" /> : <PanelLeftOpen className="w-4 h-4" aria-hidden="true" />}</button>
@@ -412,7 +412,7 @@ export function App() {
               </MobileSheet>
             )}
 
-            <div data-ctl="timeline" className="absolute bottom-2 sm:bottom-3 left-2 right-2 lg:left-[var(--tl-l)] lg:right-3 z-20" style={{ ['--tl-l' as string]: leftOpen ? '340px' : '12px' }}>
+            <div data-ctl="timeline" className="absolute bottom-2 sm:bottom-3 left-2 right-2 lg:left-[var(--tl-l)] lg:right-3 z-20" style={{ ['--tl-l' as string]: leftOpen ? '364px' : '12px' }}>
               {globeFailed && view === '3d-globe' && <p role="status" className="glass px-3 py-2 mb-2 text-sm text-[var(--ink-2)] w-fit max-w-full">{t('webglOff')}</p>}
               <TimelineBar slices={slices} index={day} onChange={setDay} playing={playing}
                 hearChange={hearChange} onToggleHearChange={() => setHearChange(!hearChange)} enabled={enabled} speed={speed} />

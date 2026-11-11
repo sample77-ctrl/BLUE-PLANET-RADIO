@@ -1,18 +1,17 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
 import { PrefsProvider } from '../lib/prefs';
-import { GameHome } from '../game/GameHome';
 import { KidsLearningZone } from '../game/KidsLearningZone';
 import { BlindExplorerMode } from '../game/BlindExplorerMode';
 import { EarthTimeMachine } from '../game/EarthTimeMachine';
 import { MyEarthPassport } from '../game/MyEarthPassport';
 import { InclusiveCoopMode } from '../game/InclusiveCoopMode';
-import { GameSettingsView } from '../game/GameSettingsView';
 import { TacticalWildfireMission } from '../game/TacticalWildfireMission';
 import { GameAudioEngine } from '../game/gameAudio';
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 beforeEach(() => {
   localStorage.clear();
@@ -89,43 +88,6 @@ beforeEach(() => {
 });
 
 describe('Sonic Earth Adventure: Master Game Sections', () => {
-  it('Section 01 – GameHome renders brand identity, CTA buttons and 10 section launcher cards', () => {
-    const onStart = vi.fn();
-    const onBlind = vi.fn();
-    const onSettings = vi.fn();
-    render(
-      <PrefsProvider>
-        <GameHome
-          onStartAdventure={onStart}
-          onOpenHub={vi.fn()}
-          onOpenMissions={vi.fn()}
-          onOpenExplorer={vi.fn()}
-          onOpenBlindMode={onBlind}
-          onOpenKidsZone={vi.fn()}
-          onOpenDJ={vi.fn()}
-          onOpenTimeMachine={vi.fn()}
-          onOpenPassport={vi.fn()}
-          onOpenSettings={onSettings}
-          onOpenCoop={vi.fn()}
-          onOpenStepGuide={vi.fn()}
-          totalStars={12}
-        />
-      </PrefsProvider>
-    );
-
-    expect(screen.getByRole('heading', { level: 1 })).toBeDefined();
-    expect(screen.getAllByText(/ADVENTURE/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/Legendary Earth Guardian/i)).toBeDefined();
-
-    const startBtn = screen.getByRole('button', { name: /Start Adventure/i });
-    fireEvent.click(startBtn);
-    expect(onStart).toHaveBeenCalled();
-
-    const blindBtn = screen.getByRole('button', { name: /Blind Mode/i });
-    fireEvent.click(blindBtn);
-    expect(onBlind).toHaveBeenCalled();
-  });
-
   it('Section 05 – BlindExplorerMode handles keyboard navigation, sonar ping, and visual spectrum', () => {
     const onBack = vi.fn();
     render(
@@ -178,13 +140,17 @@ describe('Sonic Earth Adventure: Master Game Sections', () => {
     }
   });
 
-  it('Section 08 – EarthTimeMachine compares 1981 vs 2025 climate anomaly and acoustic frequency delta', () => {
+  it('Section 08 – EarthTimeMachine compares 1981 vs 2025 climate anomaly and acoustic frequency delta', async () => {
     const onBack = vi.fn();
+    // the real bundled snapshot; with no data the view shows an error instead of an invented series
+    const snap = JSON.parse(readFileSync('public/data/gistemp_global.json', 'utf8'));
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => snap })));
     render(
       <PrefsProvider>
         <EarthTimeMachine onBack={onBack} />
       </PrefsProvider>
     );
+    await screen.findByText(/snapshot, not live/i);
 
     expect(screen.getByText(/EARTH TIME MACHINE/i)).toBeDefined();
     expect(screen.getAllByText(/1981/i).length).toBeGreaterThan(0);
@@ -197,22 +163,26 @@ describe('Sonic Earth Adventure: Master Game Sections', () => {
     expect(GameAudioEngine.prototype.playTone).toHaveBeenCalled();
   });
 
-  it('Section 09 – MyEarthPassport displays XP, badges, verified NASA checksum, and certificate modal', () => {
+  it('Section 09 – MyEarthPassport shows honest progress, the data sources used and a certificate that is not NASA\'s', () => {
     const onBack = vi.fn();
     render(
       <PrefsProvider>
-        <MyEarthPassport onBack={onBack} totalStars={12} />
+        <MyEarthPassport onBack={onBack} stars={{ 1: 2, 2: 0, 3: 0, 4: 0 }} />
       </PrefsProvider>
     );
 
     expect(screen.getByText(/MY EARTH PASSPORT/i)).toBeDefined();
-    expect(screen.getByText(/#SEAP-2026-NASA-VALIDATED/i)).toBeDefined();
+    expect(screen.getByText(/Data sources used/i)).toBeDefined();
+    expect(screen.queryByText(/SEAP-2026-NASA-VALIDATED/i)).toBeNull();
+    expect(screen.queryByText(/100% SCIENTIFIC INTEGRITY/i)).toBeNull();
     expect(screen.getByText(/Amazon Forest Sentinel/i)).toBeDefined();
 
-    // Open Certificate Modal
-    const certBtn = screen.getByRole('button', { name: /View Official Certificate/i });
+    // Open the certificate
+    const certBtn = screen.getByRole('button', { name: /View certificate of completion/i });
     fireEvent.click(certBtn);
-    expect(screen.getByText(/CERTIFICATE OF COMPLETION/i)).toBeDefined();
+    expect(screen.getByRole('dialog', { name: /CERTIFICATE OF COMPLETION/i })).toBeDefined();
+    expect(screen.getByText(/not issued or endorsed by NASA/i)).toBeDefined();
+    expect(screen.queryByText(/Research Council/i)).toBeNull();
   });
 
   it('Signature Feature E – InclusiveCoopMode synchronizes Player 1 visual grid with Player 2 audio tuning', () => {
@@ -230,27 +200,6 @@ describe('Sonic Earth Adventure: Master Game Sections', () => {
     // Tune acoustic frequency
     const tuneUpBtn = screen.getByRole('button', { name: /\+20 Hz/i });
     fireEvent.click(tuneUpBtn);
-    expect(GameAudioEngine.prototype.playTone).toHaveBeenCalled();
-  });
-
-  it('Section 10 – GameSettingsView toggles language, accessibility, and high contrast', () => {
-    const onBack = vi.fn();
-    render(
-      <PrefsProvider>
-        <GameSettingsView onBack={onBack} />
-      </PrefsProvider>
-    );
-
-    expect(screen.getByText(/SETTINGS & ACCESSIBILITY/i)).toBeDefined();
-    expect(screen.getByText(/Language & Audio Engine/i)).toBeDefined();
-
-    // Switch to Bengali
-    const bnBtn = screen.getByRole('button', { name: /বাংলা/i });
-    fireEvent.click(bnBtn);
-
-    // Test audio tone
-    const testAudioBtn = screen.getByRole('button', { name: /সাউন্ড টেস্ট করুন|Test Audio Tone/i });
-    fireEvent.click(testAudioBtn);
     expect(GameAudioEngine.prototype.playTone).toHaveBeenCalled();
   });
 

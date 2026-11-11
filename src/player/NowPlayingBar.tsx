@@ -31,7 +31,7 @@ function FullPlayer({ np }: { np: NowPlaying }) {
         {cur === 'next' && (np.upNext?.length ? <>
           <ol className="space-y-1">{np.upNext.map((u) => (
             <li key={u.id} className="flex items-center justify-between gap-2 text-sm"><span className="truncate">{u.title}</span>
-              <button type="button" className="btn btn-icon !min-h-[32px]" aria-label={t('jbQueueRemove', { title: u.title })} onClick={() => np.controls.dequeue?.(u.id)}><X className="w-3.5 h-3.5" aria-hidden="true" /></button></li>))}</ol>
+              <button type="button" className="btn btn-icon !min-h-[32px] pointer-coarse:!min-h-[44px]" aria-label={t('jbQueueRemove', { title: u.title })} onClick={() => np.controls.dequeue?.(u.id)}><X className="w-3.5 h-3.5" aria-hidden="true" /></button></li>))}</ol>
           <button type="button" className="btn btn-ghost mt-2" onClick={np.controls.clearQueue}>{t('npClearQueue')}</button></> : <p className="text-sm text-[var(--ink-3)]">{t('npQueueEmpty')}</p>)}
         {cur === 'narration' && <p className="text-sm text-[var(--ink-2)] leading-relaxed">{np.details?.narration || t('npNoNarration')}</p>}
         {cur === 'signal' && np.signal}

@@ -13,9 +13,10 @@ describe('redesign guardrails', () => {
     }
   });
   it('snapshot data never carries a live badge, and no copy says "hallucination"', () => {
-    const step = read('game/UpdatePlanStepMaster.tsx');
-    expect(step).not.toMatch(/LIVE \/ NRT/);
-    expect(step).not.toMatch(/hallucination/i);
+    for (const f of ['game/SonicRangersGame.tsx', 'game/QuestHub.tsx', 'game/EarthTimeMachine.tsx']) {
+      expect(read(f)).not.toMatch(/LIVE \/ NRT/);
+      expect(read(f)).not.toMatch(/hallucination/i);
+    }
   });
   it('the Quest opens on the hub, not on the Update Plan guide', () => {
     expect(read('game/SonicRangersGame.tsx')).toMatch(/initialScreen = 'home'/);

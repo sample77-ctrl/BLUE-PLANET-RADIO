@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { WorldMapHub, type MissionInfo } from './WorldMapHub';
+import type { MissionInfo } from './types';
 import { MissionFire } from './MissionFire';
 import { MissionMonsoon } from './MissionMonsoon';
 import { MissionOcean } from './MissionOcean';
@@ -8,7 +8,6 @@ import { CartoonGameCanvas } from './CartoonGameCanvas';
 import { EarthDJStudio } from './EarthDJStudio';
 import { LevelLab } from './LevelLab';
 import { QuestBadgeModal } from './QuestBadgeModal';
-import { UpdatePlanStepMaster } from './UpdatePlanStepMaster';
 import { QuestHub } from './QuestHub';
 import { KidsLearningZone } from './KidsLearningZone';
 import { TacticalWildfireMission } from './TacticalWildfireMission';
@@ -16,7 +15,6 @@ import { EarthTimeMachine } from './EarthTimeMachine';
 import { BlindExplorerMode } from './BlindExplorerMode';
 import { MyEarthPassport } from './MyEarthPassport';
 import { InclusiveCoopMode } from './InclusiveCoopMode';
-import { GameSettingsView } from './GameSettingsView';
 import {
   Flame,
   CloudRain,
@@ -28,12 +26,11 @@ import {
   Home,
 } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
+import { STARS_KEY, markMode } from './progress';
 import './quest.css';
 
 export type ScreenMode =
   | 'home'
-  | 'stepMaster'
-  | 'map'
   | 'mission1'
   | 'mission2'
   | 'mission3'
@@ -44,7 +41,6 @@ export type ScreenMode =
   | 'dj'
   | 'timemachine'
   | 'passport'
-  | 'settings'
   | 'coop'
   | 'lab';
 
@@ -71,7 +67,7 @@ export const SonicRangersGame: React.FC<Props> = ({
   // Load saved stars
   const [missionStars, setMissionStars] = useState<Record<number, number>>(() => {
     try {
-      const saved = localStorage.getItem('sonic_rangers_stars');
+      const saved = localStorage.getItem(STARS_KEY);
       return saved ? JSON.parse(saved) : { 1: 0, 2: 0, 3: 0, 4: 0 };
     } catch {
       return { 1: 0, 2: 0, 3: 0, 4: 0 };
@@ -80,7 +76,7 @@ export const SonicRangersGame: React.FC<Props> = ({
 
   useEffect(() => {
     try {
-      localStorage.setItem('sonic_rangers_stars', JSON.stringify(missionStars));
+      localStorage.setItem(STARS_KEY, JSON.stringify(missionStars));
     } catch {}
   }, [missionStars]);
 
@@ -197,28 +193,6 @@ export const SonicRangersGame: React.FC<Props> = ({
           />
         )}
 
-        {screen === 'stepMaster' && (
-          <UpdatePlanStepMaster
-            onSelectMission={(id) => setScreen(`mission${id}` as ScreenMode)}
-            onOpenFreeRoam={() => setScreen('freeRoam')}
-            onOpenDJ={() => setScreen('dj')}
-            onOpenLab={() => setScreen('lab')}
-            onOpenBadgeModal={() => setShowBadgeModal(true)}
-            onExploreGlobe={onExplore}
-            audioReady={audioReady}
-            onSoundOn={onSoundOn}
-          />
-        )}
-
-        {screen === 'map' && (
-          <WorldMapHub
-            missions={missions}
-            onSelectMission={(id) => setScreen(`mission${id}` as ScreenMode)}
-            onOpenBadgeModal={() => setShowBadgeModal(true)}
-            totalStars={totalStars}
-          />
-        )}
-
         {screen === 'kids' && (
           <KidsLearningZone
             onBack={() => setScreen('home')}
@@ -229,7 +203,7 @@ export const SonicRangersGame: React.FC<Props> = ({
         {screen === 'blind' && (
           <BlindExplorerMode
             onBack={() => setScreen('home')}
-            onComplete={() => setScreen('passport')}
+            onComplete={() => { markMode('blind'); setScreen('passport'); }}
           />
         )}
 
@@ -243,13 +217,7 @@ export const SonicRangersGame: React.FC<Props> = ({
         {screen === 'passport' && (
           <MyEarthPassport
             onBack={() => setScreen('home')}
-            totalStars={totalStars}
-          />
-        )}
-
-        {screen === 'settings' && (
-          <GameSettingsView
-            onBack={() => setScreen('home')}
+            stars={missionStars}
           />
         )}
 
@@ -340,12 +308,12 @@ export const SonicRangersGame: React.FC<Props> = ({
             <Compass className="w-7 h-7 text-[var(--signal)] shrink-0" />
             <div>
               <h2 className="font-display font-bold text-sm sm:text-base text-[var(--ink)]">
-                {isBn ? 'আসল স্যাটেলাইটের লাইভ ৩ডি গ্লোবে শব্দ শুনতে চাও?' : 'Ready to hear real NASA satellite observations on the 3D globe?'}
+                {isBn ? 'আসল স্যাটেলাইট পর্যবেক্ষণ ৩ডি গ্লোবে শুনতে চাও?' : 'Ready to hear real NASA satellite observations on the 3D globe?'}
               </h2>
               <p className="text-2xs sm:text-xs text-[var(--ink-2)] mt-0.5">
                 {isBn
                   ? 'গেম থেকে যা শিখলে, তা দিয়ে এবার আসল পৃথিবীর ৩ডি গ্লোবে আগুন, বৃষ্টি ও সাগরের তথ্য শোনো।'
-                  : 'Take your newly trained sonic ears to explore real-time NASA observations around the world!'}
+                  : 'Take your newly trained sonic ears to explore NASA observations from around the world (bundled snapshots, not live).'}
               </p>
             </div>
           </div>
@@ -353,13 +321,14 @@ export const SonicRangersGame: React.FC<Props> = ({
             onClick={onExplore}
             className="btn btn-brass shrink-0 text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-lg flex items-center gap-2 cursor-pointer"
           >
-            <span>{isBn ? 'লাইভ ৩ডি গ্লোবে যাও' : 'Launch 3D Globe'}</span>
+            <span>{isBn ? '৩ডি গ্লোবে যাও' : 'Launch 3D Globe'}</span>
           </button>
         </div>}
 
         {/* Cadet Badge & Graduation Certificate Modal */}
         {showBadgeModal && (
           <QuestBadgeModal
+            stars={missionStars}
             onClose={() => setShowBadgeModal(false)}
             onExploreGlobe={onExplore}
             onOpenDJ={() => {

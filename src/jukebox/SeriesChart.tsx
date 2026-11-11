@@ -3,13 +3,16 @@ import { usePrefs } from '../lib/prefs';
 import type { SeriesPoint } from '../datasets/series';
 import { digits, timeLabel, valueLabel } from './format';
 import { linePaths } from './linePaths';
+import { useElementWidth } from '../lib/useElementWidth';
 
-const W = 900, H = 300, L = 52, R = 12, T = 12, B = 28;
+const L = 52, R = 12, B = 28;
 
 /** Lightweight line chart with a cursor, unit-labelled axis, gaps drawn as breaks and a table alternative. A click moves the cursor. */
 export function SeriesChart({ points, cursor, unit, label, onCursor }: { points: SeriesPoint[]; cursor: string | null; unit: string; label: string; onCursor?: (t: string) => void }) {
   const { t, lang } = usePrefs();
-  const fs = lang === 'bn' ? 13 : 12; // SVG text stays on the 12px (EN) / 13px (বাংলা) floor
+  const fs = lang === 'bn' ? 13 : 12; // the viewBox is as wide as the rendered svg (1 unit = 1px), so this is the real on-screen size: 12px EN / 13px বাংলা
+  const [svgRef, W] = useElementWidth<SVGSVGElement>(900);
+  const H = W < 600 ? 220 : 300, T = fs + 16; // room above the plot for the unit label
   const uid = useId().replace(/:/g, '');
   const g = useMemo(() => {
     const vals = points.map((p) => p.v).filter((v): v is number => v !== null);
@@ -21,7 +24,7 @@ export function SeriesChart({ points, cursor, unit, label, onCursor }: { points:
     const x = (i: number) => L + (n === 1 ? (W - L - R) / 2 : (i / (n - 1)) * (W - L - R));
     const y = (v: number) => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
     return { lo, hi, x, y, paths: linePaths(points, x, y), vals };
-  }, [points]);
+  }, [points, W, H, T]);
   if (!g) return <p className="text-sm text-[var(--ink-3)]">{t('jbNoValues')}</p>;
   const ci = cursor ? points.findIndex((p) => p.t === cursor) : -1, cp = ci >= 0 ? points[ci] : null;
   const ticks = [g.hi, (g.lo + g.hi) / 2, g.lo];
@@ -37,7 +40,7 @@ export function SeriesChart({ points, cursor, unit, label, onCursor }: { points:
   const alt = t('jbChartAlt', { what: label, from: timeLabel(points[0].t, lang), to: timeLabel(points[points.length - 1].t, lang), lo: valueLabel(Math.min(...g.vals), unit, lang), hi: valueLabel(Math.max(...g.vals), unit, lang) });
   return (
     <figure className="space-y-1">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto select-none jb-chart" role="img" aria-label={alt} onClick={pick} style={{ cursor: onCursor ? 'crosshair' : undefined }}>
+      <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} width="100%" height={H} className="block select-none jb-chart" role="img" aria-label={alt} onClick={pick} style={{ cursor: onCursor ? 'crosshair' : undefined }}>
         <defs>
           <linearGradient id={`lg${uid}`} gradientUnits="userSpaceOnUse" x1="0" x2="0" y1={T} y2={H - B}><stop offset="0" stopColor="#f25c8a" /><stop offset=".35" stopColor="#e9c46a" /><stop offset=".7" stopColor="#7fb2ff" /><stop offset="1" stopColor="#4cc3ff" /></linearGradient>
           <filter id={`gl${uid}`} x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
@@ -49,7 +52,7 @@ export function SeriesChart({ points, cursor, unit, label, onCursor }: { points:
           </g>
         ))}
         {g.lo < 0 && g.hi > 0 && <line x1={L} x2={W - R} y1={g.y(0)} y2={g.y(0)} stroke="var(--ink-3)" strokeWidth={1} />}
-        <text x={4} y={T + 2} fontSize={fs} fill="var(--ink-2)" dominantBaseline="hanging">{unit}</text>
+        <text x={4} y={fs + 2} fontSize={fs} fill="var(--ink-2)">{unit}</text>
         {xl.map((i) => <text key={i} x={g.x(i)} y={H - 8} fontSize={fs} fill="var(--ink-3)" textAnchor={i === 0 && points.length > 1 ? 'start' : i === points.length - 1 && points.length > 1 ? 'end' : 'middle'}>{timeLabel(points[i].t, lang)}</text>)}
         {g.paths.map((d, k) => <path key={k} d={d} fill="none" stroke={`url(#lg${uid})`} strokeWidth={points.length > 200 ? 1.75 : 2.6} strokeLinejoin="round" filter={`url(#gl${uid})`} />)}
         {points.length <= 60 && points.map((p, i) => p.v !== null && <circle key={p.t} cx={g.x(i)} cy={g.y(p.v)} r={2.2} fill={`url(#lg${uid})`} />)}
