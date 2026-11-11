@@ -249,7 +249,7 @@ The full findings and the step-by-step plan are in [`ui-fix-plan.md`](ui-fix-pla
 
 Plan in [`landing-carousel-plan.md`](landing-carousel-plan.md). Steps 9A worlds + CSS sphere, 9B carousel L1, 9C levels 2–3, 9D clean-up of the landing WebGL path, 9E verify.
 
-**Gate:** no WebGL context on the landing page; L1–L3 work by mouse, touch and keyboard; all existing checks green.
+**Gate:** the landing no longer loads the Atlas globe (`GlobeCanvas` is Atlas-only). Since 9F it does create WebGL on purpose: the carousel's `WorldScene` (three.js, one renderer) draws the four 3D planets, behind a one-off `hasWebGL()` probe canvas, so a capable browser makes 2 contexts (measured on the production build) and a browser without WebGL makes none and shows the CSS Earths. L1–L3 work by mouse, touch and keyboard; all existing checks green.
 
 
 ## 5. Feature acceptance checklist (v3 §13)
