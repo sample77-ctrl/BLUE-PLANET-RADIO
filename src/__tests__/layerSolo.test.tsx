@@ -16,7 +16,13 @@ describe('layer solo and mute', () => {
     const fireMute = screen.getByRole('button', { name: 'Mute Wildfires' });
     expect(fireMute.getAttribute('aria-pressed')).toBe('true');
     fireEvent.click(fireMute); expect(onMute).toHaveBeenCalledWith('fire');
-    expect((screen.getByRole('button', { name: 'Solo Ocean heat' }) as HTMLButtonElement).disabled).toBe(true);
+    // off layers: aria-disabled (focusable, so the reason is reachable by keyboard); pressing does nothing
+    const offSolo = screen.getByRole('button', { name: 'Solo Ocean heat' }) as HTMLButtonElement;
+    expect(offSolo.getAttribute('aria-disabled')).toBe('true');
+    expect(offSolo.disabled).toBe(false);
+    offSolo.focus(); expect(document.activeElement).toBe(offSolo);
+    fireEvent.click(offSolo); fireEvent.click(screen.getByRole('button', { name: 'Mute Ocean heat' }));
+    expect(onSolo).not.toHaveBeenCalledWith('sst'); expect(onMute).not.toHaveBeenCalledWith('sst');
   });
   it('explains why a disabled Mute/Solo is disabled, and exposes solo with aria-pressed', () => {
     const on = { fire: true, precipitation: true, sst: false };

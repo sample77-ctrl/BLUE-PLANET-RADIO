@@ -147,6 +147,10 @@ html.calm { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28p
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 40px; padding: 0 .9rem; border-radius: var(--radius-md); border: 1px solid var(--hair); background: transparent; color: var(--ink); font-weight: 500; font-size: var(--fs-sm); line-height: var(--lh-ui); cursor: pointer; white-space: nowrap; transition: background var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast); }
 .btn:hover { border-color: var(--ink-3); background: var(--panel-2); }
 .btn[aria-pressed='true'] { border-color: var(--signal); color: var(--signal); }
+/* aria-disabled keeps the button focusable so its reason (title / aria-describedby) can be reached by keyboard; it must look and act inert */
+.btn[aria-disabled='true'] { opacity: .45; cursor: not-allowed; }
+.btn[aria-disabled='true']:hover { background: transparent; border-color: var(--hair); }
+.btn-ghost[aria-disabled='true']:hover { border-color: transparent; color: var(--ink-2); }
 /* .btn-brass is the primary button: a field of the signal colour (name kept for the many call sites) */
 .btn-brass { background: var(--signal); color: var(--on-signal); border-color: var(--signal); font-weight: 650; }
 .btn-brass:hover { background: color-mix(in oklch, var(--signal) 86%, white); border-color: color-mix(in oklch, var(--signal) 86%, white); }
