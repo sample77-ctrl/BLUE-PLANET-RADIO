@@ -18,15 +18,15 @@
     "check:size": "node scripts/check-size.mjs"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
     "lucide-react": "^1.52.0",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "three": "^0.186.1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.56.1",
+    "@tailwindcss/vite": "^4.3.5",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
     "@types/d3-geo": "^3.1.1",
