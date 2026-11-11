@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Play, Square, Loader2, Upload } from 'lucide-react';
 import { AudioContextManager } from '../audio/audioContext';
 import { usePrefs, speak } from '../lib/prefs';
+import { parseCsv, type CsvError, type Pt } from './csv';
 import { usePlaybackReport } from '../lib/playbackContext';
 import { usePublishNowPlaying } from '../player/nowPlaying';
 
-interface Pt { year: number; value: number }
 interface Series { id: string; unit: string; source: string; points: Pt[]; baseline?: number }
 type Tab = 'temp' | 'co2' | 'ice' | 'all' | 'own';
 
@@ -22,22 +22,13 @@ const META: Record<Exclude<Tab, 'all'>, { en: string; bn: string; color: string;
   own: { en: 'Your data', bn: 'আপনার ডেটা', color: 'var(--signal)', wave: 'triangle', rule: 'Higher pitch = higher value in your file.', ruleBn: 'উঁচু সুর = আপনার ফাইলে বড় মান।' },
 };
 
-function parseCsv(text: string): Pt[] {
-  const pts: Pt[] = [];
-  for (const line of text.split(/\r?\n/)) {
-    const cells = line.split(/[,;\t ]+/).map((c) => c.trim()).filter(Boolean);
-    if (cells.length < 2) continue;
-    const x = Number(cells[0]), y = Number(cells[1]);
-    if (Number.isFinite(x) && Number.isFinite(y)) pts.push({ year: x, value: y });
-  }
-  return pts.sort((a, b) => a.year - b.year).slice(0, 2000);
-}
-
 export const VitalSigns: React.FC = () => {
   const { t, lang, narration } = usePrefs();
   const [data, setData] = useState<Record<string, Series> | null>(null);
   const [tab, setTab] = useState<Tab>('temp');
   const [own, setOwn] = useState<{ name: string; points: Pt[] } | null>(null);
+  const [csvErr, setCsvErr] = useState<{ name: string; reason: CsvError } | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const [i, setI] = useState(-1);
   const [playing, setPlaying] = useState(false);
   const timer = useRef<number | null>(null);
@@ -216,11 +207,24 @@ export const VitalSigns: React.FC = () => {
 
         {tab === 'own' && (
           <div className="mt-4 panel-solid p-4 max-w-2xl">
-            <label className="btn cursor-pointer"><Upload className="w-4 h-4" />{lang === 'bn' ? 'CSV ফাইল বাছুন' : 'Choose a CSV file'}
-              <input type="file" accept=".csv,.txt,text/csv,text/plain" className="sr-only" onChange={async (e) => { const f = e.target.files?.[0]; if (!f) return; const pts = parseCsv(await f.text()); setOwn(pts.length >= 2 ? { name: f.name, points: pts } : null); setI(-1); }} />
+            <label className="btn cursor-pointer"><Upload className="w-4 h-4" />{t('csvPick')}
+              <input ref={fileRef} type="file" accept=".csv,.txt,text/csv,text/plain" className="sr-only" onChange={async (e) => {
+                const f = e.target.files?.[0]; if (!f) return;
+                let r: ReturnType<typeof parseCsv>;
+                try { r = parseCsv(await f.text()); } catch { r = { points: [], error: 'unreadable' }; }
+                e.target.value = ''; // so choosing the same file again still fires
+                if (r.error) { setCsvErr({ name: f.name, reason: r.error }); return; } // keep the previous valid data
+                setCsvErr(null); setOwn({ name: f.name, points: r.points }); setI(-1);
+              }} />
             </label>
-            <p className="text-sm text-[var(--ink-2)] mt-2">{lang === 'bn' ? 'দুই কলাম: বছর (বা যেকোনো সংখ্যা) এবং মান। যেমন NASA-র যেকোনো টাইম সিরিজ। ফাইলটি আপনার ব্রাউজারের বাইরে যায় না।' : 'Two columns: year (or any number) and value, for example any NASA time series downloaded as CSV. The file never leaves your browser.'}</p>
-            {own && <p className="text-sm mt-1">{own.name}: {own.points.length} rows</p>}
+            {csvErr && (
+              <div role="alert" className="mt-3 text-sm border border-[var(--warm)] rounded-lg p-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+                <p className="flex-1 basis-60 min-w-0">{t(csvErr.reason === 'columns' ? 'csvErrColumns' : csvErr.reason === 'rows' ? 'csvErrRows' : 'csvErrRead', { name: csvErr.name })}{own && ` ${t('csvKept', { name: own.name })}`}</p>
+                <button type="button" className="btn" onClick={() => fileRef.current?.click()}>{t('csvAnother')}</button>
+              </div>
+            )}
+            <p className="text-sm text-[var(--ink-2)] mt-2">{t('csvHelp')}</p>
+            {own && <p className="text-sm mt-1">{t('csvRows', { name: own.name, n: lang === 'bn' ? bnNum(own.points.length) : own.points.length })}</p>}
           </div>
         )}
 
