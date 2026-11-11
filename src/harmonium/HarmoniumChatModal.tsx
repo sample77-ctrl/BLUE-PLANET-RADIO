@@ -30,6 +30,8 @@ import {
   type ChatMessage,
 } from './groqPredictor';
 import { usePrefs } from '../lib/prefs';
+import { Overlay } from '../components/Overlay';
+import { useDialog } from '../lib/useDialog';
 
 interface Props {
   isOpen: boolean;
@@ -74,6 +76,10 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
       chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
     }
   }, [chatMessages]);
+
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const closeModal = () => { harmoniumAudio.stopAll(); onClose(); };
+  useDialog(isOpen, closeModal, dialogRef);
 
   if (!isOpen) return null;
 
@@ -263,8 +269,8 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
   const currentAnomaly = matchHarmoniumSound(dominantFreq).mappedAnomaly;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fade-in">
-      <div className="relative max-w-4xl w-full bg-[var(--panel)] border-2 border-amber-500/50 rounded-3xl p-4 sm:p-6 shadow-2xl flex flex-col gap-5 my-4 max-h-[92vh] overflow-y-auto scroll-thin">
+    <Overlay><div className="fixed inset-0 z-[70] bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto animate-fade-in" onClick={closeModal}>
+      <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="harmonium-title" onClick={(e) => e.stopPropagation()} className="relative max-w-4xl w-full bg-[var(--panel)] border-2 border-amber-500/50 rounded-3xl p-4 sm:p-6 shadow-2xl flex flex-col gap-5 my-4 max-h-[92vh] overflow-y-auto scroll-thin">
         {/* Modal Top Header */}
         <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
           <div className="flex items-center gap-3">
@@ -281,7 +287,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                   GROQ GPT-OSS ONLINE
                 </span>
               </div>
-              <h2 className="text-lg sm:text-xl font-display font-bold text-[var(--ink)] mt-0.5">
+              <h2 id="harmonium-title" className="text-lg sm:text-xl font-display font-bold text-[var(--ink)] mt-0.5">
                 {isBn ? 'হারমোনিয়াম চ্যাট: ভারতীয় সুর ও নাসার জলবায়ু অনুসন্ধান' : 'Harmonium Chat: Acoustic Resonance & Planetary Prediction'}
               </h2>
             </div>
@@ -314,10 +320,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
             </div>
 
             <button
-              onClick={() => {
-                harmoniumAudio.stopAll();
-                onClose();
-              }}
+              onClick={closeModal}
               className="p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-amber-400 cursor-pointer text-[var(--ink-2)] hover:text-white"
               aria-label="Close Harmonium Chat"
             >
@@ -779,6 +782,6 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
           </div>
         )}
       </div>
-    </div>
+    </div></Overlay>
   );
 };

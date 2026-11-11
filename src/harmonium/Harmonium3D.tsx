@@ -54,15 +54,16 @@ export const Harmonium3D: React.FC<Props> = ({ onNotePlayed, isBn = false }) => 
 
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ignore if typing in an input or textarea
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) {
         return;
       }
+      if (e.metaKey || e.ctrlKey || e.altKey) return; // browser / assistive shortcuts are not notes
       const harmoniumKey = keyMap.get(e.key);
       if (harmoniumKey && !activeKeys.has(harmoniumKey)) {
         e.preventDefault();
         handleNoteStart(harmoniumKey);
       }
-      if (e.key === ' ') {
+      if (e.key === ' ' && !(e.target instanceof HTMLButtonElement)) { // on a focused button, Space still activates it
         e.preventDefault();
         harmoniumAudio.pumpBellows(0.3);
         setBellowsLevel(Math.min(100, Math.round(harmoniumAudio.getBellowsPressure() * 100)));
@@ -72,6 +73,7 @@ export const Harmonium3D: React.FC<Props> = ({ onNotePlayed, isBn = false }) => 
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.metaKey || e.ctrlKey || e.altKey) return;
       const harmoniumKey = keyMap.get(e.key);
       if (harmoniumKey) {
         e.preventDefault();
