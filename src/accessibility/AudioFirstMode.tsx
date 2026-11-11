@@ -57,8 +57,8 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
       aria-label={t('afmLabel')}
     >
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 panel p-4">
-        <div>
+      <div className="flex flex-wrap items-center justify-between gap-4 panel p-4">
+        <div className="min-w-0 flex-1 basis-60">
           <div className="flex items-center gap-2">
             <Radio className="w-5 h-5 text-[var(--signal)]" />
             <h2 className="font-display text-2xl font-bold">
@@ -70,7 +70,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={() => {
               const next = !speechEnabled;
@@ -163,15 +163,8 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
             return (
               <div
                 key={obs.id}
-                role="button"
-                tabIndex={0}
+                role="group"
                 onClick={() => handleSelect(obs)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleSelect(obs);
-                  }
-                }}
                 className={`p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 cursor-pointer transition ${
                   isSelected
                     ? 'bg-[color-mix(in_srgb,var(--rain)_12%,transparent)] border-l-4 border-[var(--rain)] text-white'
@@ -238,6 +231,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
                   </div>
 
                   <button
+                    type="button"
                     className="p-2 rounded-lg bg-[var(--panel-2)] hover:bg-[var(--panel-2)] text-[var(--ink)] transition"
                     title={t('afmPlay')}
                     aria-label={`Play audio for ${obs.regionName}`}
