@@ -297,16 +297,16 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
       // Zone identification and speech
       if (p.x < 650) {
         setCurrentZone('forest');
-        setSpeechText(isBn ? '🌲 বনের মাঝে দাবানল! কাছে গেলে পটপট শব্দ তীব্র হয়!' : '🌲 Wildfire ahead! Notice how crackles intensify as you step closer!');
+        setSpeechText(isBn ? 'বনের মাঝে দাবানল! কাছে গেলে পটপট শব্দ তীব্র হয়!' : 'Wildfire ahead! Notice how crackles intensify as you step closer!');
       } else if (p.x < 1400) {
         setCurrentZone('meadow');
-        setSpeechText(isBn ? '🌧️ বর্ষার মেঘ! ফোঁটাগুলো টুপটুপ করে ঘন হচ্ছে!' : '🌧️ Monsoon Storm! Droplets drip faster under the cloud!');
+        setSpeechText(isBn ? 'বর্ষার মেঘ! ফোঁটাগুলো টুপটুপ করে ঘন হচ্ছে!' : 'Monsoon Storm! Droplets drip faster under the cloud!');
       } else if (p.x < 2050) {
         setCurrentZone('ocean');
-        setSpeechText(isBn ? '🐳 গভীর সাগরের সুর! তিমি বন্ধু গম্ভীর সুরে গান গাইছে!' : '🐳 Deep Ocean! Hear the whale’s calming low bass drone!');
+        setSpeechText(isBn ? 'গভীর সাগরের সুর! তিমি বন্ধু গম্ভীর সুরে গান গাইছে!' : 'Deep Ocean! Hear the whale’s calming low bass drone!');
       } else {
         setCurrentZone('mountain');
-        setSpeechText(isBn ? '📡 ক্লাইমেট স্যাটেলাইট পিক! সুর ক্রমেই উঁচুতে চড়ছে!' : '📡 NASA Climate Peak! Listen to the melody climb high!');
+        setSpeechText(isBn ? 'ক্লাইমেট স্যাটেলাইট পিক! সুর ক্রমেই উঁচুতে চড়ছে!' : 'NASA Climate Peak! Listen to the melody climb high!');
       }
 
       // Star Pickups Collision
@@ -726,11 +726,11 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
   return (
     <div className="max-w-5xl mx-auto flex flex-col gap-3">
       {/* Top Organization Header: Mission Pill + Sound Radar + Stars */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl glass border border-[var(--line)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-lg glass border border-[var(--line)]">
         {/* Checkpoint Jump Pills */}
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 pr-2 border-r border-[var(--line)]">
-            <div className="w-8 h-8 rounded-xl overflow-hidden border border-[var(--signal)] shadow-sm shrink-0">
+            <div className="w-8 h-8 rounded-lg overflow-hidden border border-[var(--signal)] shrink-0">
               <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-full h-full object-cover" />
             </div>
             <span className="text-xs font-semibold font-display text-[var(--ink)] hidden lg:inline">
@@ -747,7 +747,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
               currentZone === 'forest' ? 'border-[var(--fire)] text-[var(--fire)] bg-[var(--fire)]/10' : 'border-[var(--line)] hover:border-[var(--fire)]'
             }`}
           >
-            🔥 {isBn ? 'দাবানল বন' : 'Sparks Forest'}
+            {isBn ? 'দাবানল বন' : 'Sparks Forest'}
           </button>
           <button
             onClick={() => jumpToZone(950)}
@@ -755,7 +755,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
               currentZone === 'meadow' ? 'border-[var(--rain)] text-[var(--rain)] bg-[var(--rain)]/10' : 'border-[var(--line)] hover:border-[var(--rain)]'
             }`}
           >
-            🌧️ {isBn ? 'বর্ষার মেঘ' : 'Rain Meadow'}
+            {isBn ? 'বর্ষার মেঘ' : 'Rain Meadow'}
           </button>
           <button
             onClick={() => jumpToZone(1600)}
@@ -763,7 +763,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
               currentZone === 'ocean' ? 'border-[var(--teal)] text-[var(--teal)] bg-[var(--teal)]/10' : 'border-[var(--line)] hover:border-[var(--teal)]'
             }`}
           >
-            🐳 {isBn ? 'সাগরের তিমি' : 'Singing Ocean'}
+            {isBn ? 'সাগরের তিমি' : 'Singing Ocean'}
           </button>
           <button
             onClick={() => jumpToZone(2320)}
@@ -771,7 +771,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
               currentZone === 'mountain' ? 'border-[var(--signal)] text-[var(--signal)] bg-[var(--signal)]/10' : 'border-[var(--line)] hover:border-[var(--signal)]'
             }`}
           >
-            📡 {isBn ? 'নাসা চূড়া' : 'NASA Peak'}
+            {isBn ? 'নাসা চূড়া' : 'NASA Peak'}
           </button>
         </div>
 
@@ -782,7 +782,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
         <div className="flex items-center gap-2">
           <div className="chip border-[var(--signal)] text-[var(--signal)] font-semibold flex items-center gap-1.5 py-1 px-3">
             <Sparkles className="w-3.5 h-3.5 text-[var(--signal)] animate-spin" />
-            <span>⭐ {starsCollected} / {TOTAL_STARS}</span>
+            <span>{starsCollected} / {TOTAL_STARS}</span>
           </div>
 
           {!audioReady ? (
@@ -794,8 +794,8 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
               <span>{isBn ? 'শব্দ অন' : 'Sound On'}</span>
             </button>
           ) : (
-            <div className="chip border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-1 py-1 px-2">
-              <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="chip border-[var(--hair)] text-[var(--signal)] text-xs flex items-center gap-1 py-1 px-2">
+              <Volume2 className="w-3.5 h-3.5 text-[var(--signal)]" />
             </div>
           )}
 
@@ -813,13 +813,13 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
       {/* Main Canvas Stage */}
       <div
         ref={containerRef}
-        className="w-full rounded-3xl overflow-hidden border-2 border-[var(--line)] relative bg-[var(--abyss)] shadow-2xl"
+        className="w-full rounded-lg overflow-hidden border-2 border-[var(--line)] relative bg-[var(--abyss)]"
         style={{ minHeight: '480px' }}
       >
         <canvas ref={canvasRef} className="block w-full h-[480px]" />
 
         {/* Dynamic Cartoon Speech Bubble */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 max-w-md w-11/12 p-3 rounded-2xl glass-pop border border-[var(--signal)]/60 text-center shadow-xl animate-fade-in pointer-events-none">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 max-w-md w-11/12 p-3 rounded-lg glass-pop border border-[var(--signal)]/60 text-center animate-fade-in pointer-events-none">
           <p className="text-xs sm:text-sm font-semibold text-[var(--ink)]">
             {speechText}
           </p>
@@ -827,12 +827,12 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
 
         {/* Victory Celebration Overlay */}
         {gameWon && (
-          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in">
+          <div className="absolute inset-0 bg-[var(--ground)]/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in">
             <div className="flex items-center gap-3">
-              <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[var(--signal)] shadow-2xl">
+              <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-[var(--signal)]">
                 <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-full h-full object-cover" />
               </div>
-              <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-slate-950 shadow-2xl animate-bounce">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-[var(--on-signal)] animate-bounce bg-[var(--signal)]">
                 <Award className="w-10 h-10" />
               </div>
             </div>
@@ -847,14 +847,14 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
             <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
               <button
                 onClick={onComplete}
-                className="btn btn-brass text-sm font-semibold px-6 py-3 rounded-xl flex items-center gap-2"
+                className="btn btn-brass text-sm font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
               >
                 <Award className="w-4 h-4" />
                 <span>{isBn ? 'ক্যাডেট সার্টিফিকেট গ্রহণ করো' : 'Claim Cadet Certificate'}</span>
               </button>
               <button
                 onClick={onExploreGlobe}
-                className="btn btn-ghost border border-[var(--line)] text-sm py-3 px-5 rounded-xl flex items-center gap-2"
+                className="btn btn-ghost border border-[var(--line)] text-sm py-3 px-5 rounded-lg flex items-center gap-2"
               >
                 <Compass className="w-4 h-4 text-[var(--rain)]" />
                 <span>{isBn ? 'লাইভ ৩ডি গ্লোব চালাও' : 'Launch 3D Globe'}</span>
@@ -865,11 +865,11 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
       </div>
 
       {/* Tactile Gamepad Controls */}
-      <div className="p-3.5 rounded-2xl glass border border-[var(--line)] flex flex-wrap items-center justify-between gap-4 select-none">
+      <div className="p-3.5 rounded-lg glass border border-[var(--line)] flex flex-wrap items-center justify-between gap-4 select-none">
         <div className="text-xs text-[var(--ink-3)] font-mono hidden md:block">
           {isBn
-            ? '💡 কীবোর্ড কন্ট্রোল: ← / → (হাঁটা), Space / ↑ (লাফানো), E / F (স্ক্যান ও ইন্টার‍্যাকশন)'
-            : '💡 Controls: Arrow Keys / WASD to Walk, Space to Jump, E or F to Scan!'}
+            ? 'কীবোর্ড কন্ট্রোল: ← / → (হাঁটা), Space / ↑ (লাফানো), E / F (স্ক্যান ও ইন্টার‍্যাকশন)'
+            : 'Controls: Arrow Keys / WASD to Walk, Space to Jump, E or F to Scan!'}
         </div>
 
         {/* Touch Gamepad Buttons */}
@@ -880,7 +880,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
               onTouchEnd={() => (keysRef.current.left = false)}
               onMouseDown={() => (keysRef.current.left = true)}
               onMouseUp={() => (keysRef.current.left = false)}
-              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
+              className="w-14 h-14 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-[var(--on-signal)] flex items-center justify-center cursor-pointer"
               aria-label="Walk Left"
             >
               <ArrowLeft className="w-6 h-6" />
@@ -890,7 +890,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
               onTouchEnd={() => (keysRef.current.right = false)}
               onMouseDown={() => (keysRef.current.right = true)}
               onMouseUp={() => (keysRef.current.right = false)}
-              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
+              className="w-14 h-14 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-[var(--on-signal)] flex items-center justify-center cursor-pointer"
               aria-label="Walk Right"
             >
               <ArrowRight className="w-6 h-6" />
@@ -907,7 +907,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
                 keysRef.current.action = true;
                 setTimeout(() => (keysRef.current.action = false), 200);
               }}
-              className="h-14 px-5 rounded-2xl bg-[var(--panel-2)] border border-[var(--signal)]/50 active:bg-[var(--signal)] active:text-slate-950 flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer text-[var(--signal)]"
+              className="h-14 px-5 rounded-lg bg-[var(--panel-2)] border border-[var(--signal)]/50 active:bg-[var(--signal)] active:text-[var(--on-signal)] flex items-center gap-2 text-xs font-semibold cursor-pointer text-[var(--signal)]"
               aria-label="Scan or Interact"
             >
               <Sparkles className="w-5 h-5" />
@@ -923,7 +923,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
                 keysRef.current.jump = true;
                 setTimeout(() => (keysRef.current.jump = false), 150);
               }}
-              className="w-14 h-14 rounded-2xl bg-[var(--signal)] text-[var(--on-signal)] font-semibold flex items-center justify-center shadow-lg active:scale-95 cursor-pointer"
+              className="w-14 h-14 rounded-lg bg-[var(--signal)] text-[var(--on-signal)] font-semibold flex items-center justify-center active:scale-95 cursor-pointer"
               aria-label="Jump"
             >
               <ArrowUp className="w-6 h-6" />
