@@ -263,3 +263,15 @@ for (const s of [{ label: 'desktop', w: 1400, p: {} }, { label: 'phone, বা�
     }
   });
 }
+
+test('"Listen to a data story" opens the Data Jukebox on its first story, and nothing plays until Play is clicked', async ({ page }) => {
+  await offline(page);
+  await page.addInitScript(() => { (window as unknown as { __ac: number }).__ac = 0; const A = window.AudioContext; window.AudioContext = class extends A { constructor(...a: ConstructorParameters<typeof AudioContext>) { super(...a); (window as unknown as { __ac: number }).__ac++; } } as typeof AudioContext; });
+  await page.setViewportSize({ width: 1400, height: 900 });
+  await open(page, '');
+  await page.getByRole('button', { name: 'Listen to a data story' }).first().click({ force: true });
+  await expect(page).toHaveURL(/jukebox\?story=gistemp/);
+  await expect(page.getByRole('heading', { name: 'Data Jukebox' }).first()).toBeVisible();
+  await page.waitForTimeout(800);
+  expect(await page.evaluate(() => (window as unknown as { __ac: number }).__ac)).toBe(0); // no audio context: nothing autoplayed
+});

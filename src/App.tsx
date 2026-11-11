@@ -297,7 +297,7 @@ export function App() {
     <div className={`${showHero ? 'hero-open ' : ''}flex flex-col h-[100dvh] w-full max-w-[100vw] overflow-hidden`}>
       <a href={showHero ? '#landing' : '#main'} className="sr-only-focusable absolute z-[80] left-2 top-2 btn btn-brass">{t('skip')}</a>
       {showHero && <Landing fireObs={landingFire} onPick={(tr) => withViewTransition(() => { void pickTrack(tr); }, document.querySelector('main'))}
-        onTour={startTour} onListen={listenNow} onSilent={() => { setShowHero(false); setTrack('atlas'); }} onAbout={goAbout} onTopic={openJukebox} onFrame={(id) => withViewTransition(() => { openCollection('frames', id); }, document.querySelector('main'))} onOpenHarmonium={() => setHarmoniumOpen(true)} />}
+        onTour={startTour} onListen={() => openJukebox()} onSilent={() => { setShowHero(false); setTrack('atlas'); }} onAbout={goAbout} onTopic={openJukebox} onFrame={(id) => withViewTransition(() => { openCollection('frames', id); }, document.querySelector('main'))} onOpenHarmonium={() => setHarmoniumOpen(true)} />}
 
       <Header track={track} onLanding={showHero} onTrack={(tr) => withViewTransition(() => { navigate(tr); setShowHero(false); setTourOpen(false); }, document.querySelector('main'))} lastJukebox={lastJukebox}
         audioReady={audioReady} soundState={soundState} onToggleAudio={() => (audioReady ? soundOff() : soundOn())} onListen={listenNow}
