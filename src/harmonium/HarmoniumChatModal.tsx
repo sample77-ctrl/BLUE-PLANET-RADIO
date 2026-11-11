@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useSyncExternalStore } from 'react';
 import {
   X,
   Volume2,
@@ -14,6 +14,9 @@ import {
   Pause,
   Radio,
   Clock,
+  KeyRound,
+  CircleDot,
+  WifiOff,
 } from 'lucide-react';
 import { Harmonium3D } from './Harmonium3D';
 import {
@@ -25,13 +28,18 @@ import {
 import { matchHarmoniumSound, type SoundMatchResult } from './earthSoundMatcher';
 import {
   predictFutureClimateFromHarmonium,
-  sendHarmoniumChatMessage,
+  sendHarmoniumChatMessageDetailed,
+  getAiStatus,
+  subscribeAiStatus,
+  PITCH_METHOD_EN,
+  PITCH_METHOD_BN,
   type FuturePrediction,
   type ChatMessage,
 } from './groqPredictor';
 import { usePrefs } from '../lib/prefs';
 import { Overlay } from '../components/Overlay';
 import { useDialog } from '../lib/useDialog';
+import { useHT } from './strings';
 
 interface Props {
   isOpen: boolean;
@@ -42,6 +50,8 @@ interface Props {
 export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExploreGlobe }) => {
   const { lang } = usePrefs();
   const isBn = lang === 'bn';
+  const ht = useHT();
+  const aiStatus = useSyncExternalStore(subscribeAiStatus, getAiStatus);
 
   const [lastPlayedNote, setLastPlayedNote] = useState<HarmoniumNote | null>(null);
   const [matchResult, setMatchResult] = useState<SoundMatchResult | null>(null);
@@ -179,9 +189,10 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
       setFuturePrediction(pred);
 
       // Add to chat as well
+      const method = isBn ? PITCH_METHOD_BN : PITCH_METHOD_EN;
       const aiNote = isBn
-        ? `🔮 এআই ভবিষ্যৎ পূর্বাভাস: সংরক্ষিত সুরের (${Math.round(targetFreq)} Hz) ফ্রিকোয়েন্সি অনুযায়ী সাল ${pred.predictedYear}-এ (+${pred.yearsFromNow} বছর পর) বৈশ্বিক তাপমাত্রা +${pred.temperatureAnomaly}°C হওয়ার সম্ভাবনা রয়েছে।\n\nভবিষ্যতে কেমন সুর হতে পারে: ${pred.futureVoiceCharacterBn || pred.futureVoiceCharacterEn}\n\nকারণ: ${pred.whyAndHowBn}`
-        : `🔮 AI Future Climate Prediction: Your saved voice (${Math.round(targetFreq)} Hz) maps to Year ${pred.predictedYear} (+${pred.yearsFromNow} years from now) under a projected +${pred.temperatureAnomaly}°C anomaly.\n\nFuture Sound Character: ${pred.futureVoiceCharacterEn}\n\nWhy it will happen: ${pred.whyAndHowEn}`;
+        ? `${ht('predictionNote')}: ${ht('notForecast')}\n${ht('predictionWhy', { y: pred.predictedYear, n: pred.yearsFromNow, a: pred.temperatureAnomaly, f: Math.round(targetFreq) })}\n\n${pred.futureVoiceCharacterBn || pred.futureVoiceCharacterEn}\n\n${pred.whyAndHowBn}\n\n${method}`
+        : `${ht('predictionNote')}: ${ht('notForecast')}\n${ht('predictionWhy', { y: pred.predictedYear, n: pred.yearsFromNow, a: pred.temperatureAnomaly, f: Math.round(targetFreq) })}\n\n${pred.futureVoiceCharacterEn}\n\n${pred.whyAndHowEn}\n\n${method}`;
 
       setChatMessages((prev) => [
         ...prev,
@@ -189,6 +200,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
           id: String(Date.now()),
           role: 'assistant',
           content: aiNote,
+          source: pred.source,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -222,9 +234,10 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
       const currentPitch = lastPlayedNote ? lastPlayedNote.freq : summary.dominantFreq;
       const mappedAnomaly = matchHarmoniumSound(currentPitch).mappedAnomaly;
 
-      const aiReply = await sendHarmoniumChatMessage(
+      const aiReply = await sendHarmoniumChatMessageDetailed(
         [...chatMessages, newMsg].map((m) => ({ role: m.role, content: m.content })),
-        { freq: currentPitch, swaraSequence: summary.swaraSequence, mappedAnomaly }
+        { freq: currentPitch, swaraSequence: summary.swaraSequence, mappedAnomaly },
+        lang,
       );
 
       setChatMessages((prev) => [
@@ -232,22 +245,14 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
         {
           id: String(Date.now() + 1),
           role: 'assistant',
-          content: aiReply,
+          content: aiReply.text,
+          source: aiReply.source,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
     } catch {
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          id: String(Date.now() + 1),
-          role: 'assistant',
-          content: isBn
-            ? 'দুঃখিত, সংযোগে সামান্য বিলম্ব হচ্ছে। হারমোনিয়ামের সুরটি নাসার জলবায়ু ট্র্যাকিংয়ের সাথে সক্রিয় রয়েছে।'
-            : 'Apologies, network delay encountered. Your harmonium acoustic signals remain mapped to NASA climate vectors.',
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        },
-      ]);
+      setChatMessages((prev) => [...prev, { id: String(Date.now() + 1), role: 'assistant', source: 'built-in', timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        content: isBn ? 'কিছু একটা ভুল হয়েছে। আবার চেষ্টা করুন।' : 'Something went wrong. Please try again.' }]);
     } finally {
       setIsChatSending(false);
     }
@@ -280,11 +285,11 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
             <div>
               <div className="flex items-center gap-2">
                 <span className="chip border-amber-500/40 bg-amber-950/40 text-amber-300 text-3xs font-mono font-semibold uppercase">
-                  NASA DATA SONIFICATION × GROQ AI
+                  {ht('eyebrow')}
                 </span>
-                <span className="text-3xs font-mono text-emerald-400 font-semibold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  GROQ GPT-OSS ONLINE
+                <span role="status" className="text-3xs font-mono font-semibold flex items-center gap-1 text-[var(--ink-2)]">
+                  {aiStatus === 'connected' ? <CheckCircle2 className="w-3 h-3" aria-hidden="true" /> : aiStatus === 'offline' ? <WifiOff className="w-3 h-3" aria-hidden="true" /> : aiStatus === 'idle' ? <CircleDot className="w-3 h-3" aria-hidden="true" /> : <KeyRound className="w-3 h-3" aria-hidden="true" />}
+                  {ht(aiStatus === 'connected' ? 'aiConnected' : aiStatus === 'offline' ? 'aiOffline' : aiStatus === 'idle' ? 'aiIdle' : 'aiUnconfigured')}
                 </span>
               </div>
               <h2 id="harmonium-title" className="text-lg sm:text-xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -490,7 +495,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                   <div className="flex items-center gap-2">
                     <span className="chip border-emerald-500/50 bg-emerald-950/60 text-emerald-300 text-3xs font-mono font-semibold uppercase flex items-center gap-1">
                       <CheckCircle2 className="w-3 h-3" />
-                      NASA HISTORICAL MATCH FOUND
+                      {isBn ? 'কাছাকাছি নাসা বছর' : 'CLOSEST NASA YEAR'}
                     </span>
                     <span className="text-xs font-mono text-emerald-300 font-semibold flex items-center gap-1">
                       <Clock className="w-3 h-3" />
@@ -498,7 +503,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                     </span>
                   </div>
                   <span className="text-3xs font-mono text-emerald-400">
-                    Acoustic Correlation: {Math.round(matchResult.confidenceScore * 100)}%
+                    {isBn ? 'পার্থক্য' : 'Difference'}: {(1 - matchResult.confidenceScore).toFixed(2)}°C
                   </span>
                 </div>
 
@@ -588,7 +593,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                   <div className="flex items-center gap-2">
                     <span className="chip border-amber-500/50 bg-amber-950/60 text-amber-300 text-3xs font-mono font-semibold uppercase flex items-center gap-1">
                       <Sparkles className="w-3 h-3" />
-                      AI PREDICTED PLANETARY STATE (GROQ GPT-OSS-120B)
+                      {futurePrediction.source === 'ai' ? ht('predBadgeAi') : ht('predBadgeBuiltIn')}
                     </span>
                     <span className="text-xs font-mono text-red-300 font-semibold flex items-center gap-1">
                       <Clock className="w-3 h-3" />
@@ -596,7 +601,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                     </span>
                   </div>
                   <span className="text-3xs font-mono text-amber-400 font-semibold">
-                    Projected Anomaly: +{futurePrediction.temperatureAnomaly}°C
+                    {isBn ? 'পিচ থেকে অসংগতি' : 'Anomaly from pitch'}: +{futurePrediction.temperatureAnomaly}°C
                   </span>
                 </div>
 
@@ -604,7 +609,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                   <div className="md:col-span-2 flex flex-col gap-2.5">
                     <div>
                       <span className="text-3xs font-mono uppercase text-[var(--ink-3)] block">
-                        {isBn ? 'ভবিষ্যতের জলবায়ু অবস্থা:' : 'Projected Climate Horizon:'}
+                        {ht('predictionTitle')}:
                       </span>
                       <h3 className="text-lg font-display font-bold text-amber-200 mt-0.5">
                         {isBn ? futurePrediction.phenomenonTitleBn : futurePrediction.phenomenonTitleEn}
@@ -668,7 +673,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                   <div className="p-4 rounded-2xl bg-black/70 border border-amber-500/40 flex flex-col justify-between gap-3 text-center">
                     <div>
                       <span className="text-3xs font-mono text-[var(--ink-3)] uppercase block">
-                        {isBn ? 'ভবিষ্যতে কত বছর পর যাবে' : 'PREDICTED FUTURE HORIZON'}
+                        {isBn ? 'দৃষ্টান্তমূলক সাল' : 'ILLUSTRATIVE YEAR'}
                       </span>
                       <span className="text-4xl font-display font-bold text-amber-400 block mt-1">
                         {futurePrediction.predictedYear}
@@ -688,7 +693,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                     </div>
 
                     <div className="text-4xs font-mono text-[var(--ink-3)]">
-                      {futurePrediction.sourceTrajectory}
+                      {isBn ? PITCH_METHOD_BN : PITCH_METHOD_EN}
                     </div>
                   </div>
                 </div>
@@ -704,7 +709,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
             <div className="p-3 rounded-2xl bg-black/60 border border-[var(--line)] flex items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
                 <Brain className="w-4 h-4 text-amber-400" />
-                <span className="font-semibold text-white">Harmonium Earth AI (Groq gpt-oss-120b)</span>
+                <span className="font-semibold text-white">Harmonium Earth AI</span>
               </div>
               <span className="text-3xs font-mono text-amber-400">
                 Pitched at: {lastPlayedNote ? `${lastPlayedNote.swara} (${Math.round(lastPlayedNote.freq)} Hz)` : '261 Hz (Sa)'}
@@ -726,6 +731,7 @@ export const HarmoniumChatModal: React.FC<Props> = ({ isOpen, onClose, onExplore
                   }`}
                 >
                   <p className="whitespace-pre-wrap">{msg.content}</p>
+                  {msg.role === 'assistant' && msg.source === 'built-in' && msg.id !== 'init' && <span className="text-3xs font-mono mt-1 text-stone-300">{ht('chatSourceBuiltIn')}</span>}
                   <span className={`text-4xs font-mono mt-1 ${msg.role === 'user' ? 'text-black/60 text-right' : 'text-stone-400'}`}>
                     {msg.timestamp}
                   </span>
