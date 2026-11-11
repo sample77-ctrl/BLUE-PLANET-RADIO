@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles, Award, Play, CheckCircle2, Lock } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
+import { StarsRow } from './StarsRow';
 
 export interface MissionInfo {
   id: number;
@@ -42,9 +43,9 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
   return (
     <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto">
       {/* Top Profile & Rank Bar */}
-      <div className="glass panel p-5 rounded-3xl border border-[var(--line)] flex flex-wrap items-center justify-between gap-4 shadow-xl">
+      <div className="glass panel p-5 rounded-lg border border-[var(--line)] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--signal)] flex items-center justify-center overflow-hidden shrink-0">
+          <div className="w-16 h-16 rounded-lg p-0.5 border-2 border-[var(--signal)] flex items-center justify-center overflow-hidden shrink-0 bg-[var(--panel)]">
             <img src="/images/ninja_cadet_avatar_sm.jpg" decoding="async" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
           </div>
           <div>
@@ -65,17 +66,17 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 p-2.5 px-4 rounded-2xl bg-[var(--abyss)] border border-[var(--line)]">
+          <div className="flex items-center gap-2 p-2.5 px-4 rounded-lg bg-[var(--abyss)] border border-[var(--line)]">
             <Sparkles className="w-5 h-5 text-[var(--signal)] animate-spin" />
             <div className="flex flex-col">
               <span className="text-2xs font-mono text-[var(--ink-3)] uppercase">{isBn ? 'মোট স্টার' : 'Total Stars'}</span>
-              <span className="text-base font-semibold font-mono text-[var(--signal)]">{totalStars} / 12 ⭐</span>
+              <span className="text-base font-semibold font-mono text-[var(--signal)]">{totalStars} / 12 </span>
             </div>
           </div>
 
           <button
             onClick={onOpenBadgeModal}
-            className="btn btn-brass py-2.5 px-4 rounded-2xl flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer"
+            className="btn btn-brass py-2.5 px-4 rounded-lg flex items-center gap-2 text-xs font-semibold cursor-pointer"
           >
             <Award className="w-4 h-4" />
             <span>{isBn ? 'সার্টিফিকেট' : 'Badges & Certificate'}</span>
@@ -84,7 +85,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
       </div>
 
       {/* Overland Journey Banner */}
-      <div className="relative rounded-3xl overflow-hidden border-2 border-[var(--line)] bg-[var(--panel)] p-6 sm:p-8 flex flex-col gap-6 shadow-2xl">
+      <div className="relative rounded-lg overflow-hidden border-2 border-[var(--line)] bg-[var(--panel)] p-6 sm:p-8 flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-[var(--line)] pb-4">
           <div>
             <span className="text-2xs font-mono uppercase tracking-widest text-[var(--signal)] font-semibold">
@@ -105,9 +106,9 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
             return (
               <div
                 key={m.id}
-                className={`relative rounded-3xl p-6 border-2 transition-all flex flex-col justify-between gap-5 overflow-hidden ${
-                  m.unlocked
-                    ? `${m.borderColor} ${m.bgGradient} shadow-xl hover:scale-[1.01] hover:border-[var(--signal)]`
+                className={`relative rounded-lg p-6 border-2 transition-all flex flex-col justify-between gap-5 overflow-hidden ${
+ m.unlocked
+ ? `${m.borderColor} ${m.bgGradient}  hover:scale-[1.01] hover:border-[var(--signal)]`
                     : 'border-[var(--line)] bg-[var(--abyss)] opacity-60'
                 }`}
               >
@@ -118,7 +119,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
 
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3.5">
-                    <div className="w-12 h-12 rounded-2xl bg-[var(--panel)] border border-[var(--line)] flex items-center justify-center shrink-0 shadow-md">
+                    <div className="w-12 h-12 rounded-lg bg-[var(--panel)] border border-[var(--line)] flex items-center justify-center shrink-0">
                       {m.icon}
                     </div>
                     <div>
@@ -126,7 +127,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
                         <span className="text-2xs font-mono font-semibold uppercase tracking-wider text-[var(--signal)]">
                           {isBn ? `মিশন ${idx + 1}` : `Mission ${idx + 1}`}
                         </span>
-                        {m.stars === 3 && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                        {m.stars === 3 && <CheckCircle2 className="w-4 h-4 text-[var(--signal)]" />}
                       </div>
                       <h4 className="text-lg font-display font-bold text-[var(--ink)] mt-0.5">
                         {isBn ? m.titleBn : m.titleEn}
@@ -145,16 +146,16 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
                       {m.nasaData}
                     </span>
                     <div className="flex items-center gap-0.5 mt-0.5 text-xs text-[var(--signal)]">
-                      {'⭐'.repeat(m.stars) || <span className="text-2xs text-[var(--ink-3)] font-mono">{isBn ? 'স্টার নেই' : '0 Stars'}</span>}
+                      {m.stars > 0 ? <StarsRow n={m.stars} /> : <span className="text-2xs text-[var(--ink-3)] font-mono">{isBn ? 'স্টার নেই' : '0 Stars'}</span>}
                     </div>
                   </div>
 
                   <button
                     disabled={!m.unlocked}
                     onClick={() => onSelectMission(m.id)}
-                    className={`btn text-xs font-semibold px-4 py-2 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-md ${
+                    className={`btn text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 cursor-pointer ${
                       m.unlocked
-                        ? 'btn-brass text-slate-950 hover:scale-105'
+                        ? 'btn-brass text-[var(--on-signal)] hover:scale-105'
                         : 'btn-ghost border border-[var(--line)] cursor-not-allowed text-[var(--ink-3)]'
                     }`}
                   >

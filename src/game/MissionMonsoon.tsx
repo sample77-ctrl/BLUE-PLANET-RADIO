@@ -3,6 +3,7 @@ import { Sparkles, ArrowLeft, ArrowRight, ArrowUp, CloudRain, RotateCcw, Award }
 import { GameAudioEngine } from './gameAudio';
 import { SoundRadar } from './SoundRadar';
 import { usePrefs } from '../lib/prefs';
+import { StarsRow } from './StarsRow';
 import { drawEcoNinja } from './drawEcoNinja';
 
 interface Props {
@@ -24,8 +25,8 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
   const [animalsRescued, setAnimalsRescued] = useState(0); // 0 to 2
   const [levelWon, setLevelWon] = useState(false);
   const radioMsg = isBn
-    ? '📻 কমান্ডার নোভা: "সিলেটে ভারী বর্ষা হচ্ছে! রেইন গেজ তুলে ১০০ মিমি বৃষ্টি রেকর্ড করো এবং ভাসমান হরিণ দুটিকে উদ্ধার করো!"'
-    : '📻 Commander Nova: "Heavy monsoon in Sylhet! Hold your Rain Gauge to collect 100 mm of NASA rain data and rescue the stranded animals!"';
+    ? 'কমান্ডার নোভা: "সিলেটে ভারী বর্ষা হচ্ছে! রেইন গেজ তুলে ১০০ মিমি বৃষ্টি রেকর্ড করো এবং ভাসমান হরিণ দুটিকে উদ্ধার করো!"'
+    : 'Commander Nova: "Heavy monsoon in Sylhet! Hold your Rain Gauge to collect 100 mm of NASA rain data and rescue the stranded animals!"';
 
   const keysRef = useRef({ left: false, right: false, jump: false, catchRain: false });
 
@@ -278,11 +279,11 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
           ctx.textAlign = 'center';
           ctx.fillText(a.emoji, a.x, a.y);
           ctx.fillStyle = '#ffd166';
-          ctx.font = 'bold 10px sans-serif';
+          ctx.font = 'bold 12px sans-serif';
           ctx.fillText('HELP ME!', a.x, a.y - 32);
         } else {
           ctx.fillStyle = '#3fd1b5';
-          ctx.font = 'bold 11px sans-serif';
+          ctx.font = 'bold 12px sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText('RESCUED ✓', a.x, a.y - 10);
         }
@@ -324,16 +325,16 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
   return (
     <div className="max-w-5xl mx-auto flex flex-col gap-3">
       {/* Header HUD */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl glass border border-[var(--line)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-lg glass border border-[var(--line)]">
         <div className="flex items-center gap-3">
           <button onClick={onExit} className="btn btn-ghost text-xs px-2.5 py-1">
             ← {isBn ? 'ম্যাপে ফেরত' : 'Exit Mission'}
           </button>
           <div className="chip border-[var(--rain)] text-[var(--rain)] font-semibold text-xs py-1 px-3">
-            🌧️ {isBn ? 'বৃষ্টি রেকর্ড:' : 'Rain Data:'} {Math.round(rainGathered)} / 100 mm
+            {isBn ? 'বৃষ্টি রেকর্ড:' : 'Rain Data:'} {Math.round(rainGathered)} / 100 mm
           </div>
           <div className="chip border-[var(--signal)] text-[var(--signal)] font-semibold text-xs py-1 px-3">
-            🦌 {isBn ? 'প্রাণী উদ্ধার:' : 'Rescued:'} {animalsRescued} / 2
+            {isBn ? 'প্রাণী উদ্ধার:' : 'Rescued:'} {animalsRescued} / 2
           </div>
         </div>
 
@@ -345,29 +346,30 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
       </div>
 
       {/* Main Canvas */}
-      <div ref={containerRef} className="w-full rounded-3xl overflow-hidden border-2 border-[var(--rain)]/40 relative bg-[var(--abyss)] shadow-2xl" style={{ minHeight: '460px' }}>
+      <div ref={containerRef} className="w-full rounded-lg overflow-hidden border-2 border-[var(--rain)]/40 relative bg-[var(--abyss)]" style={{ minHeight: '460px' }}>
         <canvas ref={canvasRef} width={900} height={460} className="block w-full h-[460px]" />
 
         {/* Radio Dialogue with Eco-Ninja Cadet Portrait */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 max-w-xl w-11/12 p-2.5 rounded-2xl glass-pop border border-[var(--signal)] flex items-center gap-3 text-xs sm:text-sm font-semibold pointer-events-none text-[var(--ink)] shadow-xl">
-          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-9 h-9 rounded-xl border border-[var(--signal)] shrink-0 object-cover shadow-sm" />
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 max-w-xl w-11/12 p-2.5 rounded-lg glass-pop border border-[var(--signal)] flex items-center gap-3 text-xs sm:text-sm font-semibold pointer-events-none text-[var(--ink)]">
+          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-9 h-9 rounded-lg border border-[var(--signal)] shrink-0 object-cover" />
           <span className="leading-snug">{radioMsg}</span>
         </div>
 
         {/* Level Complete Win Overlay */}
         {levelWon && (
-          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in">
+          <div className="absolute inset-0 bg-[var(--ground)]/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in">
             <div className="flex items-center gap-3">
-              <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-[var(--signal)] shadow-2xl">
+              <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-[var(--signal)]">
                 <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-full h-full object-cover" />
               </div>
-              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-slate-950 shadow-2xl animate-bounce">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center text-[var(--on-signal)] animate-bounce bg-[var(--signal)]">
                 <Award className="w-8 h-8" />
               </div>
             </div>
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--signal)]">
-              {isBn ? 'বর্ষার প্লাবন উদ্ধার সম্পন্ন! ⭐⭐⭐' : 'Monsoon Rescue Complete! ⭐⭐⭐'}
+              {isBn ? 'বর্ষার প্লাবন উদ্ধার সম্পন্ন!' : 'Monsoon Rescue Complete!'}
             </h2>
+            <StarsRow n={3} />
             <p className="text-xs sm:text-sm text-[var(--ink-2)] max-w-md">
               {isBn
                 ? 'নাসার POWER ডেটা দিয়ে তুমি ১০০ মিমি বৃষ্টি রেকর্ড করেছ এবং বন্যপ্রাণীদের নিরাপদে পৌঁছে দিয়েছ!'
@@ -375,7 +377,7 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
             </p>
             <button
               onClick={() => onComplete(3)}
-              className="btn btn-brass font-semibold px-6 py-3 rounded-xl flex items-center gap-2 cursor-pointer shadow-lg hover:scale-105"
+              className="btn btn-brass font-semibold px-6 py-3 rounded-lg flex items-center gap-2 cursor-pointer hover:scale-105"
             >
               <span>{isBn ? 'মিশন সম্পন্ন ও পরবর্তী মিশন' : 'Complete & Return to Map'}</span>
               <Sparkles className="w-4 h-4" />
@@ -385,11 +387,11 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
       </div>
 
       {/* Touch Gamepad */}
-      <div className="p-3.5 rounded-2xl glass border border-[var(--line)] flex flex-wrap items-center justify-between gap-4 select-none">
+      <div className="p-3.5 rounded-lg glass border border-[var(--line)] flex flex-wrap items-center justify-between gap-4 select-none">
         <div className="text-xs text-[var(--ink-3)] font-mono hidden md:block">
           {isBn
-            ? '💡 কীবোর্ড: ← / → (হাঁটা), Space (লাফানো), E বা F চেপে ধরে বৃষ্টি সংগ্রহ'
-            : '💡 Controls: Arrow Keys / WASD to Walk, Space to Jump, Hold E or F to collect rain!'}
+            ? 'কীবোর্ড: ← / → (হাঁটা), Space (লাফানো), E বা F চেপে ধরে বৃষ্টি সংগ্রহ'
+            : 'Controls: Arrow Keys / WASD to Walk, Space to Jump, Hold E or F to collect rain!'}
         </div>
 
         <div className="flex items-center justify-between w-full md:w-auto gap-3">
@@ -399,7 +401,7 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
               onTouchEnd={() => (keysRef.current.left = false)}
               onMouseDown={() => (keysRef.current.left = true)}
               onMouseUp={() => (keysRef.current.left = false)}
-              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
+              className="w-14 h-14 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-[var(--on-signal)] flex items-center justify-center cursor-pointer"
               aria-label="Walk Left"
             >
               <ArrowLeft className="w-6 h-6" />
@@ -409,7 +411,7 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
               onTouchEnd={() => (keysRef.current.right = false)}
               onMouseDown={() => (keysRef.current.right = true)}
               onMouseUp={() => (keysRef.current.right = false)}
-              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
+              className="w-14 h-14 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-[var(--on-signal)] flex items-center justify-center cursor-pointer"
               aria-label="Walk Right"
             >
               <ArrowRight className="w-6 h-6" />
@@ -422,7 +424,7 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
               onTouchEnd={() => (keysRef.current.catchRain = false)}
               onMouseDown={() => (keysRef.current.catchRain = true)}
               onMouseUp={() => (keysRef.current.catchRain = false)}
-              className="h-14 px-5 rounded-2xl bg-sky-700 active:bg-sky-500 text-white flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer"
+              className="btn btn-brass h-14 px-5 rounded-lg flex items-center gap-2 text-xs font-semibold cursor-pointer"
               aria-label="Catch Rain"
             >
               <CloudRain className="w-5 h-5" />
@@ -438,7 +440,7 @@ export const MissionMonsoon: React.FC<Props> = ({ onComplete, onExit, audioReady
                 keysRef.current.jump = true;
                 setTimeout(() => (keysRef.current.jump = false), 150);
               }}
-              className="w-14 h-14 rounded-2xl bg-[var(--signal)] text-[var(--on-signal)] font-semibold flex items-center justify-center shadow-lg active:scale-95 cursor-pointer"
+              className="w-14 h-14 rounded-lg bg-[var(--signal)] text-[var(--on-signal)] font-semibold flex items-center justify-center active:scale-95 cursor-pointer"
               aria-label="Jump"
             >
               <ArrowUp className="w-6 h-6" />

@@ -66,8 +66,8 @@ export const TacticalWildfireMission: React.FC<Props> = ({
   const [missionComplete, setMissionComplete] = useState(false);
   const [radioLog, setRadioLog] = useState<string[]>([
     isBn
-      ? '📻 নাসার FIRMS স্যাটেলাইট আমাজন অববাহিকায় উচ্চ তাপমাত্রার দাবানল (FRP 850 MW) শনাক্ত করেছে।'
-      : '📻 NASA FIRMS VIIRS detected intense wildfire hotspots (FRP 850 MW) in the Amazon basin.',
+      ? 'নাসার FIRMS স্যাটেলাইট আমাজন অববাহিকায় উচ্চ তাপমাত্রার দাবানল (FRP 850 MW) শনাক্ত করেছে।'
+      : 'NASA FIRMS VIIRS detected intense wildfire hotspots (FRP 850 MW) in the Amazon basin.',
   ]);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -135,7 +135,7 @@ export const TacticalWildfireMission: React.FC<Props> = ({
   // Air Tanker Water Drop Trigger
   const deployAirTanker = () => {
     if (waterBudget < 25) {
-      addRadioMessage(isBn ? '⚠️ পানি অপর্যাপ্ত! ওয়াটার রিচার্জ হওয়া পর্যন্ত অপেক্ষা করুন।' : '⚠️ Insufficient water payload! Wait for refill.');
+      addRadioMessage(isBn ? 'পানি অপর্যাপ্ত! ওয়াটার রিচার্জ হওয়া পর্যন্ত অপেক্ষা করুন।' : 'Insufficient water payload! Wait for refill.');
       return;
     }
     setWaterBudget((b) => Math.max(0, b - 25));
@@ -150,8 +150,8 @@ export const TacticalWildfireMission: React.FC<Props> = ({
     audio.playSplash();
     addRadioMessage(
       isBn
-        ? '✈️ এয়ার ট্যাংকার কল করা হয়েছে: দাবানলের ওপর পানি ফেলার জন্য এগিয়ে আসছে!'
-        : '✈️ Air Tanker deployed: Inbound for aerial water drop over fire perimeter!'
+        ? 'এয়ার ট্যাংকার কল করা হয়েছে: দাবানলের ওপর পানি ফেলার জন্য এগিয়ে আসছে!'
+        : 'Air Tanker deployed: Inbound for aerial water drop over fire perimeter!'
     );
   };
 
@@ -189,8 +189,8 @@ export const TacticalWildfireMission: React.FC<Props> = ({
             const next = prev + 1;
             addRadioMessage(
               isBn
-                ? `🔥 হটস্পট #${fire.id} সফলভাবে নিভিয়ে ফেলা হয়েছে! (FRP: ${fire.frpMw} MW শান্ত)`
-                : `🔥 Hotspot #${fire.id} extinguished! (FRP: ${fire.frpMw} MW neutralized)`
+                ? `হটস্পট #${fire.id} সফলভাবে নিভিয়ে ফেলা হয়েছে! (FRP: ${fire.frpMw} MW শান্ত)`
+                : `Hotspot #${fire.id} extinguished! (FRP: ${fire.frpMw} MW neutralized)`
             );
             if (next >= 3) {
               setMissionComplete(true);
@@ -253,10 +253,10 @@ export const TacticalWildfireMission: React.FC<Props> = ({
       ctx.stroke();
 
       ctx.fillStyle = '#9ae6b4';
-      ctx.font = 'bold 11px sans-serif';
+      ctx.font = 'bold 12px sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(isBn ? 'নিরাপদ অঞ্চল' : 'EVACUATION ZONE', 95, 68);
-      ctx.font = '9px monospace';
+      ctx.font = '12px monospace';
       ctx.fillText(isBn ? 'আশ্রয়কেন্দ্র' : 'SHELTER CP', 95, 84);
 
       // Houses / Staging Area
@@ -305,7 +305,7 @@ export const TacticalWildfireMission: React.FC<Props> = ({
 
           // Satellite telemetry text
           ctx.fillStyle = '#48bb78';
-          ctx.font = '10px monospace';
+          ctx.font = '12px monospace';
           ctx.fillText(`VIIRS FRP: ${f.frpMw} MW`, f.x - 35, f.y - f.radius - 8);
         });
         ctx.restore();
@@ -355,9 +355,9 @@ export const TacticalWildfireMission: React.FC<Props> = ({
         ctx.fillRect(fire.x - 30, fire.y + fire.radius + 6, (fire.health / 100) * 60, 6);
 
         ctx.fillStyle = '#fff';
-        ctx.font = 'bold 10px sans-serif';
+        ctx.font = 'bold 12px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(`🔥 ${fire.frpMw} MW`, fire.x, fire.y + fire.radius + 24);
+        ctx.fillText(`${fire.frpMw} MW`, fire.x, fire.y + fire.radius + 24);
       });
 
       // Update & Draw Smoke Particles
@@ -396,7 +396,7 @@ export const TacticalWildfireMission: React.FC<Props> = ({
             civ.evacuated = true;
             setCiviliansEvacuated((prev) => {
               const next = prev + 1;
-              addRadioMessage(isBn ? `🚶 নাগরিক উদ্ধার! (${next}/4 নিরাপদ কেন্দ্রে পৌঁছেছে)` : `🚶 Civilian evacuated! (${next}/4 at Safe Shelter)`);
+              addRadioMessage(isBn ? `নাগরিক উদ্ধার! (${next}/4 নিরাপদ কেন্দ্রে পৌঁছেছে)` : `Civilian evacuated! (${next}/4 at Safe Shelter)`);
               return next;
             });
           }
@@ -501,18 +501,18 @@ export const TacticalWildfireMission: React.FC<Props> = ({
   return (
     <div className="w-full flex flex-col gap-4 max-w-5xl mx-auto">
       {/* Top Incident Command HUD Bar (Image 1 style!) */}
-      <div className="glass panel p-3 sm:p-4 rounded-2xl border border-amber-500/40 bg-gradient-to-r from-amber-950/40 via-[var(--panel)] to-red-950/30 flex flex-wrap items-center justify-between gap-3 shadow-xl">
+      <div className="glass panel p-3 sm:p-4 rounded-lg border border-[var(--hair)] flex flex-wrap items-center justify-between gap-3 bg-[var(--panel)]">
         <div className="flex items-center gap-3">
           <button
             onClick={onExit}
-            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] cursor-pointer"
+            className="btn btn-ghost p-2 rounded-lg border border-[var(--line)] cursor-pointer"
             aria-label="Exit Mission"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <span className="chip border-red-500/50 bg-red-950/40 text-red-300 font-mono text-xs font-semibold uppercase tracking-wider">
+              <span className="chip border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)] font-mono text-xs font-semibold uppercase tracking-wider">
                 {isBn ? 'দাবানল জরুরি নিয়ন্ত্রণ' : 'WILDFIRE INCIDENT COMMAND'}
               </span>
               <span className="font-mono text-xs text-[var(--signal)] font-semibold">
@@ -526,11 +526,12 @@ export const TacticalWildfireMission: React.FC<Props> = ({
         </div>
 
         {/* View Switcher: Tactical Command, Air Scout, Satellite Downlink */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-[var(--line)]">
+        <div className="flex items-center gap-1.5 p-1 rounded-lg bg-[var(--ground)]/40 border border-[var(--line)]">
           <button
             onClick={() => setViewMode('tactical')}
+            aria-pressed={viewMode === 'tactical'}
             className={`text-2xs font-semibold py-1 px-2.5 rounded-lg flex items-center gap-1 transition cursor-pointer ${
-              viewMode === 'tactical' ? 'bg-amber-500 text-black font-semibold' : 'text-[var(--ink-2)] hover:text-white'
+              viewMode === 'tactical' ? 'bg-[var(--signal)] font-semibold text-[var(--on-signal)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
           >
             <Compass className="w-3.5 h-3.5" />
@@ -538,8 +539,9 @@ export const TacticalWildfireMission: React.FC<Props> = ({
           </button>
           <button
             onClick={() => setViewMode('satellite')}
+            aria-pressed={viewMode === 'satellite'}
             className={`text-2xs font-semibold py-1 px-2.5 rounded-lg flex items-center gap-1 transition cursor-pointer ${
-              viewMode === 'satellite' ? 'bg-emerald-500 text-black font-semibold' : 'text-[var(--ink-2)] hover:text-white'
+              viewMode === 'satellite' ? 'bg-[var(--signal)] font-semibold text-[var(--on-signal)]' : 'text-[var(--ink-2)] hover:text-[var(--ink)]'
             }`}
           >
             <Satellite className="w-3.5 h-3.5" />
@@ -552,14 +554,14 @@ export const TacticalWildfireMission: React.FC<Props> = ({
           {onSwitchToPlatformer && (
             <button
               onClick={onSwitchToPlatformer}
-              className="btn btn-ghost border border-[var(--line)] text-xs font-semibold py-2 px-3 rounded-xl flex items-center gap-1 cursor-pointer hover:border-[var(--signal)]"
+              className="btn btn-ghost border border-[var(--line)] text-xs font-semibold py-2 px-3 rounded-lg flex items-center gap-1 cursor-pointer hover:border-[var(--signal)]"
             >
               <span>{isBn ? 'প্ল্যাটফর্মার মোড' : 'Platformer View'}</span>
             </button>
           )}
           <button
             onClick={deployAirTanker}
-            className="btn btn-brass text-xs font-semibold py-2 px-3.5 rounded-xl flex items-center gap-1.5 shadow-lg hover:scale-105 cursor-pointer"
+            className="btn btn-brass text-xs font-semibold py-2 px-3.5 rounded-lg flex items-center gap-1.5 hover:scale-105 cursor-pointer"
           >
             <Plane className="w-4 h-4" />
             <span>{isBn ? 'এয়ার ট্যাংকার ড্রপ' : 'Deploy Air Tanker'}</span>
@@ -572,24 +574,24 @@ export const TacticalWildfireMission: React.FC<Props> = ({
         {/* Left Status & Objectives Column (Image 1 HUD recreation!) */}
         <div className="lg:col-span-1 flex flex-col gap-3">
           {/* Objectives Card */}
-          <div className="p-3.5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-2.5 shadow-md">
+          <div className="p-3.5 rounded-lg bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-2.5">
             <span className="text-2xs font-mono uppercase tracking-wider text-[var(--signal)] font-semibold">
               {isBn ? 'মিশন অবজেক্টিভস' : 'INCIDENT OBJECTIVES'}
             </span>
             <div className="flex flex-col gap-2 text-xs">
               <div className="flex items-center justify-between">
                 <span className="text-[var(--ink-2)] flex items-center gap-1.5">
-                  <Flame className="w-3.5 h-3.5 text-amber-400" />
+                  <Flame className="w-3.5 h-3.5 text-[var(--signal)]" />
                   {isBn ? 'দাবানল দমন:' : 'Extinguish Fires:'}
                 </span>
-                <span className="font-mono font-semibold text-amber-300">{firesExtinguished} / 3</span>
+                <span className="font-mono font-semibold text-[var(--signal)]">{firesExtinguished} / 3</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-[var(--ink-2)] flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5 text-blue-400" />
+                  <Users className="w-3.5 h-3.5 text-[var(--signal)]" />
                   {isBn ? 'নাগরিক উদ্ধার:' : 'Evacuate Civilians:'}
                 </span>
-                <span className="font-mono font-semibold text-blue-300">{civiliansEvacuated} / 4</span>
+                <span className="font-mono font-semibold text-[var(--signal)]">{civiliansEvacuated} / 4</span>
               </div>
             </div>
 
@@ -597,27 +599,27 @@ export const TacticalWildfireMission: React.FC<Props> = ({
             <div className="border-t border-[var(--line)] pt-2 flex flex-col gap-1.5 text-2xs">
               <div className="flex justify-between">
                 <span className="text-[var(--ink-3)]">{isBn ? 'পাবলিক সেফটি:' : 'Public Safety:'}</span>
-                <span className="text-red-400 font-semibold font-mono">{isBn ? 'উচ্চ ঝুঁকি' : 'SEVERE DANGER'}</span>
+                <span className="text-[var(--signal)] font-semibold font-mono">{isBn ? 'উচ্চ ঝুঁকি' : 'SEVERE DANGER'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[var(--ink-3)]">{isBn ? 'পানি সরবরাহ:' : 'Water Payload:'}</span>
-                <span className="text-sky-300 font-semibold font-mono">{waterBudget}%</span>
+                <span className="text-[var(--signal)] font-semibold font-mono">{waterBudget}%</span>
               </div>
-              <div className="w-full h-1.5 rounded-full bg-black/40 overflow-hidden">
-                <div className="h-full bg-sky-400 transition-all duration-300" style={{ width: `${waterBudget}%` }} />
+              <div className="w-full h-1.5 rounded-full bg-[var(--ground)]/40 overflow-hidden">
+                <div className="h-full bg-[var(--signal)] transition-all duration-300" style={{ width: `${waterBudget}%` }} />
               </div>
             </div>
           </div>
 
           {/* Radio Telemetry Log Feed */}
-          <div className="p-3.5 rounded-2xl bg-black/60 border border-[var(--line)] flex flex-col gap-2 flex-1 shadow-inner">
-            <span className="text-3xs font-mono uppercase tracking-wider text-emerald-400 flex items-center gap-1.5 font-semibold">
+          <div className="p-3.5 rounded-lg bg-[var(--ground)]/60 border border-[var(--line)] flex flex-col gap-2 flex-1">
+            <span className="text-2xs font-mono uppercase tracking-wider text-[var(--signal)] flex items-center gap-1.5 font-semibold">
               <Radio className="w-3.5 h-3.5 animate-pulse" />
               {isBn ? 'লাইভ রেডিও ফিড' : 'LIVE RADIO / SATELLITE FEED'}
             </span>
-            <div className="flex flex-col gap-1.5 overflow-y-auto max-h-48 text-3xs font-mono text-[var(--ink-2)] scroll-thin">
+            <div className="flex flex-col gap-1.5 overflow-y-auto max-h-48 text-2xs font-mono text-[var(--ink-2)] scroll-thin">
               {radioLog.map((log, i) => (
-                <div key={i} className="p-1.5 rounded bg-white/5 border border-white/5">
+                <div key={i} className="p-1.5 rounded bg-[var(--panel-2)] border border-[var(--hair)]">
                   {log}
                 </div>
               ))}
@@ -627,7 +629,7 @@ export const TacticalWildfireMission: React.FC<Props> = ({
 
         {/* Center Canvas Tactical Map Area */}
         <div className="lg:col-span-3 flex flex-col gap-3">
-          <div className="relative rounded-2xl overflow-hidden border-2 border-[var(--line)] shadow-2xl bg-black">
+          <div className="relative rounded-lg overflow-hidden border-2 border-[var(--line)] bg-[var(--ground)]">
             <canvas
               ref={canvasRef}
               width={800}
@@ -638,22 +640,22 @@ export const TacticalWildfireMission: React.FC<Props> = ({
             />
 
             {/* Click-to-Spray Ground Hint Overlay */}
-            <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-xl bg-black/75 border border-white/10 text-2xs font-mono text-[var(--ink-2)] backdrop-blur-sm pointer-events-none">
-              💡 {isBn ? 'হটস্পটে ক্লিক করে গ্রাউন্ড ওয়াটার স্প্রে করো | বাটন দিয়ে এয়ার ট্যাংকার পাঠাও' : 'Click on fires to deploy ground hose spray | Click button for Air Tanker'}
+            <div className="absolute bottom-3 left-3 px-3 py-1.5 rounded-lg bg-[var(--ground)]/75 border border-[var(--hair)] text-2xs font-mono text-[var(--ink-2)] backdrop-blur-sm pointer-events-none">
+              {isBn ? 'হটস্পটে ক্লিক করে গ্রাউন্ড ওয়াটার স্প্রে করো | বাটন দিয়ে এয়ার ট্যাংকার পাঠাও' : 'Click on fires to deploy ground hose spray | Click button for Air Tanker'}
             </div>
 
             {/* Educational Simulation Disclaimer */}
-            <div className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-black/70 border border-amber-500/30 text-3xs font-mono text-amber-300 backdrop-blur-sm pointer-events-none">
+            <div className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-[var(--ground)]/70 border border-[var(--hair)] text-2xs font-mono text-[var(--signal)] backdrop-blur-sm pointer-events-none">
               NASA FIRMS VIIRS S-NPP 375m FRP Simulation
             </div>
 
             {/* Mission Complete Overlay Modal */}
             {missionComplete && (
-              <div className="absolute inset-0 bg-black/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center animate-fade-in z-20">
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mb-3">
-                  <Award className="w-8 h-8 text-emerald-400 animate-bounce" />
+              <div className="absolute inset-0 bg-[var(--ground)]/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center animate-fade-in z-20">
+                <div className="w-16 h-16 rounded-full bg-[var(--panel-2)] border-2 border-[var(--signal)] flex items-center justify-center mb-3">
+                  <Award className="w-8 h-8 text-[var(--signal)] animate-bounce" />
                 </div>
-                <h3 className="text-2xl font-display font-bold text-white">
+                <h3 className="text-2xl font-display font-bold text-[var(--ink)]">
                   {isBn ? 'মিশন সম্পন্ন! আমাজন দাবানল শান্ত!' : 'MISSION COMPLETE! AMAZON FIRES EXTINGUISHED!'}
                 </h3>
                 <p className="text-xs text-[var(--ink-2)] max-w-md mt-1 mb-4 leading-relaxed">
@@ -664,7 +666,7 @@ export const TacticalWildfireMission: React.FC<Props> = ({
                 <div className="flex gap-3">
                   <button
                     onClick={onExit}
-                    className="btn btn-brass px-6 py-2.5 rounded-xl text-xs font-semibold cursor-pointer"
+                    className="btn btn-brass px-6 py-2.5 rounded-lg text-xs font-semibold cursor-pointer"
                   >
                     {isBn ? 'মিশন সেন্টার-এ ফিরে যান' : 'Return to Mission Center'}
                   </button>

@@ -191,7 +191,7 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
 
       <div className="glass panel p-6 sm:p-8 flex flex-col gap-6">
         {/* Headphone Advisory */}
-        <div className="flex items-center justify-center gap-2 p-3 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] text-xs sm:text-sm text-[var(--ink-2)]">
+        <div className="flex items-center justify-center gap-2 p-3 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-xs sm:text-sm text-[var(--ink-2)]">
           <Headphones className="w-5 h-5 text-[var(--signal)] shrink-0" />
           <span>
             {isBn
@@ -201,7 +201,7 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
         </div>
 
         {/* Visual Stereo Indicator */}
-        <div className="p-6 rounded-2xl bg-[var(--abyss)] border border-[var(--line)] flex flex-col items-center gap-4">
+        <div className="p-6 rounded-lg bg-[var(--abyss)] border border-[var(--line)] flex flex-col items-center gap-4">
           <div className="flex items-center justify-between w-full max-w-sm px-4">
             <div className={`flex flex-col items-center gap-1 transition-all ${isPlaying && cur.pan < -0.2 ? 'scale-110 text-[var(--fire)]' : 'text-[var(--ink-3)]'}`}>
               <span className="text-xs font-semibold uppercase">{isBn ? 'বাঁ কান (পশ্চিম)' : 'Left Ear (West)'}</span>
@@ -255,11 +255,11 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
                 key={c.id}
                 disabled={isAnswered}
                 onClick={() => handleSelect(c.id, c.correct)}
-                className={`p-5 rounded-xl border flex flex-col gap-2 text-left transition-all cursor-pointer ${
+                className={`p-5 rounded-lg border flex flex-col gap-2 text-left transition-all cursor-pointer ${
                   isSuccess
-                    ? 'border-emerald-500 bg-emerald-950/40 text-emerald-100 ring-2 ring-emerald-500'
+                    ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)] ring-2 ring-[var(--signal)]'
                     : isFail
-                    ? 'border-rose-500 bg-rose-950/40 text-rose-200'
+                    ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)]'
                     : isSelected
                     ? 'border-[var(--signal)] bg-[var(--panel-2)]'
                     : 'border-[var(--glass-border)] bg-[var(--panel)] hover:border-[var(--line)] hover:bg-[var(--panel-2)]'
@@ -281,12 +281,12 @@ export const LevelCompass: React.FC<Props> = ({ onComplete }) => {
 
         {/* Feedback & Proceed */}
         {isAnswered && (
-          <div className="p-4 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="p-4 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-start gap-3">
               {selectedId === cur.choices.find((c) => c.correct)?.id ? (
-                <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-6 h-6 text-[var(--signal)] shrink-0 mt-0.5" />
               ) : (
-                <RotateCcw className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
+                <RotateCcw className="w-6 h-6 text-[var(--signal)] shrink-0 mt-0.5" />
               )}
               <div>
                 <h4 className="font-semibold text-sm text-[var(--ink)]">

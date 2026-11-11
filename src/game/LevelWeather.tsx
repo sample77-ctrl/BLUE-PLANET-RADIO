@@ -152,7 +152,7 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
 
       <div className="glass panel p-6 sm:p-8 flex flex-col gap-6">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300">
+          <div className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] text-[var(--signal)]">
             {cur.phenomenon === 'rain' ? <CloudRain className="w-6 h-6 text-[var(--rain)]" /> : <Waves className="w-6 h-6 text-[var(--teal)]" />}
           </div>
           <div>
@@ -168,13 +168,13 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
         {/* Comparison Play Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-2">
           {/* Sound A */}
-          <div className="p-5 rounded-2xl bg-[var(--abyss)] border border-[var(--line)] flex flex-col items-center gap-4 text-center">
+          <div className="p-5 rounded-lg bg-[var(--abyss)] border border-[var(--line)] flex flex-col items-center gap-4 text-center">
             <span className="text-xs font-mono uppercase tracking-wider text-[var(--ink-3)]">
               {isBn ? 'প্রথম অপশন' : 'Option 1'}
             </span>
             <button
               onClick={() => handlePlay('A')}
-              className={`btn btn-ghost border border-[var(--line)] px-6 py-4 rounded-xl flex items-center gap-2.5 w-full justify-center transition-all ${
+              className={`btn btn-ghost border border-[var(--line)] px-6 py-4 rounded-lg flex items-center gap-2.5 w-full justify-center transition-all ${
                 playingWhich === 'A' ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)]' : 'hover:border-[var(--signal)]'
               }`}
             >
@@ -189,8 +189,8 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
               className={`w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition cursor-pointer border ${
                 selectedChoice === 'A'
                   ? cur.soundA.isExtreme
-                    ? 'bg-emerald-600 text-white border-emerald-500'
-                    : 'bg-rose-600 text-white border-rose-500'
+                    ? 'bg-[var(--signal)] border-[var(--signal)] text-[var(--on-signal)]'
+                    : 'bg-[var(--signal)] border-[var(--signal)] text-[var(--on-signal)]'
                   : 'bg-[var(--panel-2)] text-[var(--ink)] border-[var(--line)] hover:border-[var(--signal)]'
               }`}
             >
@@ -199,13 +199,13 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
           </div>
 
           {/* Sound B */}
-          <div className="p-5 rounded-2xl bg-[var(--abyss)] border border-[var(--line)] flex flex-col items-center gap-4 text-center">
+          <div className="p-5 rounded-lg bg-[var(--abyss)] border border-[var(--line)] flex flex-col items-center gap-4 text-center">
             <span className="text-xs font-mono uppercase tracking-wider text-[var(--ink-3)]">
               {isBn ? 'দ্বিতীয় অপশন' : 'Option 2'}
             </span>
             <button
               onClick={() => handlePlay('B')}
-              className={`btn btn-ghost border border-[var(--line)] px-6 py-4 rounded-xl flex items-center gap-2.5 w-full justify-center transition-all ${
+              className={`btn btn-ghost border border-[var(--line)] px-6 py-4 rounded-lg flex items-center gap-2.5 w-full justify-center transition-all ${
                 playingWhich === 'B' ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)]' : 'hover:border-[var(--signal)]'
               }`}
             >
@@ -220,8 +220,8 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
               className={`w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition cursor-pointer border ${
                 selectedChoice === 'B'
                   ? cur.soundB.isExtreme
-                    ? 'bg-emerald-600 text-white border-emerald-500'
-                    : 'bg-rose-600 text-white border-rose-500'
+                    ? 'bg-[var(--signal)] border-[var(--signal)] text-[var(--on-signal)]'
+                    : 'bg-[var(--signal)] border-[var(--signal)] text-[var(--on-signal)]'
                   : 'bg-[var(--panel-2)] text-[var(--ink)] border-[var(--line)] hover:border-[var(--signal)]'
               }`}
             >
@@ -232,12 +232,12 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
 
         {/* Feedback */}
         {isAnswered && (
-          <div className="p-4 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="p-4 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-start gap-3">
               {isCurrentCorrect ? (
-                <ShieldCheck className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+                <ShieldCheck className="w-6 h-6 text-[var(--signal)] shrink-0 mt-0.5" />
               ) : (
-                <AlertTriangle className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
+                <AlertTriangle className="w-6 h-6 text-[var(--signal)] shrink-0 mt-0.5" />
               )}
               <div>
                 <h4 className="font-semibold text-sm text-[var(--ink)]">

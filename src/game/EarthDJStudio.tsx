@@ -27,14 +27,14 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
   const [oceanAnomaly, setOceanAnomaly] = useState(0.5);
 
   const pentatonicNotes: NotePad[] = [
-    { note: 'G3', freq: 196.0, color: 'border-emerald-500/40 bg-emerald-950/30 text-emerald-200' },
-    { note: 'A3', freq: 220.0, color: 'border-teal-500/40 bg-teal-950/30 text-teal-200' },
-    { note: 'C4', freq: 261.6, color: 'border-cyan-500/40 bg-cyan-950/30 text-cyan-200' },
-    { note: 'D4', freq: 293.7, color: 'border-blue-500/40 bg-blue-950/30 text-blue-200' },
-    { note: 'E4', freq: 329.6, color: 'border-indigo-500/40 bg-indigo-950/30 text-indigo-200' },
-    { note: 'G4', freq: 392.0, color: 'border-violet-500/40 bg-violet-950/30 text-violet-200' },
-    { note: 'A4', freq: 440.0, color: 'border-amber-500/40 bg-amber-950/30 text-amber-200' },
-    { note: 'C5', freq: 523.3, color: 'border-rose-500/40 bg-rose-950/30 text-rose-200' },
+    { note: 'G3', freq: 196.0, color: 'border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)]' },
+    { note: 'A3', freq: 220.0, color: 'border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)]' },
+    { note: 'C4', freq: 261.6, color: 'border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)]' },
+    { note: 'D4', freq: 293.7, color: 'border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)]' },
+    { note: 'E4', freq: 329.6, color: 'border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)]' },
+    { note: 'G4', freq: 392.0, color: 'border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)]' },
+    { note: 'A4', freq: 440.0, color: 'border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)]' },
+    { note: 'C5', freq: 523.3, color: 'border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)]' },
   ];
 
   const [activePad, setActivePad] = useState<string | null>(null);
@@ -100,7 +100,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
       {/* Top Header */}
       <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-[var(--signal)]/20 border border-[var(--signal)]/40 text-[var(--signal)]">
+          <div className="p-2.5 rounded-lg bg-[var(--signal)]/20 border border-[var(--signal)]/40 text-[var(--signal)]">
             <Sparkles className="w-6 h-6" />
           </div>
           <div>
@@ -126,7 +126,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
       {/* Main Studio Deck */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Fire Deck */}
-        <div className={`glass panel p-5 rounded-2xl flex flex-col gap-4 border transition-all ${fireActive ? 'border-[var(--fire)] shadow-lg shadow-[var(--fire)]/10 ring-1 ring-[var(--fire)]' : 'border-[var(--line)]'}`}>
+        <div className={`glass panel p-5 rounded-lg flex flex-col gap-4 border transition-all ${fireActive ? 'border-[var(--fire)]  shadow-[var(--fire)]/10 ring-1 ring-[var(--fire)]' : 'border-[var(--line)]'}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-[var(--fire)] font-semibold">
               <Flame className="w-5 h-5" />
@@ -136,7 +136,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
               onClick={toggleFire}
               className={`p-2 rounded-full border transition ${
                 fireActive
-                  ? 'bg-[var(--fire)] text-[var(--abyss)] border-[var(--fire)] shadow-md'
+                  ? 'bg-[var(--fire)] text-[var(--abyss)] border-[var(--fire)] '
                   : 'bg-[var(--panel-2)] text-[var(--ink-2)] border-[var(--line)]'
               }`}
               aria-label={isBn ? 'আগুন চালু/বন্ধ' : 'Toggle fire'}
@@ -171,7 +171,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
         </div>
 
         {/* Rain Deck */}
-        <div className={`glass panel p-5 rounded-2xl flex flex-col gap-4 border transition-all ${rainActive ? 'border-[var(--rain)] shadow-lg shadow-[var(--rain)]/10 ring-1 ring-[var(--rain)]' : 'border-[var(--line)]'}`}>
+        <div className={`glass panel p-5 rounded-lg flex flex-col gap-4 border transition-all ${rainActive ? 'border-[var(--rain)]  shadow-[var(--rain)]/10 ring-1 ring-[var(--rain)]' : 'border-[var(--line)]'}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-[var(--rain)] font-semibold">
               <CloudRain className="w-5 h-5" />
@@ -181,7 +181,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
               onClick={toggleRain}
               className={`p-2 rounded-full border transition ${
                 rainActive
-                  ? 'bg-[var(--rain)] text-[var(--abyss)] border-[var(--rain)] shadow-md'
+                  ? 'bg-[var(--rain)] text-[var(--abyss)] border-[var(--rain)] '
                   : 'bg-[var(--panel-2)] text-[var(--ink-2)] border-[var(--line)]'
               }`}
               aria-label={isBn ? 'বৃষ্টি চালু/বন্ধ' : 'Toggle rain'}
@@ -216,7 +216,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
         </div>
 
         {/* Ocean Deck */}
-        <div className={`glass panel p-5 rounded-2xl flex flex-col gap-4 border transition-all ${oceanActive ? 'border-[var(--teal)] shadow-lg shadow-[var(--teal)]/10 ring-1 ring-[var(--teal)]' : 'border-[var(--line)]'}`}>
+        <div className={`glass panel p-5 rounded-lg flex flex-col gap-4 border transition-all ${oceanActive ? 'border-[var(--teal)]  shadow-[var(--teal)]/10 ring-1 ring-[var(--teal)]' : 'border-[var(--line)]'}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-[var(--teal)] font-semibold">
               <Waves className="w-5 h-5" />
@@ -226,7 +226,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
               onClick={toggleOcean}
               className={`p-2 rounded-full border transition ${
                 oceanActive
-                  ? 'bg-[var(--teal)] text-[var(--abyss)] border-[var(--teal)] shadow-md'
+                  ? 'bg-[var(--teal)] text-[var(--abyss)] border-[var(--teal)] '
                   : 'bg-[var(--panel-2)] text-[var(--ink-2)] border-[var(--line)]'
               }`}
               aria-label={isBn ? 'সাগর চালু/বন্ধ' : 'Toggle ocean'}
@@ -262,7 +262,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
       </div>
 
       {/* Interactive Pentatonic Keyboard (Vital Signs Lead Synth) */}
-      <div className="glass panel p-6 rounded-2xl flex flex-col gap-4">
+      <div className="glass panel p-6 rounded-lg flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Music className="w-5 h-5 text-[var(--signal)]" />
@@ -273,7 +273,7 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
           {(fireActive || rainActive || oceanActive) && (
             <button
               onClick={stopAllLoops}
-              className="btn btn-ghost text-xs text-rose-300 border border-rose-500/30 flex items-center gap-1.5"
+              className="btn btn-ghost text-xs text-[var(--signal)] border border-[var(--hair)] flex items-center gap-1.5"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>{isBn ? 'সব লুপ বন্ধ করো' : 'Stop All Layers'}</span>
@@ -295,8 +295,8 @@ export const EarthDJStudio: React.FC<Props> = ({ onBackToMissions }) => {
               <button
                 key={p.note}
                 onClick={() => triggerNote(p)}
-                className={`py-5 px-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer transform active:scale-90 ${p.color} ${
-                  isPlaying ? 'ring-2 ring-white scale-105 shadow-lg brightness-125' : 'hover:scale-102 hover:brightness-110'
+                className={`py-5 px-3 rounded-lg border flex flex-col items-center justify-center gap-1.5 transition-all cursor-pointer transform active:scale-90 ${p.color} ${
+                  isPlaying ? 'ring-2 ring-white scale-105  brightness-125' : 'hover:scale-102 hover:brightness-110'
                 }`}
               >
                 <span className="font-semibold text-lg font-mono">{p.note}</span>

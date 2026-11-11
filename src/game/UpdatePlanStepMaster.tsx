@@ -107,48 +107,47 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
       num: 2,
       titleEn: 'The 7 Explorer Game Modes',
       titleBn: '৭টি গেম ও এক্সপ্লোরার মোড',
-      icon: <Sliders className="w-4 h-4 text-cyan-400" />,
+      icon: <Sliders className="w-4 h-4 text-[var(--signal)]" />,
     },
     {
       num: 3,
       titleEn: '4 Playable NASA Missions',
       titleBn: '৪টি বাস্তব নাসা মিশন',
-      icon: <Flame className="w-4 h-4 text-amber-400" />,
+      icon: <Flame className="w-4 h-4 text-[var(--signal)]" />,
     },
     {
       num: 4,
       titleEn: 'Scientific Audio Legend & Live Badges',
       titleBn: 'সাউন্ড ফর্মুলা ও লাইভ ব্যাজ',
-      icon: <Volume2 className="w-4 h-4 text-emerald-400" />,
+      icon: <Volume2 className="w-4 h-4 text-[var(--signal)]" />,
     },
     {
       num: 5,
       titleEn: 'Time Travel: 1981 vs 2025',
       titleBn: 'টাইম ট্রাভেল: ১৯৮১ বনাম ২০২৫',
-      icon: <Clock className="w-4 h-4 text-indigo-400" />,
+      icon: <Clock className="w-4 h-4 text-[var(--signal)]" />,
     },
     {
       num: 6,
       titleEn: 'Blind Explorer & Spatial Audio',
       titleBn: 'দৃষ্টিপ্রতিবন্ধী মোড ও ৩ডি অডিও',
-      icon: <EyeOff className="w-4 h-4 text-rose-400" />,
+      icon: <EyeOff className="w-4 h-4 text-[var(--signal)]" />,
     },
     {
       num: 7,
       titleEn: 'Earth Sound Passport & Certification',
       titleBn: 'আর্থ সাউন্ড পাসপোর্ট ও সার্টিফিকেট',
-      icon: <Award className="w-4 h-4 text-amber-300" />,
+      icon: <Award className="w-4 h-4 text-[var(--signal)]" />,
     },
   ];
 
   return (
     <div className="w-full flex flex-col gap-6" role="region" aria-label="Update Plan Step Master">
       {/* Stepper Navigation Header */}
-      <div className="glass panel p-4 sm:p-5 rounded-3xl border border-[var(--line)] shadow-xl flex flex-col gap-4">
+      <div className="glass panel p-4 sm:p-5 rounded-lg border border-[var(--line)] flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-3">
           <div className="flex items-center gap-3">
-            <span className="text-3xl">🚀</span>
-            <div>
+                        <div>
               <div className="inline-flex items-center gap-2 text-2xs uppercase tracking-widest text-[var(--signal)] font-semibold font-mono">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{isBn ? 'মাস্টার আপডেট প্ল্যান' : 'Master Update Plan Roadmap'}</span>
@@ -177,15 +176,15 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                 role="tab"
                 aria-selected={isCurrent}
                 onClick={() => setActiveStep(step.num)}
-                className={`flex items-center gap-2 py-2 px-3 sm:px-3.5 rounded-2xl text-xs font-semibold whitespace-nowrap transition cursor-pointer border ${
+                className={`flex items-center gap-2 py-2 px-3 sm:px-3.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer border ${
                   isCurrent
-                    ? 'bg-[var(--signal)] text-[var(--on-signal)] border-[var(--signal)] shadow-md'
+                    ? 'bg-[var(--signal)] text-[var(--on-signal)] border-[var(--signal)] '
                     : isCompleted
-                    ? 'bg-[var(--panel)] text-[var(--ink)] border-emerald-500/40 hover:border-emerald-400'
+                    ? 'bg-[var(--panel)] text-[var(--ink)] border-[var(--hair)] hover:border-[var(--signal)]'
                     : 'bg-[var(--abyss)]/60 text-[var(--ink-3)] border-[var(--line)] hover:text-[var(--ink)]'
                 }`}
               >
-                {isCompleted ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : step.icon}
+                {isCompleted ? <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" /> : step.icon}
                 <span>{step.num}. {isBn ? step.titleBn : step.titleEn}</span>
               </button>
             );
@@ -197,10 +196,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
       {/* STEP 1: Vision & Authentic Science */}
       {activeStep === 1 && (
-        <div className="glass panel p-6 sm:p-8 rounded-3xl border border-[var(--line)] flex flex-col gap-6 shadow-2xl">
+        <div className="glass panel p-6 sm:p-8 rounded-lg border border-[var(--line)] flex flex-col gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
-              <ShieldCheck className="w-6 h-6 text-amber-400" />
+            <div className="w-12 h-12 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-6 h-6 text-[var(--signal)]" />
             </div>
             <div>
               <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
@@ -218,7 +217,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-4 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-2">
+            <div className="p-4 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <Flame className="w-4 h-4 text-[var(--fire)]" />
                 <span className="font-semibold text-xs text-[var(--ink)]">NASA FIRMS VIIRS</span>
@@ -226,10 +225,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <p className="text-2xs text-[var(--ink-2)]">
                 {isBn ? '৩৭৫ মিটার রেজোলিউশনের ফায়ার রেডিয়েটিভ পাওয়ার (FRP)। আগুনের তেজ বাড়লে সাউন্ডের পিচ ও স্পার্ক বাড়ে।' : '375m active fire detection with Fire Radiative Power (MW). Panning matches geographic longitude.'}
               </p>
-              <span className="chip border-amber-500/30 text-amber-400 text-3xs font-mono w-fit">[SNAPSHOT · 2–7 OCT 2026]</span>
+              <span className="chip border-[var(--hair)] text-[var(--signal)] text-2xs font-mono w-fit">[SNAPSHOT · 2–7 OCT 2026]</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-2">
+            <div className="p-4 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <CloudRain className="w-4 h-4 text-[var(--rain)]" />
                 <span className="font-semibold text-xs text-[var(--ink)]">NASA POWER</span>
@@ -237,10 +236,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <p className="text-2xs text-[var(--ink-2)]">
                 {isBn ? '১৯৮১-২০২৫ সালের ৪৫ বছরের ঐতিহাসিক বৃষ্টিপাত ও তাপমাত্রা। ফোঁটার গতি দিয়ে বৃষ্টির তীব্রতা প্রকাশ পায়।' : '45-year precipitation models (mm/day). Droplet rhythm and impact pitch map directly to rain intensity.'}
               </p>
-              <span className="chip border-sky-500/30 text-sky-400 text-3xs font-mono w-fit">[HISTORICAL BASELINE]</span>
+              <span className="chip border-[var(--hair)] text-[var(--signal)] text-2xs font-mono w-fit">[HISTORICAL BASELINE]</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-2">
+            <div className="p-4 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <Waves className="w-4 h-4 text-[var(--teal)]" />
                 <span className="font-semibold text-xs text-[var(--ink)]">JPL MUR SST</span>
@@ -248,18 +247,18 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <p className="text-2xs text-[var(--ink-2)]">
                 {isBn ? 'জেট প্রোপালশন ল্যাবরেটরির সাগরের পৃষ্ঠের তাপমাত্রা অ্যানোমালি। গভীর বেস সুরে সাগরের তাপের রূপান্তর।' : 'Sea surface temperature anomalies. Modulates sub-bass drone and harmonic detune ratios.'}
               </p>
-              <span className="chip border-teal-500/30 text-teal-400 text-3xs font-mono w-fit">[OBSERVATION MODEL]</span>
+              <span className="chip border-[var(--hair)] text-[var(--signal)] text-2xs font-mono w-fit">[OBSERVATION MODEL]</span>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-2">
+            <div className="p-4 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-2">
               <div className="flex items-center gap-2">
-                <Radio className="w-4 h-4 text-violet-400" />
+                <Radio className="w-4 h-4 text-[var(--signal)]" />
                 <span className="font-semibold text-xs text-[var(--ink)]">NASA GISS GISTEMP</span>
               </div>
               <p className="text-2xs text-[var(--ink-2)]">
                 {isBn ? '১৮৮০ থেকে বর্তমান পর্যন্ত ১৪০+ বছরের তাপমাত্রা পরিবর্তন। জি-পেন্টাটোনিক স্কেলে পৃথিবীর বৈশ্বিক সুর।' : '140-year instrumental temperature anomaly mapped to G-major pentatonic harmonic scales (G3 to G5).'}
               </p>
-              <span className="chip border-violet-500/30 text-violet-400 text-3xs font-mono w-fit">[CLIMATOLOGY]</span>
+              <span className="chip border-[var(--hair)] text-[var(--signal)] text-2xs font-mono w-fit">[CLIMATOLOGY]</span>
             </div>
           </div>
 
@@ -270,10 +269,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               <span>{isBn ? 'নাসার ৪টি বৈজ্ঞানিক সাউন্ড মিশন:' : 'Four Authentic NASA Sound Missions:'}</span>
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <div className="p-3.5 rounded-2xl bg-[var(--panel)] border border-[var(--fire)]/40 flex flex-col justify-between gap-2 shadow-sm">
+              <div className="p-3.5 rounded-lg bg-[var(--panel)] border border-[var(--fire)]/40 flex flex-col justify-between gap-2">
                 <div>
                   <span className="font-semibold text-xs text-[var(--ink)] block">Amazon Wildfire Extinguisher</span>
-                  <span className="text-3xs text-[var(--ink-2)]">NASA FIRMS VIIRS (375m FRP)</span>
+                  <span className="text-2xs text-[var(--ink-2)]">NASA FIRMS VIIRS (375m FRP)</span>
                 </div>
                 <button
                   onClick={() => onSelectMission(1)}
@@ -284,10 +283,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                 </button>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-[var(--panel)] border border-[var(--rain)]/40 flex flex-col justify-between gap-2 shadow-sm">
+              <div className="p-3.5 rounded-lg bg-[var(--panel)] border border-[var(--rain)]/40 flex flex-col justify-between gap-2">
                 <div>
                   <span className="font-semibold text-xs text-[var(--ink)] block">Bengal Monsoon Flood Rescue</span>
-                  <span className="text-3xs text-[var(--ink-2)]">NASA POWER Precipitation</span>
+                  <span className="text-2xs text-[var(--ink-2)]">NASA POWER Precipitation</span>
                 </div>
                 <button
                   onClick={() => onSelectMission(2)}
@@ -298,10 +297,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                 </button>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-[var(--panel)] border border-[var(--teal)]/40 flex flex-col justify-between gap-2 shadow-sm">
+              <div className="p-3.5 rounded-lg bg-[var(--panel)] border border-[var(--teal)]/40 flex flex-col justify-between gap-2">
                 <div>
                   <span className="font-semibold text-xs text-[var(--ink)] block">Pacific Ocean Submarine Dive</span>
-                  <span className="text-3xs text-[var(--ink-2)]">JPL MUR SST Thermal Anomalies</span>
+                  <span className="text-2xs text-[var(--ink-2)]">JPL MUR SST Thermal Anomalies</span>
                 </div>
                 <button
                   onClick={() => onSelectMission(3)}
@@ -312,10 +311,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                 </button>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-[var(--panel)] border border-violet-500/40 flex flex-col justify-between gap-2 shadow-sm">
+              <div className="p-3.5 rounded-lg bg-[var(--panel)] border border-[var(--hair)] flex flex-col justify-between gap-2">
                 <div>
                   <span className="font-semibold text-xs text-[var(--ink)] block">NASA Orbital Space Station</span>
-                  <span className="text-3xs text-[var(--ink-2)]">Vital Signs & Climate Harmonizer</span>
+                  <span className="text-2xs text-[var(--ink-2)]">Vital Signs & Climate Harmonizer</span>
                 </div>
                 <button
                   onClick={() => onSelectMission(4)}
@@ -329,10 +328,9 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
           </div>
 
           {/* Educational Disclaimer Banner */}
-          <div className="p-4 rounded-2xl bg-amber-950/20 border border-amber-500/30 flex items-start gap-3">
-            <span className="text-lg">⚠️</span>
-            <div className="text-xs text-[var(--ink-2)]">
-              <strong className="text-amber-300 font-semibold">
+          <div className="p-4 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] flex items-start gap-3">
+                        <div className="text-xs text-[var(--ink-2)]">
+              <strong className="text-[var(--signal)] font-semibold">
                 {isBn ? 'শিক্ষামূলক সিমুলেশন বিজ্ঞপ্তি: ' : 'Educational Simulation Notice: '}
               </strong>
               {isBn
@@ -345,10 +343,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
       {/* STEP 2: The 7 Game Modes */}
       {activeStep === 2 && (
-        <div className="glass panel p-6 sm:p-8 rounded-3xl border border-[var(--line)] flex flex-col gap-6 shadow-2xl">
+        <div className="glass panel p-6 sm:p-8 rounded-lg border border-[var(--line)] flex flex-col gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center shrink-0">
-              <Sliders className="w-6 h-6 text-cyan-400" />
+            <div className="w-12 h-12 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] flex items-center justify-center shrink-0">
+              <Sliders className="w-6 h-6 text-[var(--signal)]" />
             </div>
             <div>
               <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
@@ -367,11 +365,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Mode 1 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">🥷</span>
-                  <h4 className="font-semibold text-sm text-[var(--ink)]">
+                                    <h4 className="font-semibold text-sm text-[var(--ink)]">
                     {isBn ? '১. অ্যাডভেঞ্চার মোড' : '1. Adventure Mode'}
                   </h4>
                 </div>
@@ -383,7 +380,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={() => onSelectMission(1)}
-                className="btn btn-brass text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer"
+                className="btn btn-brass text-xs py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer"
               >
                 <span>{isBn ? 'মিশন শুরু করুন' : 'Launch Missions'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -391,11 +388,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 2 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">🗺️</span>
-                  <h4 className="font-semibold text-sm text-[var(--ink)]">
+                                    <h4 className="font-semibold text-sm text-[var(--ink)]">
                     {isBn ? '২. মুক্ত ভ্রমণ (Free Roam)' : '2. Free Roam Biomes'}
                   </h4>
                 </div>
@@ -407,7 +403,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={onOpenFreeRoam}
-                className="btn btn-ghost border border-[var(--line)] text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer"
+                className="btn btn-ghost border border-[var(--line)] text-xs py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer"
               >
                 <span>{isBn ? 'মুক্ত ভ্রমণে যান' : 'Launch Free Roam'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -415,11 +411,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 3 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">🎧</span>
-                  <h4 className="font-semibold text-sm text-[var(--ink)]">
+                                    <h4 className="font-semibold text-sm text-[var(--ink)]">
                     {isBn ? '৩. ব্লাইন্ড এক্সপ্লোরার (Sonic Adventure)' : '3. Blind Explorer Mode'}
                   </h4>
                 </div>
@@ -431,7 +426,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={() => setActiveStep(6)}
-                className="btn btn-ghost border border-rose-500/40 text-rose-300 text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer"
+                className="btn btn-ghost border border-[var(--hair)] text-[var(--signal)] text-xs py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer"
               >
                 <span>{isBn ? 'ব্লাইন্ড মোড পরীক্ষা' : 'Test Blind Mode'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -439,11 +434,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 4 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">🎛️</span>
-                  <h4 className="font-semibold text-sm text-[var(--ink)]">
+                                    <h4 className="font-semibold text-sm text-[var(--ink)]">
                     {isBn ? '৪. আর্থ ডিজে স্টুডিও' : '4. Earth DJ Studio'}
                   </h4>
                 </div>
@@ -455,7 +449,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={onOpenDJ}
-                className="btn btn-ghost border border-[var(--line)] text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer"
+                className="btn btn-ghost border border-[var(--line)] text-xs py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer"
               >
                 <span>{isBn ? 'ডিজে স্টুডিও খুলুন' : 'Open DJ Studio'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -463,11 +457,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 5 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">🔍</span>
-                  <h4 className="font-semibold text-sm text-[var(--ink)]">
+                                    <h4 className="font-semibold text-sm text-[var(--ink)]">
                     {isBn ? '৫. সনিক কুইজ (Sound Detective)' : '5. Sonic Quiz / Lab'}
                   </h4>
                 </div>
@@ -479,7 +472,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={onOpenLab}
-                className="btn btn-ghost border border-[var(--line)] text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer"
+                className="btn btn-ghost border border-[var(--line)] text-xs py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer"
               >
                 <span>{isBn ? 'সায়েন্স ল্যাব কুইজ' : 'Open Science Lab'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -487,11 +480,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mode 6 & 7 */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-4 hover:border-[var(--signal)] transition">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">🤝</span>
-                  <h4 className="font-semibold text-sm text-[var(--ink)]">
+                                    <h4 className="font-semibold text-sm text-[var(--ink)]">
                     {isBn ? '৬ ও ৭. কিডস জোন ও ইনক্লুসিভ কো-অপ' : '6 & 7. Kids & Inclusive Co-op'}
                   </h4>
                 </div>
@@ -503,7 +495,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={() => setActiveStep(5)}
-                className="btn btn-ghost border border-[var(--line)] text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer"
+                className="btn btn-ghost border border-[var(--line)] text-xs py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer"
               >
                 <span>{isBn ? 'পরবর্তী ফিচার দেখুন' : 'View Next Features'}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -515,10 +507,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
       {/* STEP 3: 4 Authentic NASA Missions */}
       {activeStep === 3 && (
-        <div className="glass panel p-6 sm:p-8 rounded-3xl border border-[var(--line)] flex flex-col gap-6 shadow-2xl">
+        <div className="glass panel p-6 sm:p-8 rounded-lg border border-[var(--line)] flex flex-col gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
-              <Flame className="w-6 h-6 text-amber-400" />
+            <div className="w-12 h-12 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] flex items-center justify-center shrink-0">
+              <Flame className="w-6 h-6 text-[var(--signal)]" />
             </div>
             <div>
               <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
@@ -537,7 +529,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Mission 1 */}
-            <div className="p-5 rounded-3xl bg-gradient-to-br from-amber-950/30 to-[var(--panel)] border border-[var(--fire)]/50 flex flex-col justify-between gap-4 shadow-lg">
+            <div className="p-5 rounded-lg border border-[var(--fire)]/50 flex flex-col justify-between gap-4 bg-[var(--panel)]">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -546,7 +538,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                       {isBn ? 'মিশন ১: আমাজন দাবানল ট্র্যাকার' : 'Mission 1: Amazon Wildfire Extinguisher'}
                     </span>
                   </div>
-                  <span className="chip text-2xs font-mono border-amber-500/40 text-amber-300">FIRMS VIIRS</span>
+                  <span className="chip text-2xs font-mono border-[var(--hair)] text-[var(--signal)]">FIRMS VIIRS</span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
                   {isBn
@@ -556,7 +548,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={() => onSelectMission(1)}
-                className="btn btn-brass text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="btn btn-brass text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>{isBn ? 'মিশন ১ খেলুন' : 'Deploy Mission 1'}</span>
@@ -564,7 +556,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mission 2 */}
-            <div className="p-5 rounded-3xl bg-gradient-to-br from-sky-950/30 to-[var(--panel)] border border-[var(--rain)]/50 flex flex-col justify-between gap-4 shadow-lg">
+            <div className="p-5 rounded-lg border border-[var(--rain)]/50 flex flex-col justify-between gap-4 bg-[var(--panel)]">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -573,7 +565,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                       {isBn ? 'মিশন ২: বাংলা বর্ষা প্লাবন উদ্ধার' : 'Mission 2: Bengal Monsoon Flood Rescue'}
                     </span>
                   </div>
-                  <span className="chip text-2xs font-mono border-sky-500/40 text-sky-300">NASA POWER</span>
+                  <span className="chip text-2xs font-mono border-[var(--hair)] text-[var(--signal)]">NASA POWER</span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
                   {isBn
@@ -583,7 +575,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={() => onSelectMission(2)}
-                className="btn btn-brass text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="btn btn-brass text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>{isBn ? 'মিশন ২ খেলুন' : 'Deploy Mission 2'}</span>
@@ -591,7 +583,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mission 3 */}
-            <div className="p-5 rounded-3xl bg-gradient-to-br from-teal-950/30 to-[var(--panel)] border border-[var(--teal)]/50 flex flex-col justify-between gap-4 shadow-lg">
+            <div className="p-5 rounded-lg border border-[var(--teal)]/50 flex flex-col justify-between gap-4 bg-[var(--panel)]">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -600,7 +592,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                       {isBn ? 'মিশন ৩: প্রশান্ত মহাসাগর সাবমেরিন ডাইভ' : 'Mission 3: Pacific Ocean Submarine Dive'}
                     </span>
                   </div>
-                  <span className="chip text-2xs font-mono border-teal-500/40 text-teal-300">JPL MUR SST</span>
+                  <span className="chip text-2xs font-mono border-[var(--hair)] text-[var(--signal)]">JPL MUR SST</span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
                   {isBn
@@ -610,7 +602,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={() => onSelectMission(3)}
-                className="btn btn-brass text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="btn btn-brass text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>{isBn ? 'মিশন ৩ খেলুন' : 'Deploy Mission 3'}</span>
@@ -618,16 +610,16 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Mission 4 */}
-            <div className="p-5 rounded-3xl bg-gradient-to-br from-violet-950/30 to-[var(--panel)] border border-violet-500/50 flex flex-col justify-between gap-4 shadow-lg">
+            <div className="p-5 rounded-lg border border-[var(--signal)] flex flex-col justify-between gap-4 bg-[var(--panel)]">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Radio className="w-5 h-5 text-violet-400" />
+                    <Radio className="w-5 h-5 text-[var(--signal)]" />
                     <span className="font-display font-bold text-base text-[var(--ink)]">
                       {isBn ? 'মিশন ৪: মহাকাশ স্যাটেলাইট কন্ট্রোল স্টেশন' : 'Mission 4: NASA Orbital Space Station (Harmonizer)'}
                     </span>
                   </div>
-                  <span className="chip text-2xs font-mono border-violet-500/40 text-violet-300">GISTEMP & Vital Signs</span>
+                  <span className="chip text-2xs font-mono border-[var(--hair)] text-[var(--signal)]">GISTEMP & Vital Signs</span>
                 </div>
                 <p className="text-xs text-[var(--ink-2)] leading-relaxed">
                   {isBn
@@ -637,7 +629,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
               </div>
               <button
                 onClick={() => onSelectMission(4)}
-                className="btn btn-brass text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="btn btn-brass text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>{isBn ? 'মিশন ৪ খেলুন' : 'Deploy Mission 4'}</span>
@@ -649,10 +641,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
       {/* STEP 4: Scientific Audio Legend & Live Verification */}
       {activeStep === 4 && (
-        <div className="glass panel p-6 sm:p-8 rounded-3xl border border-[var(--line)] flex flex-col gap-6 shadow-2xl">
+        <div className="glass panel p-6 sm:p-8 rounded-lg border border-[var(--line)] flex flex-col gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
-              <Volume2 className="w-6 h-6 text-emerald-400" />
+            <div className="w-12 h-12 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] flex items-center justify-center shrink-0">
+              <Volume2 className="w-6 h-6 text-[var(--signal)]" />
             </div>
             <div>
               <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
@@ -671,16 +663,16 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Fire Formula Demo */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--fire)]/40 flex flex-col justify-between gap-4">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--fire)]/40 flex flex-col justify-between gap-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold text-sm text-[var(--ink)] flex items-center gap-1.5">
                     <Flame className="w-4 h-4 text-[var(--fire)]" />
                     {isBn ? 'দাবানল (Fire FRP)' : 'Fire Radiative Power'}
                   </span>
-                  <span className="font-mono text-xs text-amber-400">{demoFrp} MW</span>
+                  <span className="font-mono text-xs text-[var(--signal)]">{demoFrp} MW</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-black/40 font-mono text-3xs text-[var(--ink-2)] border border-[var(--line)] mb-3">
+                <div className="p-2.5 rounded-lg bg-[var(--ground)]/40 font-mono text-2xs text-[var(--ink-2)] border border-[var(--line)] mb-3">
                   f = 800 + 2200 × log10(1 + FRP/800) Hz
                 </div>
                 <label className="text-2xs text-[var(--ink-3)] block mb-1">
@@ -700,7 +692,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                   ensureAudio();
                   audio.playFire(demoFrp / 800, 0, 2200);
                 }}
-                className="btn btn-ghost border border-[var(--fire)]/50 text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--fire)]/10"
+                className="btn btn-ghost border border-[var(--fire)]/50 text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--fire)]/10"
               >
                 <Play className="w-3.5 h-3.5 text-[var(--fire)]" />
                 <span>{isBn ? 'সাউন্ড শুনুন' : 'Test Fire Sound'}</span>
@@ -708,16 +700,16 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Rain Formula Demo */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--rain)]/40 flex flex-col justify-between gap-4">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--rain)]/40 flex flex-col justify-between gap-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold text-sm text-[var(--ink)] flex items-center gap-1.5">
                     <CloudRain className="w-4 h-4 text-[var(--rain)]" />
                     {isBn ? 'বৃষ্টিপাত (Rain mm/day)' : 'Precipitation Rate'}
                   </span>
-                  <span className="font-mono text-xs text-sky-400">{demoRain} mm</span>
+                  <span className="font-mono text-xs text-[var(--signal)]">{demoRain} mm</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-black/40 font-mono text-3xs text-[var(--ink-2)] border border-[var(--line)] mb-3">
+                <div className="p-2.5 rounded-lg bg-[var(--ground)]/40 font-mono text-2xs text-[var(--ink-2)] border border-[var(--line)] mb-3">
                   N_drops = 2 + 18 × √(Rain / 100)
                 </div>
                 <label className="text-2xs text-[var(--ink-3)] block mb-1">
@@ -737,7 +729,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                   ensureAudio();
                   audio.playRain(demoRain / 100, 0, 2200);
                 }}
-                className="btn btn-ghost border border-[var(--rain)]/50 text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--rain)]/10"
+                className="btn btn-ghost border border-[var(--rain)]/50 text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--rain)]/10"
               >
                 <Play className="w-3.5 h-3.5 text-[var(--rain)]" />
                 <span>{isBn ? 'সাউন্ড শুনুন' : 'Test Rain Sound'}</span>
@@ -745,16 +737,16 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Ocean Heat Demo */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--teal)]/40 flex flex-col justify-between gap-4">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--teal)]/40 flex flex-col justify-between gap-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold text-sm text-[var(--ink)] flex items-center gap-1.5">
                     <Waves className="w-4 h-4 text-[var(--teal)]" />
                     {isBn ? 'সাগরের তাপ (SST Anomaly)' : 'Ocean SST Anomaly'}
                   </span>
-                  <span className="font-mono text-xs text-teal-400">+{demoSst}°C</span>
+                  <span className="font-mono text-xs text-[var(--signal)]">+{demoSst}°C</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-black/40 font-mono text-3xs text-[var(--ink-2)] border border-[var(--line)] mb-3">
+                <div className="p-2.5 rounded-lg bg-[var(--ground)]/40 font-mono text-2xs text-[var(--ink-2)] border border-[var(--line)] mb-3">
                   f = 110 × 2^(ΔT / 3.0) Hz Sub-bass
                 </div>
                 <label className="text-2xs text-[var(--ink-3)] block mb-1">
@@ -775,7 +767,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                   ensureAudio();
                   audio.playOcean(demoSst / 3.0, 0, 2400);
                 }}
-                className="btn btn-ghost border border-[var(--teal)]/50 text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--teal)]/10"
+                className="btn btn-ghost border border-[var(--teal)]/50 text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--teal)]/10"
               >
                 <Play className="w-3.5 h-3.5 text-[var(--teal)]" />
                 <span>{isBn ? 'সাউন্ড শুনুন' : 'Test Ocean Sound'}</span>
@@ -787,10 +779,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
       {/* STEP 5: Time Travel: 1981 vs 2025 */}
       {activeStep === 5 && (
-        <div className="glass panel p-6 sm:p-8 rounded-3xl border border-[var(--line)] flex flex-col gap-6 shadow-2xl">
+        <div className="glass panel p-6 sm:p-8 rounded-lg border border-[var(--line)] flex flex-col gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center shrink-0">
-              <Clock className="w-6 h-6 text-indigo-400" />
+            <div className="w-12 h-12 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] flex items-center justify-center shrink-0">
+              <Clock className="w-6 h-6 text-[var(--signal)]" />
             </div>
             <div>
               <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
@@ -810,27 +802,27 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* 1981 Card */}
             <div
-              className={`p-6 rounded-3xl border transition flex flex-col justify-between gap-4 ${
+              className={`p-6 rounded-lg border transition flex flex-col justify-between gap-4 ${
                 timeTravelYear === '1981'
-                  ? 'bg-gradient-to-br from-blue-950/40 to-[var(--panel)] border-blue-400 shadow-xl'
+                  ? 'border-[var(--signal)] bg-[var(--panel)]'
                   : 'bg-[var(--abyss)]/60 border-[var(--line)]'
               }`}
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-display font-bold text-xl text-blue-300">1981 Baseline</span>
-                  <span className="chip border-blue-500/30 text-blue-300 text-2xs font-mono">Historical Record</span>
+                  <span className="font-display font-bold text-xl text-[var(--signal)]">1981 Baseline</span>
+                  <span className="chip border-[var(--hair)] text-[var(--signal)] text-2xs font-mono">Historical Record</span>
                 </div>
                 <div className="flex flex-col gap-1.5 text-xs text-[var(--ink-2)]">
-                  <div>🌡️ Global Anomaly: <strong className="text-[var(--ink)]">+0.12°C</strong></div>
-                  <div>🎵 Acoustic Pitch: <strong className="text-[var(--ink)]">G3 (196 Hz)</strong></div>
-                  <div>🌧️ Rain Volatility: <strong className="text-[var(--ink)]">Standard seasonal cadence</strong></div>
+                  <div>Global Anomaly: <strong className="text-[var(--ink)]">+0.12°C</strong></div>
+                  <div>Acoustic Pitch: <strong className="text-[var(--ink)]">G3 (196 Hz)</strong></div>
+                  <div>Rain Volatility: <strong className="text-[var(--ink)]">Standard seasonal cadence</strong></div>
                 </div>
               </div>
               <button
                 onClick={() => playTimeTravel('1981')}
                 disabled={isPlayingYear}
-                className="btn btn-ghost border border-blue-400/50 text-blue-200 text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer hover:bg-blue-900/30"
+                className="btn btn-ghost border border-[var(--signal)] text-[var(--signal)] text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--panel-2)]"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>{isBn ? '১৯৮১ সালের সাউন্ড শুনুন' : 'Hear Earth in 1981'}</span>
@@ -839,27 +831,27 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
             {/* 2025 Card */}
             <div
-              className={`p-6 rounded-3xl border transition flex flex-col justify-between gap-4 ${
+              className={`p-6 rounded-lg border transition flex flex-col justify-between gap-4 ${
                 timeTravelYear === '2025'
-                  ? 'bg-gradient-to-br from-rose-950/40 to-[var(--panel)] border-rose-400 shadow-xl'
+                  ? 'border-[var(--signal)] bg-[var(--panel)]'
                   : 'bg-[var(--abyss)]/60 border-[var(--line)]'
               }`}
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-display font-bold text-xl text-rose-300">2025 Current</span>
-                  <span className="chip border-rose-500/30 text-rose-300 text-2xs font-mono">Near-Real-Time</span>
+                  <span className="font-display font-bold text-xl text-[var(--signal)]">2025 Current</span>
+                  <span className="chip border-[var(--hair)] text-[var(--signal)] text-2xs font-mono">Near-Real-Time</span>
                 </div>
                 <div className="flex flex-col gap-1.5 text-xs text-[var(--ink-2)]">
-                  <div>🌡️ Global Anomaly: <strong className="text-rose-400">+1.28°C</strong></div>
-                  <div>🎵 Acoustic Pitch: <strong className="text-rose-400">G5 (784 Hz) — High Pitch</strong></div>
-                  <div>🌧️ Rain Volatility: <strong className="text-rose-400">Accelerated droplet clusters (+42%)</strong></div>
+                  <div>Global Anomaly: <strong className="text-[var(--signal)]">+1.28°C</strong></div>
+                  <div>Acoustic Pitch: <strong className="text-[var(--signal)]">G5 (784 Hz) — High Pitch</strong></div>
+                  <div>Rain Volatility: <strong className="text-[var(--signal)]">Accelerated droplet clusters (+42%)</strong></div>
                 </div>
               </div>
               <button
                 onClick={() => playTimeTravel('2025')}
                 disabled={isPlayingYear}
-                className="btn btn-brass text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="btn btn-brass text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>{isBn ? '২০২৫ সালের সাউন্ড শুনুন' : 'Hear Earth in 2025'}</span>
@@ -867,10 +859,9 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-[var(--abyss)]/90 border border-[var(--line)] flex items-center justify-between gap-4">
+          <div className="p-4 rounded-lg bg-[var(--abyss)]/90 border border-[var(--line)] flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <span className="text-2xl">📊</span>
-              <div>
+                            <div>
                 <h4 className="font-semibold text-xs text-[var(--ink)]">
                   {isBn ? 'অ্যাকোস্টিক ডেল্টা (Acoustic Delta Δf): +588 Hz' : 'Acoustic Delta Shift: +588 Hz (2 Octaves Up)'}
                 </h4>
@@ -887,10 +878,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
       {/* STEP 6: Blind Explorer & Spatial Audio */}
       {activeStep === 6 && (
-        <div className="glass panel p-6 sm:p-8 rounded-3xl border border-[var(--line)] flex flex-col gap-6 shadow-2xl">
+        <div className="glass panel p-6 sm:p-8 rounded-lg border border-[var(--line)] flex flex-col gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center shrink-0">
-              <EyeOff className="w-6 h-6 text-rose-400" />
+            <div className="w-12 h-12 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] flex items-center justify-center shrink-0">
+              <EyeOff className="w-6 h-6 text-[var(--signal)]" />
             </div>
             <div>
               <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
@@ -909,7 +900,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Spatial Audio Direction Test */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-3">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 <Headphones className="w-4 h-4 text-[var(--signal)]" />
                 <h4 className="font-semibold text-xs text-[var(--ink)]">
@@ -927,7 +918,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                     ensureAudio();
                     audio.playTone(320, -0.9, 1400);
                   }}
-                  className="btn btn-ghost border border-[var(--line)] text-3xs py-2 px-2 rounded-xl text-center cursor-pointer hover:border-[var(--signal)]"
+                  className="btn btn-ghost border border-[var(--line)] text-2xs py-2 px-2 rounded-lg text-center cursor-pointer hover:border-[var(--signal)]"
                 >
                   ◀ {isBn ? 'বাম কান (-90°)' : 'Left Ear (-90°)'}
                 </button>
@@ -936,7 +927,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                     ensureAudio();
                     audio.playTone(440, 0, 1400);
                   }}
-                  className="btn btn-ghost border border-[var(--line)] text-3xs py-2 px-2 rounded-xl text-center cursor-pointer hover:border-[var(--signal)]"
+                  className="btn btn-ghost border border-[var(--line)] text-2xs py-2 px-2 rounded-lg text-center cursor-pointer hover:border-[var(--signal)]"
                 >
                   ▲ {isBn ? 'সামনে (0°)' : 'Center (0°)'}
                 </button>
@@ -945,7 +936,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                     ensureAudio();
                     audio.playTone(580, 0.9, 1400);
                   }}
-                  className="btn btn-ghost border border-[var(--line)] text-3xs py-2 px-2 rounded-xl text-center cursor-pointer hover:border-[var(--signal)]"
+                  className="btn btn-ghost border border-[var(--line)] text-2xs py-2 px-2 rounded-lg text-center cursor-pointer hover:border-[var(--signal)]"
                 >
                   {isBn ? 'ডান কান (+90°)' : 'Right Ear (+90°)'} ▶
                 </button>
@@ -953,10 +944,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
 
             {/* Voice Guidance Test */}
-            <div className="p-5 rounded-2xl bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-3">
+            <div className="p-5 rounded-lg bg-[var(--abyss)]/80 border border-[var(--line)] flex flex-col justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <Volume2 className="w-4 h-4 text-emerald-400" />
+                  <Volume2 className="w-4 h-4 text-[var(--signal)]" />
                   <h4 className="font-semibold text-xs text-[var(--ink)]">
                     {isBn ? 'ন্যাচারাল ভয়েস গাইডেন্স (Web Speech API)' : 'Spoken NASA Data Narration'}
                   </h4>
@@ -974,13 +965,13 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
                     : 'You are inspecting Bangladesh climate data. Daily rainfall is 14.2 millimeters, which is 2.3 mm above the 45-year baseline.';
                   handleSpeak(msg);
                 }}
-                className="btn btn-brass text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="btn btn-brass text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>{isBn ? 'ভয়েস গাইডেন্স চালান' : 'Speak NASA Data Summary'}</span>
               </button>
               {spokenMessage && (
-                <p className="text-3xs font-mono text-[var(--signal)] bg-black/40 p-2 rounded-lg border border-[var(--line)]" role="status">
+                <p className="text-2xs font-mono text-[var(--signal)] bg-[var(--ground)]/40 p-2 rounded-lg border border-[var(--line)]" role="status">
                   "{spokenMessage}"
                 </p>
               )}
@@ -988,7 +979,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
           </div>
 
           {/* Keyboard Shortcuts Matrix */}
-          <div className="p-4 rounded-2xl bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-2">
+          <div className="p-4 rounded-lg bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-2">
             <span className="font-semibold text-xs text-[var(--ink)]">
               {isBn ? 'কীবোর্ড নেভিগেশন চার্ট (মাউস ছাড়া খেলা):' : 'Keyboard Accessibility Control Matrix:'}
             </span>
@@ -1004,10 +995,10 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
       {/* STEP 7: Earth Sound Passport & Certification */}
       {activeStep === 7 && (
-        <div className="glass panel p-6 sm:p-8 rounded-3xl border border-[var(--line)] flex flex-col gap-6 shadow-2xl">
+        <div className="glass panel p-6 sm:p-8 rounded-lg border border-[var(--line)] flex flex-col gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
-              <Award className="w-6 h-6 text-amber-400" />
+            <div className="w-12 h-12 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] flex items-center justify-center shrink-0">
+              <Award className="w-6 h-6 text-[var(--signal)]" />
             </div>
             <div>
               <span className="text-2xs font-mono text-[var(--signal)] uppercase font-semibold">
@@ -1024,13 +1015,13 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="p-6 rounded-3xl bg-gradient-to-tr from-amber-950/30 via-[var(--panel)] to-emerald-950/30 border-2 border-[var(--signal)]/60 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
+          <div className="p-6 rounded-lg border-2 border-[var(--signal)]/60 flex flex-col sm:flex-row items-center justify-between gap-6 bg-[var(--panel)]">
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--signal)] flex items-center justify-center overflow-hidden shrink-0">
+              <div className="w-20 h-20 rounded-lg p-0.5 border-2 border-[var(--signal)] flex items-center justify-center overflow-hidden shrink-0 bg-[var(--panel)]">
                 <img src="/images/ninja_cadet_avatar.png" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
               </div>
               <div>
-                <span className="chip border-[var(--signal)] text-[var(--signal)] text-3xs font-mono font-semibold">
+                <span className="chip border-[var(--signal)] text-[var(--signal)] text-2xs font-mono font-semibold">
                   OFFICIAL CADET CREDENTIAL
                 </span>
                 <h4 className="font-display font-bold text-lg text-[var(--ink)] mt-1">
@@ -1045,7 +1036,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
               <button
                 onClick={onOpenBadgeModal}
-                className="btn btn-brass text-xs font-semibold py-3 px-5 rounded-2xl flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer shadow-lg hover:scale-105"
+                className="btn btn-brass text-xs font-semibold py-3 px-5 rounded-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer hover:scale-105"
               >
                 <Award className="w-4 h-4" />
                 <span>{isBn ? 'সার্টিফিকেট ও ব্যাজ দেখুন' : 'View Official Certificate'}</span>
@@ -1053,7 +1044,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
 
               <button
                 onClick={onExploreGlobe}
-                className="btn btn-ghost border border-[var(--line)] text-xs font-semibold py-3 px-5 rounded-2xl flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer"
+                className="btn btn-ghost border border-[var(--line)] text-xs font-semibold py-3 px-5 rounded-lg flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer"
               >
                 <Compass className="w-4 h-4 text-[var(--signal)]" />
                 <span>{isBn ? '৩ডি গ্লোব অন্বেষণ' : 'Launch 3D Globe'}</span>
@@ -1068,7 +1059,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
         <button
           onClick={() => setActiveStep((prev) => Math.max(1, prev - 1))}
           disabled={activeStep === 1}
-          className={`btn btn-ghost border border-[var(--line)] text-xs py-2.5 px-4 rounded-xl flex items-center gap-2 ${
+          className={`btn btn-ghost border border-[var(--line)] text-xs py-2.5 px-4 rounded-lg flex items-center gap-2 ${
             activeStep === 1 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:border-[var(--ink)]'
           }`}
         >
@@ -1083,7 +1074,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
         {activeStep < totalSteps ? (
           <button
             onClick={() => setActiveStep((prev) => Math.min(totalSteps, prev + 1))}
-            className="btn btn-brass text-xs py-2.5 px-5 rounded-xl flex items-center gap-2 cursor-pointer shadow-md hover:scale-105"
+            className="btn btn-brass text-xs py-2.5 px-5 rounded-lg flex items-center gap-2 cursor-pointer hover:scale-105"
           >
             <span>{isBn ? 'পরবর্তী ধাপ' : 'Next Step'}</span>
             <ArrowRight className="w-4 h-4" />
@@ -1091,7 +1082,7 @@ export const UpdatePlanStepMaster: React.FC<Props> = ({
         ) : (
           <button
             onClick={() => onSelectMission(1)}
-            className="btn btn-brass text-xs py-2.5 px-5 rounded-xl flex items-center gap-2 cursor-pointer shadow-lg hover:scale-105"
+            className="btn btn-brass text-xs py-2.5 px-5 rounded-lg flex items-center gap-2 cursor-pointer hover:scale-105"
           >
             <span>{isBn ? 'গেম শুরু করুন (Mission 1)' : 'Start Game (Deploy Mission 1)'}</span>
             <Play className="w-4 h-4" />

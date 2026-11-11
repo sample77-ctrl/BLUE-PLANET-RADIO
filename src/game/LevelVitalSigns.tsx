@@ -99,7 +99,7 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
             {isBn ? 'পৃথিবীর স্পন্দন: ১৪০ বছরের সুর' : 'Planet Heartbeat: 140-Year Melody'}
           </h2>
         </div>
-        <div className="chip border-emerald-500/40 text-emerald-300 flex items-center gap-1.5">
+        <div className="chip border-[var(--hair)] text-[var(--signal)] flex items-center gap-1.5">
           <Award className="w-3.5 h-3.5" />
           <span>{isBn ? 'গ্র্যাজুয়েশন মিশন' : 'Graduation Mission'}</span>
         </div>
@@ -123,7 +123,7 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
         </div>
 
         {/* Playback Controls & Timeline Visualizer */}
-        <div className="p-5 rounded-2xl bg-[var(--abyss)] border border-[var(--line)] flex flex-col gap-5">
+        <div className="p-5 rounded-lg bg-[var(--abyss)] border border-[var(--line)] flex flex-col gap-5">
           <div className="flex items-center justify-between">
             <button
               onClick={isPlayingSeq ? stopPlayback : playSequence}
@@ -151,16 +151,16 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
                 <button
                   key={m.year}
                   onClick={() => playSingleMilestone(idx)}
-                  className={`p-3 rounded-xl border flex flex-col items-center justify-between gap-1.5 transition-all cursor-pointer text-center ${
+                  className={`p-3 rounded-lg border flex flex-col items-center justify-between gap-1.5 transition-all cursor-pointer text-center ${
                     isActive
-                      ? 'border-[var(--signal)] bg-[var(--panel-2)] scale-105 shadow-md ring-2 ring-[var(--signal)]'
+                      ? 'border-[var(--signal)] bg-[var(--panel-2)] scale-105  ring-2 ring-[var(--signal)]'
                       : 'border-[var(--glass-border)] bg-[var(--panel)] hover:border-[var(--line)]'
                   }`}
                 >
                   <span className="font-semibold text-xs sm:text-sm font-mono text-[var(--ink)]">{m.year}</span>
                   <div
                     className={`text-2xs font-semibold px-1.5 py-0.5 rounded ${
-                      isWarm ? 'bg-rose-950/60 text-rose-300' : 'bg-sky-950/60 text-sky-300'
+                      isWarm ? 'bg-[var(--panel-2)] text-[var(--signal)]' : 'bg-[var(--panel-2)] text-[var(--signal)]'
                     }`}
                   >
                     {m.anomaly > 0 ? `+${m.anomaly}` : m.anomaly}°C
@@ -173,7 +173,7 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
 
           {/* Active Era Details */}
           {activeStep !== null && (
-            <div className="p-3.5 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-between text-xs sm:text-sm">
+            <div className="p-3.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex items-center justify-between text-xs sm:text-sm">
               <span className="text-[var(--ink-2)]">
                 {isBn ? milestones[activeStep].eraBn : milestones[activeStep].eraEn}
               </span>
@@ -201,13 +201,13 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
           <button
             disabled={isAnswered}
             onClick={() => handleAnswer('higher')}
-            className={`p-5 rounded-xl border flex items-center gap-3 transition cursor-pointer text-left ${
+            className={`p-5 rounded-lg border flex items-center gap-3 transition cursor-pointer text-left ${
               isAnswered && selectedAnswer === 'higher'
-                ? 'border-emerald-500 bg-emerald-950/40 text-emerald-100 ring-2 ring-emerald-500'
+                ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)] ring-2 ring-[var(--signal)]'
                 : 'border-[var(--glass-border)] bg-[var(--panel)] hover:border-[var(--line)] hover:bg-[var(--panel-2)]'
             }`}
           >
-            <div className="p-2.5 rounded-full bg-emerald-950/50 border border-emerald-500/30 text-emerald-400">
+            <div className="p-2.5 rounded-full bg-[var(--panel-2)] border border-[var(--hair)] text-[var(--signal)]">
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
@@ -223,13 +223,13 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
           <button
             disabled={isAnswered}
             onClick={() => handleAnswer('lower')}
-            className={`p-5 rounded-xl border flex items-center gap-3 transition cursor-pointer text-left ${
+            className={`p-5 rounded-lg border flex items-center gap-3 transition cursor-pointer text-left ${
               isAnswered && selectedAnswer === 'lower'
-                ? 'border-rose-500 bg-rose-950/40 text-rose-200 ring-2 ring-rose-500'
+                ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)] ring-2 ring-[var(--signal)]'
                 : 'border-[var(--glass-border)] bg-[var(--panel)] hover:border-[var(--line)] hover:bg-[var(--panel-2)]'
             }`}
           >
-            <div className="p-2.5 rounded-full bg-rose-950/50 border border-rose-500/30 text-rose-400">
+            <div className="p-2.5 rounded-full bg-[var(--panel-2)] border border-[var(--hair)] text-[var(--signal)]">
               <Music className="w-5 h-5" />
             </div>
             <div>
@@ -245,7 +245,7 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
 
         {/* Feedback & Graduation Trigger */}
         {isAnswered && (
-          <div className="p-5 rounded-xl bg-gradient-to-r from-amber-950/40 to-emerald-950/40 border border-[var(--signal)] flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+          <div className="p-5 rounded-lg border border-[var(--signal)] flex flex-col sm:flex-row items-center justify-between gap-4 mt-2 bg-[var(--panel)]">
             <div className="flex items-start gap-3">
               <Sparkles className="w-6 h-6 text-[var(--signal)] shrink-0 mt-0.5 animate-bounce" />
               <div>
@@ -264,7 +264,7 @@ export const LevelVitalSigns: React.FC<Props> = ({ onComplete }) => {
 
             <button
               onClick={onComplete}
-              className="btn btn-brass text-base font-semibold px-7 py-3 rounded-xl flex items-center gap-2 shrink-0 shadow-xl hover:scale-105"
+              className="btn btn-brass text-base font-semibold px-7 py-3 rounded-lg flex items-center gap-2 shrink-0 hover:scale-105"
             >
               <Award className="w-5 h-5" />
               <span>{isBn ? 'ক্যাডেট ব্যাজ গ্রহণ করো!' : 'Claim Your Cadet Badge!'}</span>
