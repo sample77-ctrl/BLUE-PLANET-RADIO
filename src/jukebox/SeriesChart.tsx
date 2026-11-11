@@ -9,6 +9,7 @@ const W = 900, H = 300, L = 52, R = 12, T = 12, B = 28;
 /** Lightweight line chart with a cursor, unit-labelled axis, gaps drawn as breaks and a table alternative. A click moves the cursor. */
 export function SeriesChart({ points, cursor, unit, label, onCursor }: { points: SeriesPoint[]; cursor: string | null; unit: string; label: string; onCursor?: (t: string) => void }) {
   const { t, lang } = usePrefs();
+  const fs = lang === 'bn' ? 13 : 12; // SVG text stays on the 12px (EN) / 13px (বাংলা) floor
   const uid = useId().replace(/:/g, '');
   const g = useMemo(() => {
     const vals = points.map((p) => p.v).filter((v): v is number => v !== null);
@@ -44,19 +45,19 @@ export function SeriesChart({ points, cursor, unit, label, onCursor }: { points:
         {ticks.map((v, k) => (
           <g key={k}>
             <line x1={L} x2={W - R} y1={g.y(v)} y2={g.y(v)} stroke="var(--line)" strokeDasharray={k === 1 ? '3 4' : undefined} />
-            <text x={L - 6} y={g.y(v) + 4} textAnchor="end" fontSize="11" fill="var(--ink-3)">{digits(v.toFixed(Math.abs(v) >= 10 ? 0 : 1), lang)}</text>
+            <text x={L - 6} y={g.y(v) + 4} textAnchor="end" fontSize={fs} fill="var(--ink-3)">{digits(v.toFixed(Math.abs(v) >= 10 ? 0 : 1), lang)}</text>
           </g>
         ))}
         {g.lo < 0 && g.hi > 0 && <line x1={L} x2={W - R} y1={g.y(0)} y2={g.y(0)} stroke="var(--ink-3)" strokeWidth={1} />}
-        <text x={4} y={T + 2} fontSize="11" fill="var(--ink-2)" dominantBaseline="hanging">{unit}</text>
-        {xl.map((i) => <text key={i} x={g.x(i)} y={H - 8} fontSize="11" fill="var(--ink-3)" textAnchor={i === 0 && points.length > 1 ? 'start' : i === points.length - 1 && points.length > 1 ? 'end' : 'middle'}>{timeLabel(points[i].t, lang)}</text>)}
+        <text x={4} y={T + 2} fontSize={fs} fill="var(--ink-2)" dominantBaseline="hanging">{unit}</text>
+        {xl.map((i) => <text key={i} x={g.x(i)} y={H - 8} fontSize={fs} fill="var(--ink-3)" textAnchor={i === 0 && points.length > 1 ? 'start' : i === points.length - 1 && points.length > 1 ? 'end' : 'middle'}>{timeLabel(points[i].t, lang)}</text>)}
         {g.paths.map((d, k) => <path key={k} d={d} fill="none" stroke={`url(#lg${uid})`} strokeWidth={points.length > 200 ? 1.75 : 2.6} strokeLinejoin="round" filter={`url(#gl${uid})`} />)}
         {points.length <= 60 && points.map((p, i) => p.v !== null && <circle key={p.t} cx={g.x(i)} cy={g.y(p.v)} r={2.2} fill={`url(#lg${uid})`} />)}
         {cp && (
           <g data-cursor={cp.t}>
             <line x1={g.x(ci)} x2={g.x(ci)} y1={T} y2={H - B} stroke="var(--signal)" strokeWidth={1.5} />
             {cp.v !== null ? <circle cx={g.x(ci)} cy={g.y(cp.v)} r={6} fill="var(--signal)" stroke="var(--abyss)" strokeWidth={2} filter={`url(#gl${uid})`} />
-              : <text x={g.x(ci) + 4} y={T + 12} fontSize="11" fill="var(--signal)">{t('jbGap')}</text>}
+              : <text x={g.x(ci) + 4} y={T + 12} fontSize={fs} fill="var(--signal)">{t('jbGap')}</text>}
           </g>
         )}
       </svg>

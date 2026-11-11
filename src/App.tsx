@@ -93,13 +93,18 @@ export function App() {
   const [sheet, setSheet] = useState<'layers' | 'hearing' | 'country' | null>(null);
   const [harmoniumOpen, setHarmoniumOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const cty = useCountry(initialShare?.c, !showHero);
+  // Lazy data (roadmap §3 weight): the NASA snapshots are for the landing numbers, the Atlas and the Jukebox country profiles; the borders for the Atlas, Jukebox and the palette. Once wanted, they stay.
+  const [dataWanted, setDataWanted] = useState(false), [bordersWanted, setBordersWanted] = useState(false);
+  if (!dataWanted && (showHero || track === 'atlas' || track === 'jukebox')) setDataWanted(true);
+  if (!bordersWanted && ((!showHero && (track === 'atlas' || track === 'jukebox')) || paletteOpen)) setBordersWanted(true);
+  const cty = useCountry(initialShare?.c, bordersWanted);
 
   useEffect(() => { if (initialShare?.lang && initialShare.lang !== lang) set({ lang: initialShare.lang }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    if (!dataWanted) return;
     DatasetAdapter.loadDatasets('live').then(setData).catch(() => DatasetAdapter.loadDatasets('demo').then(setData));
-  }, []);
+  }, [dataWanted]);
 
   const slices: DatasetTimeSlice[] = useMemo(() => data?.slices ?? [], [data]);
   const slice = slices[day] ?? slices[0];
@@ -297,7 +302,7 @@ export function App() {
     <div className={`${showHero ? 'hero-open ' : ''}flex flex-col h-[100dvh] w-full max-w-[100vw] overflow-hidden`}>
       <a href={showHero ? '#landing' : '#main'} className="sr-only-focusable absolute z-[80] left-2 top-2 btn btn-brass">{t('skip')}</a>
       {showHero && <Landing fireObs={landingFire} onPick={(tr) => withViewTransition(() => { void pickTrack(tr); }, document.querySelector('main'))}
-        onTour={startTour} onListen={listenNow} onSilent={() => { setShowHero(false); setTrack('atlas'); }} onAbout={goAbout} onTopic={openJukebox} onFrame={(id) => withViewTransition(() => { openCollection('frames', id); }, document.querySelector('main'))} onOpenHarmonium={() => setHarmoniumOpen(true)} />}
+        onTour={startTour} onListen={() => openJukebox()} onSilent={() => { setShowHero(false); setTrack('atlas'); }} onAbout={goAbout} onTopic={openJukebox} onFrame={(id) => withViewTransition(() => { openCollection('frames', id); }, document.querySelector('main'))} onOpenHarmonium={() => setHarmoniumOpen(true)} />}
 
       <Header track={track} onLanding={showHero} onTrack={(tr) => withViewTransition(() => { navigate(tr); setShowHero(false); setTourOpen(false); }, document.querySelector('main'))} lastJukebox={lastJukebox}
         audioReady={audioReady} soundState={soundState} onToggleAudio={() => (audioReady ? soundOff() : soundOn())} onListen={listenNow}
@@ -330,7 +335,7 @@ export function App() {
                 countries={cty.list} country={cty.country} onSelectCountry={cty.select} />
           )}
           {track === 'atlas' && !showHero && view === 'audio-first' && (
-            <div className="w-full h-full overflow-y-auto pb-6 pt-[calc(var(--header-h)+1.5rem)] lg:pl-[340px]">
+            <div className={`w-full h-full overflow-y-auto pb-6 pt-[calc(var(--header-h)+1.5rem)] ${leftOpen ? 'lg:pl-[372px]' : ''} ${rightOpen ? 'lg:pr-[372px]' : ''}`}>
               <AudioFirstMode observations={observations.filter((o) => enabled[o.phenomenon])} currentDateLabel={slice?.dateLabel ?? ''} selectedObservation={selected}
                 onSelectObservation={setSelected} onExitAudioFirst={() => setView('3d-globe')}
                 countries={{ list: cty.list, country: cty.country, point: cty.point, onSelect: cty.select }} />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, Award, RotateCw, Globe, Music, Flame, CloudRain, Waves, CheckCircle2 } from 'lucide-react';
 import { GameAudioEngine } from './gameAudio';
 import { usePrefs } from '../lib/prefs';
+import { StarsRow } from './StarsRow';
 
 interface Props {
   onComplete: (starsEarned: number) => void;
@@ -66,8 +67,8 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
       nameEn: 'GISTEMP Vital Signs Satellite',
       nameBn: 'জিআইএসটেম্প প্রাণচিহ্ন স্যাটেলাইট',
       dataset: '1880–2026 Climate Symphony',
-      color: 'text-violet-400 border-violet-500/50 bg-violet-950/20',
-      icon: <Music className="w-5 h-5 text-violet-400" />,
+      color: 'text-[var(--signal)] border-[var(--signal)] bg-[var(--panel-2)]',
+      icon: <Music className="w-5 h-5 text-[var(--signal)]" />,
       aligned: false,
       angle: 300,
       targetAngle: 0,
@@ -76,8 +77,8 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
 
   const [levelWon, setLevelWon] = useState(false);
   const radioMsg = isBn
-    ? '📻 কমান্ডার নোভা: "চূড়ান্ত মিশন! মহাকাশ থেকে ৪টি নাসা স্যাটেলাইটের ডেটা-বিম পৃথিবীর সাথে সামঞ্জস্য করো এবং পৃথিবীর মহা-সিম্ফনি বাজাও!"'
-    : '📻 Commander Nova: "Final mission! Align the 4 NASA observation satellite beams with Earth to unleash the grand Earth Symphony!"';
+    ? 'কমান্ডার নোভা: "চূড়ান্ত মিশন! মহাকাশ থেকে ৪টি নাসা স্যাটেলাইটের ডেটা-বিম পৃথিবীর সাথে সামঞ্জস্য করো এবং পৃথিবীর মহা-সিম্ফনি বাজাও!"'
+    : 'Commander Nova: "Final mission! Align the 4 NASA observation satellite beams with Earth to unleash the grand Earth Symphony!"';
 
   useEffect(() => {
     audio.playRadioBeep();
@@ -117,13 +118,13 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
   return (
     <div className="max-w-4xl mx-auto flex flex-col gap-4">
       {/* HUD Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl glass border border-[var(--line)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-lg glass border border-[var(--line)]">
         <div className="flex items-center gap-3">
           <button onClick={onExit} className="btn btn-ghost text-xs px-2.5 py-1">
             ← {isBn ? 'ম্যাপে ফেরত' : 'Exit Mission'}
           </button>
           <div className="chip border-[var(--signal)] text-[var(--signal)] font-semibold text-xs py-1 px-3">
-            🛰️ {isBn ? 'স্যাটেলাইট সামঞ্জস্য:' : 'Aligned:'} {beams.filter((b) => b.aligned).length} / 4
+            {isBn ? 'স্যাটেলাইট সামঞ্জস্য:' : 'Aligned:'} {beams.filter((b) => b.aligned).length} / 4
           </div>
         </div>
 
@@ -133,19 +134,19 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
       </div>
 
       {/* Main Orbital Harmonizer Console */}
-      <div className="p-6 sm:p-10 rounded-3xl border-2 border-[var(--signal)]/40 relative bg-gradient-to-b from-[#030712] via-[#0b1926] to-[#040810] shadow-2xl flex flex-col items-center gap-8">
+      <div className="p-6 sm:p-10 rounded-lg border-2 border-[var(--signal)]/40 relative flex flex-col items-center gap-8 bg-[var(--panel)]">
         {/* Radio Dialogue with Eco-Ninja Cadet Portrait */}
-        <div className="w-full max-w-lg p-2.5 rounded-2xl glass-pop border border-[var(--signal)] flex items-center gap-3 text-xs sm:text-sm font-semibold text-[var(--ink)] shadow-xl">
-          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-10 h-10 rounded-xl border border-[var(--signal)] shrink-0 object-cover shadow-sm" />
+        <div className="w-full max-w-lg p-2.5 rounded-lg glass-pop border border-[var(--signal)] flex items-center gap-3 text-xs sm:text-sm font-semibold text-[var(--ink)]">
+          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-10 h-10 rounded-lg border border-[var(--signal)] shrink-0 object-cover" />
           <span className="leading-snug">{radioMsg}</span>
         </div>
 
         {/* Central Rotating Holographic Earth */}
-        <div className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-full flex items-center justify-center border-4 border-cyan-500/30 shadow-[0_0_50px_rgba(56,189,248,0.25)] bg-[var(--abyss)]">
-          <Globe className="w-32 h-32 sm:w-40 sm:h-40 text-cyan-400 animate-spin" style={{ animationDuration: '24s' }} />
+        <div className="relative w-48 h-48 sm:w-60 sm:h-60 rounded-full flex items-center justify-center border-4 border-[var(--hair)] bg-[var(--abyss)]">
+          <Globe className="w-32 h-32 sm:w-40 sm:h-40 text-[var(--signal)] animate-spin" style={{ animationDuration: '24s' }} />
 
           {/* Glowing Center Ring */}
-          <div className="absolute inset-0 rounded-full border border-cyan-400/20 animate-ping opacity-25" />
+          <div className="absolute inset-0 rounded-full border border-[var(--hair)] animate-ping opacity-25" />
 
           {/* Active Beams indicator */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -153,7 +154,7 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
               b.aligned ? (
                 <div
                   key={b.id}
-                  className="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-[var(--signal)] to-transparent"
+                  className="absolute w-full h-0.5 from-transparent to-transparent bg-[var(--panel)]"
                   style={{ transform: `rotate(${b.targetAngle}deg)` }}
                 />
               ) : null
@@ -166,14 +167,14 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
           {beams.map((b) => (
             <div
               key={b.id}
-              className={`p-4 rounded-2xl border-2 transition-all flex items-center justify-between gap-3 ${
+              className={`p-4 rounded-lg border-2 transition-all flex items-center justify-between gap-3 ${
                 b.aligned
-                  ? 'border-emerald-500 bg-emerald-950/20 shadow-lg'
+                  ? 'border-[var(--signal)] bg-[var(--panel-2)]'
                   : 'border-[var(--line)] bg-[var(--panel)] hover:border-[var(--signal)]'
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className={`p-2.5 rounded-xl border ${b.color}`}>
+                <div className={`p-2.5 rounded-lg border ${b.color}`}>
                   {b.icon}
                 </div>
                 <div>
@@ -181,7 +182,7 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
                     <h2 className="font-display font-bold text-sm text-[var(--ink)]">
                       {isBn ? b.nameBn : b.nameEn}
                     </h2>
-                    {b.aligned && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                    {b.aligned && <CheckCircle2 className="w-4 h-4 text-[var(--signal)]" />}
                   </div>
                   <span className="text-2xs font-mono text-[var(--ink-3)]">{b.dataset}</span>
                 </div>
@@ -190,10 +191,10 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
               <button
                 disabled={b.aligned}
                 onClick={() => rotateSatellite(b.id)}
-                className={`btn text-xs font-semibold px-3 py-2 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-md ${
+                className={`btn text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 cursor-pointer ${
                   b.aligned
-                    ? 'bg-emerald-600 text-white border-emerald-500 cursor-default'
-                    : 'btn-brass text-slate-950 hover:scale-105'
+                    ? 'bg-[var(--signal)] border-[var(--signal)] cursor-default text-[var(--on-signal)]'
+                    : 'btn-brass text-[var(--on-signal)] hover:scale-105'
                 }`}
               >
                 <RotateCw className={`w-3.5 h-3.5 ${b.aligned ? '' : 'animate-spin'}`} style={{ animationDuration: '6s' }} />
@@ -205,18 +206,19 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
 
         {/* Level Complete Win Overlay */}
         {levelWon && (
-          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in rounded-3xl">
+          <div className="absolute inset-0 bg-[var(--ground)]/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in rounded-lg">
             <div className="flex items-center gap-3">
-              <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[var(--signal)] shadow-2xl">
+              <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-[var(--signal)]">
                 <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-full h-full object-cover" />
               </div>
-              <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-slate-950 shadow-2xl animate-bounce">
+              <div className="w-20 h-20 rounded-full flex items-center justify-center text-[var(--on-signal)] animate-bounce bg-[var(--signal)]">
                 <Award className="w-10 h-10" />
               </div>
             </div>
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--signal)]">
-              {isBn ? 'পৃথিবীর মহাশিবির সিম্ফনি সফল! ⭐⭐⭐' : 'Earth Symphony Harmonized! ⭐⭐⭐'}
+              {isBn ? 'পৃথিবীর মহাশিবির সিম্ফনি সফল!' : 'Earth Symphony Harmonized!'}
             </h2>
+            <StarsRow n={3} />
             <p className="text-xs sm:text-sm text-[var(--ink-2)] max-w-md">
               {isBn
                 ? 'তুমি নাসার ৪টি স্যাটেলাইটকে সফলভাবে টিউন করেছ! পৃথিবী এখন মহাকাশ জুড়ে তার নিজস্ব প্রাকৃতিক সুর ছড়িয়ে দিচ্ছে।'
@@ -224,7 +226,7 @@ export const MissionSatellite: React.FC<Props> = ({ onComplete, onExit, audioRea
             </p>
             <button
               onClick={() => onComplete(3)}
-              className="btn btn-brass font-semibold px-7 py-3.5 rounded-xl flex items-center gap-2 cursor-pointer shadow-lg hover:scale-105"
+              className="btn btn-brass font-semibold px-7 py-3.5 rounded-lg flex items-center gap-2 cursor-pointer hover:scale-105"
             >
               <span>{isBn ? 'গ্র্যাজুয়েশন সার্টিফিকেট গ্রহণ করো' : 'Claim Earth Guardian Graduation'}</span>
               <Sparkles className="w-4 h-4" />

@@ -34,6 +34,9 @@ export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, status
       {(Object.keys(LAYER_META) as PhenomenonType[]).map((p) => {
         const m = LAYER_META[p], on = enabled[p], st = statuses?.[p];
         const available = isFallback || st?.loaded !== false;
+        const others = (Object.keys(LAYER_META) as PhenomenonType[]).filter((x) => x !== p);
+        const soloing = on && !muted?.[p] && others.every((x) => muted?.[x] || !enabled[x]) && others.some((x) => enabled[x] && muted?.[x]); // pressing Solo again would clear the mutes
+        const offWhy = on ? undefined : t('layerOffHint', { name: t(m.name) }); // Mute/Solo need the layer on; it is switched on from its card
         return (
           <div key={p} className={`rounded-xl border p-2.5 transition ${on ? 'bg-[var(--panel-2)]' : 'bg-transparent'}`} style={{ borderColor: on ? m.color : 'var(--line)', boxShadow: on ? `0 0 0 1px ${m.color}55, 0 0 30px -8px ${m.color}` : undefined }}>
             <div className="flex items-center gap-3">
@@ -44,16 +47,17 @@ export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, status
                 </span>
                 <span className="min-w-0">
                   <span className="block font-semibold leading-tight">{t(m.name)} <ShapeGlyph phenomenon={p} color={m.color} /> <span className="text-[var(--ink-3)] font-normal tnum text-sm">· {counts[p]}</span></span>
-                  <span className="block text-xs text-[var(--ink-3)] truncate">{t(m.unit)} → {t(m.sound)}</span>
+                  <span className="block text-xs leading-snug text-[var(--ink-3)]">{t(m.unit)} → {t(m.sound)}</span>
                 </span>
               </label>
-              {onSolo && <button className="btn btn-ghost btn-icon shrink-0" disabled={!on} aria-label={t('soloLayer', { name: t(m.name) })} title={t('soloLayer', { name: t(m.name) })} onClick={() => onSolo(p)}><Headphones className="w-4 h-4" aria-hidden="true" /></button>}
-              {onMute && <button className="btn btn-ghost btn-icon shrink-0" disabled={!on} aria-pressed={!!muted?.[p]} aria-label={t('muteLayer', { name: t(m.name) })} title={t('muteLayer', { name: t(m.name) })} onClick={() => onMute(p)}>{muted?.[p] ? <VolumeX className="w-4 h-4" aria-hidden="true" /> : <Volume2 className="w-4 h-4" aria-hidden="true" />}</button>}
+              {onSolo && <button className="btn btn-ghost btn-icon shrink-0" disabled={!on} aria-pressed={soloing} aria-describedby={offWhy ? `off-${p}` : undefined} aria-label={t('soloLayer', { name: t(m.name) })} title={offWhy ?? t('soloLayer', { name: t(m.name) })} onClick={() => onSolo(p)}><Headphones className="w-4 h-4" aria-hidden="true" /></button>}
+              {onMute && <button className="btn btn-ghost btn-icon shrink-0" disabled={!on} aria-pressed={!!muted?.[p]} aria-describedby={offWhy ? `off-${p}` : undefined} aria-label={t('muteLayer', { name: t(m.name) })} title={offWhy ?? t('muteLayer', { name: t(m.name) })} onClick={() => onMute(p)}>{muted?.[p] ? <VolumeX className="w-4 h-4" aria-hidden="true" /> : <Volume2 className="w-4 h-4" aria-hidden="true" />}</button>}
               <button className="btn btn-ghost btn-icon shrink-0" disabled={!audioReady} title={audioReady ? `${t('hear')}: ${t(m.name)}` : t('soundOn')}
                 aria-label={`${t('hear')} ${t(m.name)} reference sound`} onClick={() => SonificationEngine.getInstance().playIsolatedPreview(p)}>
                 <Volume2 className="w-4 h-4" />
               </button>
             </div>
+            {offWhy && (onSolo || onMute) && <span id={`off-${p}`} className="sr-only">{offWhy}</span>}
             {st?.loaded && <p className="text-2xs leading-snug text-[var(--ink-3)] mt-1.5 pl-12">{st.sourceName}. {st.infoText}.</p>}
           </div>
         );

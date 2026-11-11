@@ -153,7 +153,7 @@ html.calm { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28p
 .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
 .btn-ghost:hover { background: var(--panel-2); color: var(--ink); border-color: transparent; }
 .btn-icon { padding: 0; width: 40px; }
-@media (pointer: coarse) { .btn { min-height: 44px; } .btn-icon { width: 44px; } input[type='range'] { min-height: 32px; } }
+@media (pointer: coarse) { .btn { min-height: 44px; } .btn-icon { width: 44px; } .nav-link { height: auto; min-height: 44px; } input[type='range'] { min-height: 32px; } }
 .chip { display: inline-flex; align-items: center; gap: .35rem; padding: .15rem .5rem; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--fs-2xs); line-height: var(--lh-ui); border: 1px solid var(--hair); color: var(--ink-2); }
 .label { font-size: var(--fs-xs); color: var(--ink-3); }
 .dot { width: .6rem; height: .6rem; border-radius: 999px; display: inline-block; flex: none; }
@@ -273,9 +273,10 @@ html[lang='bn'] .world-pill { letter-spacing: 0; text-transform: none; }
 html[lang='bn'] .world-nav { letter-spacing: 0; text-transform: none; }
 @media (max-width: 767px) { .world-nav span { display: none; } .world-nav { top: 60%; } }
 .world-foot { z-index: 3; left: 0; right: 0; bottom: .75rem; display: flex; flex-direction: column; align-items: center; gap: .25rem; }
-.world-dot { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 1px solid var(--ink-2); background: transparent; cursor: pointer; position: relative; }
-.world-dot::after { content: ''; position: absolute; inset: -16px -4px; } /* a bigger hit area than the dot */
-.world-dot[aria-current='true'] { background: var(--signal); border-color: var(--signal); }
+.world-dot { width: 24px; height: 24px; padding: 0; border: 0; background: transparent; cursor: pointer; position: relative; display: grid; place-items: center; } /* 24px hit area (WCAG 2.5.8); the 12px dot is drawn by ::before */
+.world-dot::before { content: ''; width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--ink-2); box-sizing: border-box; }
+.world-dot[aria-current='true']::before { background: var(--signal); border-color: var(--signal); }
+@media (pointer: coarse) { .world-dot { width: 44px; height: 44px; } }
 html.hc .lv1, html.hc .lv2 { background: #000; }
 /* Scroll-scrubbed copy: the text follows the planet. Level 1 lifts away as the Earth starts to move, level 2 slides in from the left as the Earth glides right
    (and fades before the zoom), the level 3 card rises once the Earth fills the screen. `visibility` still flips with data-on, so hidden text stays out of the tab order. */
@@ -287,7 +288,10 @@ html.rm .world-stage .lv[data-on='true'] { translate: none; }
 
 /* Landing on desktop: everything sized in rem (text, spacing, cards, buttons' padding) is set at 90%, the scale the page was designed at.
    It is relative, so a larger browser font size still scales it up. Planets are sized in vmin/dvh and are not affected. */
-@media (min-width: 768px) { html.landing-open { font-size: 90%; } }
+@media (min-width: 768px) {
+  html.landing-open { font-size: 90%; --fs-2xs: .8334rem; --fs-xs: .9028rem; } /* the small sizes are rescaled so they still land on 12px / 13px */
+  html[lang='bn'].landing-open { --fs-2xs: .9028rem; --fs-sm: .9028rem; } /* বাংলা floor is 13px */
+}
 
 /* Landing, below the carousel: no solid layer, the starfield shows through; the cards are glass. Titles share the carousel's serif voice. */
 .landing-more { position: relative; z-index: 1; } /* above the pinned stage */

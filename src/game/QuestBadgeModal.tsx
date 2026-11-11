@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Award, Sparkles, X, Globe, Music, CheckCircle2 } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
+import { Overlay } from '../components/Overlay';
+import { useDialog } from '../lib/useDialog';
 
 interface Props {
   onClose: () => void;
@@ -13,9 +15,12 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
   const isBn = lang === 'bn';
   const [cadetName, setCadetName] = useState(isBn ? 'ক্যাডেট অভিযাত্রী' : 'Cadet Explorer');
 
+  const ref = useRef<HTMLDivElement>(null);
+  useDialog(true, onClose, ref);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 scrim backdrop-blur-md animate-fade-in">
-      <div className="glass-pop max-w-lg w-full p-6 sm:p-8 flex flex-col items-center gap-5 relative border-2 border-[var(--signal)] shadow-2xl">
+    <Overlay><div className="fixed inset-0 z-[70] flex items-center justify-center p-4 scrim backdrop-blur-md animate-fade-in" onClick={onClose}>
+      <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="quest-badge-title" onClick={(e) => e.stopPropagation()} className="glass-pop max-w-lg w-full p-6 sm:p-8 flex flex-col items-center gap-5 relative border-2 border-[var(--signal)] ">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer"
@@ -26,11 +31,11 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
 
         {/* Certificate Golden Seal & Eco-Ninja Hero Avatar */}
         <div className="flex items-center justify-center gap-4">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--signal)] overflow-hidden shrink-0">
+          <div className="w-20 h-20 rounded-lg p-0.5 border-2 border-[var(--signal)] overflow-hidden shrink-0 bg-[var(--panel)]">
             <img src="/images/ninja_cadet_avatar.png" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
           </div>
           <div className="relative">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-amber-300 flex items-center justify-center text-slate-950 shadow-xl border-4 border-amber-200">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center text-[var(--on-signal)] border-4 border-[var(--signal)] bg-[var(--signal)]">
               <Award className="w-10 h-10 animate-pulse" />
             </div>
             <Sparkles className="w-6 h-6 text-[var(--signal)] absolute -top-1 -right-1 animate-bounce" />
@@ -41,7 +46,7 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
           <span className="text-xs uppercase tracking-widest text-[var(--signal)] font-semibold font-mono">
             NASA SPACE APPS CHALLENGE 2026
           </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-[var(--ink)] mt-1">
+          <h2 id="quest-badge-title" className="text-2xl sm:text-3xl font-extrabold font-display text-[var(--ink)] mt-1">
             {isBn ? 'নাসা জুনিয়র সাউন্ড ক্যাডেট' : 'NASA Junior Sonic Cadet'}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--ink-2)] mt-1">
@@ -67,28 +72,24 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
 
         {/* 4 Badges Earned */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full my-1">
-          <div className="p-2.5 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
-            <span className="text-xl">🔥</span>
-            <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'আগুন ও প্রকৃতি' : 'Fire & Nature'}</span>
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
+                        <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'আগুন ও প্রকৃতি' : 'Fire & Nature'}</span>
+            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" />
           </div>
 
-          <div className="p-2.5 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
-            <span className="text-xl">🧭</span>
-            <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'শব্দের কম্পাস' : 'Ear Compass'}</span>
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
+                        <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'শব্দের কম্পাস' : 'Ear Compass'}</span>
+            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" />
           </div>
 
-          <div className="p-2.5 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
-            <span className="text-xl">⚡</span>
-            <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'আবহাওয়া গোয়েন্দা' : 'Weather Scout'}</span>
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
+                        <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'আবহাওয়া গোয়েন্দা' : 'Weather Scout'}</span>
+            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" />
           </div>
 
-          <div className="p-2.5 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
-            <span className="text-xl">🎵</span>
-            <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'জলবায়ুর সুর' : 'Climate Singer'}</span>
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col items-center text-center gap-1">
+                        <span className="text-2xs font-semibold text-[var(--ink)]">{isBn ? 'জলবায়ুর সুর' : 'Climate Singer'}</span>
+            <CheckCircle2 className="w-3.5 h-3.5 text-[var(--signal)]" />
           </div>
         </div>
 
@@ -105,7 +106,7 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
               onClose();
               onExploreGlobe();
             }}
-            className="btn btn-brass w-full justify-center text-sm font-semibold py-3 flex items-center gap-2 shadow-lg"
+            className="btn btn-brass w-full justify-center text-sm font-semibold py-3 flex items-center gap-2 "
           >
             <Globe className="w-4 h-4" />
             <span>{isBn ? 'লাইভ গ্লোব এক্সপ্লোর করো!' : 'Explore Live 3D Globe!'}</span>
@@ -123,6 +124,6 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
           </button>
         </div>
       </div>
-    </div>
+    </div></Overlay>
   );
 };

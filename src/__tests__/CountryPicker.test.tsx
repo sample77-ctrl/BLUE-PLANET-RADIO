@@ -37,6 +37,12 @@ describe('CountryPicker (ARIA 1.2 combobox)', () => {
     expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(expect.arrayContaining([expect.stringContaining('Nepal')]));
   });
 
+  it('uses a singular form for exactly one match', async () => {
+    const { input } = await setup();
+    fireEvent.change(input, { target: { value: 'bangladesh' } });
+    expect(screen.getByRole('status').textContent).toBe('1 country found');
+  });
+
   it('keyboard only: type, arrow, Enter selects; the live region reports the count', async () => {
     const { input, onSelect } = await setup();
     fireEvent.change(input, { target: { value: 'ban' } });

@@ -1,0 +1,59 @@
+/* Sonic Quest + Harmonium building blocks. Tokens only (src/index.css): no raw colours, no gradients, radii 1 to 4 px, nothing under 12 px.
+   Dataset colours (--fire --rain --teal --brass) appear only as a rule or swatch that means that dataset. */
+.q-panel { background: var(--panel); border: 1px solid var(--hair); border-radius: var(--radius-lg); }
+.q-card { background: var(--panel); border: 1px solid var(--hair); border-radius: var(--radius-lg); padding: 1rem; }
+.q-hud { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem .9rem; padding: .6rem .8rem; background: var(--panel); border: 1px solid var(--hair); border-radius: var(--radius-lg); font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--ink-2); }
+.q-stat { display: inline-flex; align-items: center; gap: .4rem; padding: .2rem .55rem; border: 1px solid var(--hair); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--ink-2); background: var(--ground); }
+.q-stat b { color: var(--ink); font-weight: 600; }
+.q-label { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+html[lang='bn'] .q-label { text-transform: none; letter-spacing: .02em; }
+.q-sub { font-size: var(--fs-sm); color: var(--ink-2); line-height: 1.5; }
+.q-bar { height: .5rem; background: var(--panel-2); border-radius: var(--radius-sm); overflow: hidden; } .q-bar > i { display: block; height: 100%; background: var(--signal); }
+.q-chip-on { border-color: var(--signal); color: var(--signal); }
+.q-sw { display: inline-block; width: .6rem; height: .6rem; background: var(--c, var(--signal)); flex: none; } /* dataset swatch */
+.q-fire { --c: var(--fire); } .q-rain { --c: var(--rain); } .q-ocean { --c: var(--teal); } .q-sat { --c: var(--brass); }
+
+/* Hub */
+.q-hub { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: clamp(1rem, 3vw, 2rem); align-items: start; }
+.q-side { display: flex; flex-direction: column; gap: .9rem; position: sticky; top: calc(var(--header-h) + 1rem); }
+.q-avatar { width: 5rem; height: 5rem; border-radius: 50%; border: 1px solid var(--hair); overflow: hidden; flex: none; background: var(--panel-2); }
+.q-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.q-meter { display: flex; gap: 3px; } .q-meter i { flex: 1; height: .45rem; background: var(--panel-2); border: 1px solid var(--hair); border-radius: 1px; } .q-meter i.on { background: var(--signal); border-color: var(--signal); }
+.q-main { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
+.q-title { font-weight: 800; font-stretch: var(--wide); font-size: clamp(1.6rem, 3.4vw, 2.6rem); line-height: 1.05; letter-spacing: -.02em; }
+html[lang='bn'] .q-title { letter-spacing: 0; line-height: 1.25; }
+.q-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; }
+.q-mission { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--hair); border-top: 3px solid var(--c, var(--signal)); border-radius: var(--radius-lg); overflow: hidden; }
+.q-art { height: 9rem; position: relative; overflow: hidden; background: var(--panel-2); }
+.q-art img, .q-art svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+.q-body { padding: .9rem 1rem 1rem; display: flex; flex-direction: column; gap: .45rem; flex: 1; }
+.q-name { font-weight: 700; font-stretch: var(--wide-mid); font-size: var(--fs-lg); line-height: 1.2; }
+.q-src { display: inline-flex; align-items: center; gap: .4rem; font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--ink-3); letter-spacing: .03em; }
+.q-more { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+@media (max-width: 899px) { .q-hub { grid-template-columns: 1fr; } .q-side { position: static; flex-direction: row; flex-wrap: wrap; align-items: center; } .q-side > .q-card { flex: 1 1 14rem; } }
+
+/* Modal / overlay shell */
+.q-dialog { background: var(--panel); border: 1px solid var(--hair); border-radius: var(--radius-lg); }
+.q-tab { display: inline-flex; align-items: center; gap: .4rem; min-height: 40px; padding: 0 .9rem; font-size: var(--fs-sm); font-weight: 500; color: var(--ink-2); background: none; border: 0; box-shadow: inset 0 -1px 0 var(--hair); cursor: pointer; }
+.q-tab:hover { color: var(--ink); box-shadow: inset 0 -1px 0 var(--ink-3); }
+.q-tab[aria-selected='true'] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--signal); }
+@media (pointer: coarse) { .q-tab { min-height: 44px; } }
+
+/* Harmonium keys: dark keys on the neutral ground, signal on the pressed one, mono labels */
+.hm-case { background: var(--panel); border: 1px solid var(--hair); border-radius: var(--radius-lg); }
+.hm-keybed { background: var(--ground); border: 1px solid var(--hair); border-radius: var(--radius-md); padding: .5rem .5rem .75rem; overflow-x: auto; }
+.hm-keys { position: relative; display: flex; gap: 2px; min-width: 34rem; }
+.hm-white { position: relative; flex: 1 1 0; min-width: 2.1rem; height: 11rem; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: .1rem; padding-bottom: .5rem; background: var(--hair); border: 1px solid var(--ink-3); border-top: 0; border-radius: 0 0 var(--radius-md) var(--radius-md); color: var(--ink); cursor: pointer; transition: background var(--dur-fast), transform var(--dur-fast); }
+.hm-white:hover { background: color-mix(in srgb, var(--hair) 80%, var(--ink)); }
+.hm-black { position: absolute; top: 0; height: 6.6rem; width: 6.2%; min-width: 1.6rem; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: .1rem; padding-bottom: .4rem; background: var(--ground); border: 1px solid var(--ink-3); border-top: 0; border-radius: 0 0 var(--radius-sm) var(--radius-sm); color: var(--ink); cursor: pointer; transition: background var(--dur-fast); }
+.hm-white[data-on='true'], .hm-black[data-on='true'] { background: var(--signal); color: var(--on-signal); border-color: var(--signal); }
+.hm-white[data-on='true'] { transform: translateY(2px); }
+.hm-note { font-family: var(--font-mono); font-size: var(--fs-2xs); font-weight: 600; line-height: 1.1; }
+.hm-sub { font-family: var(--font-mono); font-size: var(--fs-2xs); opacity: .8; line-height: 1.1; }
+html.rm .hm-white { transition: none; }
+
+/* High contrast: --hair becomes near-white there, so a key must not use it as a fill */
+html.hc .hm-white { background: var(--panel-2); border-color: var(--hair); }
+html.hc .hm-white:hover { background: var(--panel); }
+html.hc .hm-black { border-color: var(--hair); }
+html.hc .q-mission, html.hc .q-card { border-color: var(--hair); }

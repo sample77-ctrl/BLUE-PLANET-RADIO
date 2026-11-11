@@ -23,7 +23,7 @@ export function CountryPicker({ list, selected, onSelect }: { list: Country[]; s
     else if (e.key === 'Escape') { if (open) { e.preventDefault(); e.stopPropagation(); setOpen(false); } else if (q) { setQ(''); } }
   };
   const showList = open && list.length > 0;
-  const status = !showList ? '' : results.length ? t('countryResults', { n: results.length }) : t('countryNone', { q });
+  const status = !showList ? '' : results.length ? t(results.length === 1 ? 'countryResultsOne' : 'countryResults', { n: results.length }) : t('countryNone', { q });
   return (
     <div className="relative">
       <label htmlFor={`${uid}-in`} className="block text-xs font-semibold text-[var(--ink-2)] mb-1">{t('countrySearch')}</label>

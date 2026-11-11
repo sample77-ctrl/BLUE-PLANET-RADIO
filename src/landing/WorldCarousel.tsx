@@ -214,7 +214,7 @@ export const WorldCarousel: React.FC<Props> = ({ data, onOpen, onTour, onListen,
       <button className="world-nav world-nav-prev lv" data-on={level < 3} inert={level === 3} aria-hidden={level === 3} onClick={() => go(-1)} aria-label={t('carPrev', { name: name(prev) })}><ChevronLeft className="w-5 h-5" /><span>{name(prev)}</span></button>
       <button className="world-nav world-nav-next lv" data-on={level < 3} inert={level === 3} aria-hidden={level === 3} onClick={() => go(1)} aria-label={t('carNext', { name: name(next) })}><span>{name(next)}</span><ChevronRight className="w-5 h-5" /></button>
       <div className="world-foot lv" {...lv(1)}>
-        <div className="flex gap-2" role="group" aria-label={t('carouselLabel')}>
+        <div className="flex" role="group" aria-label={t('carouselLabel')}>
           {WORLDS.map((w, i) => <button key={w.id} className="world-dot" aria-current={i === index ? 'true' : undefined} aria-label={t('carGoTo', { name: name(w) })} onClick={() => pick(i)} />)}
         </div>
         <button className="btn btn-ghost world-down" onClick={onDown} aria-label={t('carHowItWorks')}><ArrowDown className="w-5 h-5" /></button>

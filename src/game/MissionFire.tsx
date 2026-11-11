@@ -3,6 +3,7 @@ import { Sparkles, ArrowLeft, ArrowRight, ArrowUp, Droplets, RotateCcw, Award } 
 import { GameAudioEngine } from './gameAudio';
 import { SoundRadar } from './SoundRadar';
 import { usePrefs } from '../lib/prefs';
+import { StarsRow } from './StarsRow';
 import { drawEcoNinja } from './drawEcoNinja';
 
 interface Props {
@@ -35,8 +36,8 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
   const [waterAmmo, setWaterAmmo] = useState(100);
   const [levelWon, setLevelWon] = useState(false);
   const radioMsg = isBn
-    ? '📻 কমান্ডার নোভা: "ক্যাডেট! নাসার FIRMS স্যাটেলাইট বনে ৩টি বড় দাবানল শনাক্ত করেছে! শব্দ শুনে আগুন খুঁজে ওয়াটার ব্লাস্টার দিয়ে নিভিয়ে দাও!"'
-    : '📻 Commander Nova: "Cadet! NASA FIRMS satellites detected 3 blazing wildfires! Listen to the crackles, locate them, and extinguish with your water blaster!"';
+    ? 'কমান্ডার নোভা: "ক্যাডেট! নাসার FIRMS স্যাটেলাইট বনে ৩টি বড় দাবানল শনাক্ত করেছে! শব্দ শুনে আগুন খুঁজে ওয়াটার ব্লাস্টার দিয়ে নিভিয়ে দাও!"'
+    : 'Commander Nova: "Cadet! NASA FIRMS satellites detected 3 blazing wildfires! Listen to the crackles, locate them, and extinguish with your water blaster!"';
   const [pan, setPan] = useState(0);
   const [intensity, setIntensity] = useState(0);
 
@@ -471,9 +472,9 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
 
           // FRP Label
           ctx.fillStyle = '#fef08a';
-          ctx.font = 'bold 10px monospace';
+          ctx.font = 'bold 12px monospace';
           ctx.textAlign = 'center';
-          ctx.fillText(`🔥 ${fire.frpMw} MW`, fx, cardY + 10);
+          ctx.fillText(`${fire.frpMw} MW`, fx, cardY + 10);
         } else {
           // Extinguished Sanctuary: Blooming Ferns, Flowers & Clean Air!
           ctx.fillStyle = '#2dd4bf';
@@ -493,7 +494,7 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
           ctx.roundRect(fire.x - 36, fire.y - 38, 72, 18, [5]);
           ctx.fill();
           ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 10px sans-serif';
+          ctx.font = 'bold 12px sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText('SAVED ✓', fire.x, fire.y - 25);
         }
@@ -549,13 +550,13 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
   return (
     <div className="max-w-5xl mx-auto flex flex-col gap-3">
       {/* Mission HUD Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl glass border border-[var(--line)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-lg glass border border-[var(--line)]">
         <div className="flex items-center gap-3">
           <button onClick={onExit} className="btn btn-ghost text-xs px-2.5 py-1">
             ← {isBn ? 'ম্যাপে ফেরত' : 'Exit Mission'}
           </button>
           <div className="chip border-[var(--fire)] text-[var(--fire)] font-semibold text-xs py-1 px-3">
-            🔥 {isBn ? 'দাবানল নিভানো:' : 'Extinguished:'} {firesExtinguished} / {TOTAL_FIRES}
+            {isBn ? 'দাবানল নিভানো:' : 'Extinguished:'} {firesExtinguished} / {TOTAL_FIRES}
           </div>
         </div>
 
@@ -563,10 +564,10 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
 
         <div className="flex items-center gap-2">
           {/* Water Ammo Meter */}
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[var(--abyss)] border border-[var(--line)] text-xs">
-            <Droplets className="w-4 h-4 text-sky-400" />
-            <div className="w-16 h-2 rounded-full bg-slate-800 overflow-hidden">
-              <div className="h-full bg-sky-400 transition-all" style={{ width: `${waterAmmo}%` }} />
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--abyss)] border border-[var(--line)] text-xs">
+            <Droplets className="w-4 h-4 text-[var(--signal)]" />
+            <div className="w-16 h-2 rounded-full bg-[var(--panel-2)] overflow-hidden">
+              <div className="h-full bg-[var(--signal)] transition-all" style={{ width: `${waterAmmo}%` }} />
             </div>
           </div>
 
@@ -577,29 +578,30 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
       </div>
 
       {/* Main Canvas Stage */}
-      <div ref={containerRef} className="w-full rounded-3xl overflow-hidden border-2 border-[var(--fire)]/40 relative bg-[var(--abyss)] shadow-2xl" style={{ minHeight: '460px' }}>
+      <div ref={containerRef} className="w-full rounded-lg overflow-hidden border-2 border-[var(--fire)]/40 relative bg-[var(--abyss)]" style={{ minHeight: '460px' }}>
         <canvas ref={canvasRef} width={900} height={460} className="block w-full h-[460px]" />
 
         {/* Radio Dialogue Bubble with Eco-Ninja Cadet Portrait */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 max-w-xl w-11/12 p-2.5 rounded-2xl glass-pop border border-[var(--signal)] flex items-center gap-3 text-xs sm:text-sm font-semibold pointer-events-none text-[var(--ink)] shadow-xl">
-          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-9 h-9 rounded-xl border border-[var(--signal)] shrink-0 object-cover shadow-sm" />
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 max-w-xl w-11/12 p-2.5 rounded-lg glass-pop border border-[var(--signal)] flex items-center gap-3 text-xs sm:text-sm font-semibold pointer-events-none text-[var(--ink)]">
+          <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-9 h-9 rounded-lg border border-[var(--signal)] shrink-0 object-cover" />
           <span className="leading-snug">{radioMsg}</span>
         </div>
 
         {/* Level Complete Win Overlay */}
         {levelWon && (
-          <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in">
+          <div className="absolute inset-0 bg-[var(--ground)]/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in">
             <div className="flex items-center gap-3">
-              <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-[var(--signal)] shadow-2xl">
+              <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-[var(--signal)]">
                 <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-full h-full object-cover" />
               </div>
-              <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-slate-950 shadow-2xl animate-bounce">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center text-[var(--on-signal)] animate-bounce bg-[var(--signal)]">
                 <Award className="w-8 h-8" />
               </div>
             </div>
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--signal)]">
-              {isBn ? 'দাবানল সফলভাবে নিভানো হয়েছে! ⭐⭐⭐' : 'Wildfires Neutralized! ⭐⭐⭐'}
+              {isBn ? 'দাবানল সফলভাবে নিভানো হয়েছে! ' : 'Wildfires Neutralized!'}
             </h2>
+            <StarsRow n={3} />
             <p className="text-xs sm:text-sm text-[var(--ink-2)] max-w-md">
               {isBn
                 ? 'নাসার FIRMS স্যাটেলাইট ডেটা দিয়ে তুমি ৩টি দাবানল শনাক্ত করে নিভিয়ে দিয়েছ এবং বন রক্ষা করেছ!'
@@ -607,7 +609,7 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
             </p>
             <button
               onClick={() => onComplete(3)}
-              className="btn btn-brass font-semibold px-6 py-3 rounded-xl flex items-center gap-2 cursor-pointer shadow-lg hover:scale-105"
+              className="btn btn-brass font-semibold px-6 py-3 rounded-lg flex items-center gap-2 cursor-pointer hover:scale-105"
             >
               <span>{isBn ? 'মিশন সম্পন্ন ও পরবর্তী মিশন' : 'Complete & Return to Map'}</span>
               <Sparkles className="w-4 h-4" />
@@ -617,11 +619,11 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
       </div>
 
       {/* Touch Gamepad */}
-      <div className="p-3.5 rounded-2xl glass border border-[var(--line)] flex flex-wrap items-center justify-between gap-4 select-none">
+      <div className="p-3.5 rounded-lg glass border border-[var(--line)] flex flex-wrap items-center justify-between gap-4 select-none">
         <div className="text-xs text-[var(--ink-3)] font-mono hidden md:block">
           {isBn
-            ? '💡 কীবোর্ড: ← / → (হাঁটা), Space (লাফানো), E বা F (ওয়াটার স্প্রে)'
-            : '💡 Controls: Arrow Keys / WASD to Walk, Space to Jump, Hold E or F to Spray Water!'}
+            ? 'কীবোর্ড: ← / → (হাঁটা), Space (লাফানো), E বা F (ওয়াটার স্প্রে)'
+            : 'Controls: Arrow Keys / WASD to Walk, Space to Jump, Hold E or F to Spray Water!'}
         </div>
 
         <div className="flex items-center justify-between w-full md:w-auto gap-3">
@@ -631,7 +633,7 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
               onTouchEnd={() => (keysRef.current.left = false)}
               onMouseDown={() => (keysRef.current.left = true)}
               onMouseUp={() => (keysRef.current.left = false)}
-              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
+              className="w-14 h-14 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-[var(--on-signal)] flex items-center justify-center cursor-pointer"
               aria-label="Walk Left"
             >
               <ArrowLeft className="w-6 h-6" />
@@ -641,7 +643,7 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
               onTouchEnd={() => (keysRef.current.right = false)}
               onMouseDown={() => (keysRef.current.right = true)}
               onMouseUp={() => (keysRef.current.right = false)}
-              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
+              className="w-14 h-14 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-[var(--on-signal)] flex items-center justify-center cursor-pointer"
               aria-label="Walk Right"
             >
               <ArrowRight className="w-6 h-6" />
@@ -654,7 +656,7 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
               onTouchEnd={() => (keysRef.current.spray = false)}
               onMouseDown={() => (keysRef.current.spray = true)}
               onMouseUp={() => (keysRef.current.spray = false)}
-              className="h-14 px-5 rounded-2xl bg-sky-700 active:bg-sky-500 text-white flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer"
+              className="btn btn-brass h-14 px-5 rounded-lg flex items-center gap-2 text-xs font-semibold cursor-pointer"
               aria-label="Spray Water"
             >
               <Droplets className="w-5 h-5" />
@@ -670,7 +672,7 @@ export const MissionFire: React.FC<Props> = ({ onComplete, onExit, audioReady: _
                 keysRef.current.jump = true;
                 setTimeout(() => (keysRef.current.jump = false), 150);
               }}
-              className="w-14 h-14 rounded-2xl bg-[var(--signal)] text-[var(--on-signal)] font-semibold flex items-center justify-center shadow-lg active:scale-95 cursor-pointer"
+              className="w-14 h-14 rounded-lg bg-[var(--signal)] text-[var(--on-signal)] font-semibold flex items-center justify-center active:scale-95 cursor-pointer"
               aria-label="Jump"
             >
               <ArrowUp className="w-6 h-6" />

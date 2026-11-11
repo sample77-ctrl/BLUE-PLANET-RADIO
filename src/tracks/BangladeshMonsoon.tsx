@@ -35,6 +35,7 @@ const py = (lat: number) => H - ((lat - LAT0) / (LAT1 - LAT0)) * H;
 
 export const BangladeshMonsoon: React.FC = () => {
   const { t, lang, narration } = usePrefs();
+  const fs = lang === 'bn' ? 13 : 12; // SVG text stays on the 12px (EN) / 13px (বাংলা) floor
   const [data, setData] = useState<Monsoon | null>(null);
   const [err, setErr] = useState(false);
   const [year, setYear] = useState<2026 | 2025>(2026);
@@ -450,7 +451,7 @@ export const BangladeshMonsoon: React.FC = () => {
                   {[50, 100, 150].map((v) => (
                     <g key={v}>
                       <line x1={0} x2={chartW} y1={chartH - (v / yMax) * chartH} y2={chartH - (v / yMax) * chartH} stroke="#22384a" />
-                      <text x={chartW - 2} y={chartH - (v / yMax) * chartH - 3} fontSize={10} textAnchor="end" fill="var(--ink-3)">{v} mm</text>
+                      <text x={chartW - 2} y={chartH - (v / yMax) * chartH - 3} fontSize={fs} textAnchor="end" fill="var(--ink-3)">{v} mm</text>
                     </g>
                   ))}
                   {series(fc).map((v, i) => (
@@ -473,7 +474,7 @@ export const BangladeshMonsoon: React.FC = () => {
                     strokeWidth={1.5}
                     points={dates.map((iso, i) => `${i * bw},${chartH - (fc.climP[+iso.slice(5, 7) - 1] / yMax) * chartH}`).join(' ')}
                   />
-                  {dates.map((iso, i) => (iso.endsWith('-01') ? <text key={iso} x={i * bw} y={chartH + 14} fontSize={11} fill="var(--ink-3)">{fmtDate(iso)}</text> : null))}
+                  {dates.map((iso, i) => (iso.endsWith('-01') ? <text key={iso} x={i * bw} y={chartH + 14} fontSize={fs} fill="var(--ink-3)">{fmtDate(iso)}</text> : null))}
                 </svg>
               </div>
               <figcaption className="text-xs text-[var(--ink-3)] flex justify-between items-center">

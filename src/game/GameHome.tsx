@@ -55,7 +55,7 @@ export const GameHome: React.FC<Props> = ({
   return (
     <div className="w-full flex flex-col gap-8 max-w-5xl mx-auto" role="region" aria-label="Game Home">
       {/* Hero Banner: 3D Animated Earth Sphere + Brand Identity */}
-      <div className="relative rounded-3xl overflow-hidden border-2 border-[var(--signal)]/50 bg-gradient-to-br from-blue-950/40 via-[var(--panel)] to-amber-950/30 p-6 sm:p-10 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
+      <div className="relative rounded-lg overflow-hidden border-2 border-[var(--signal)]/50 p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 bg-[var(--panel)]">
         <div className="flex flex-col gap-3 text-center md:text-left z-10">
           <div className="inline-flex items-center gap-2 text-2xs uppercase tracking-widest text-[var(--signal)] font-semibold font-mono mx-auto md:mx-0">
             <Sparkles className="w-4 h-4" />
@@ -76,7 +76,7 @@ export const GameHome: React.FC<Props> = ({
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-4">
             <button
               onClick={onStartAdventure}
-              className="btn btn-brass text-sm sm:text-base font-semibold px-7 py-3 rounded-2xl flex items-center gap-2 shadow-xl hover:scale-105 transition cursor-pointer"
+              className="btn btn-brass text-sm sm:text-base font-semibold px-7 py-3 rounded-lg flex items-center gap-2 hover:scale-105 transition cursor-pointer"
             >
               <Play className="w-4 h-4 fill-current" />
               <span>{isBn ? 'অ্যাডভেঞ্চার শুরু করুন' : 'Start Adventure'}</span>
@@ -84,25 +84,25 @@ export const GameHome: React.FC<Props> = ({
 
             <button
               onClick={onOpenStepGuide}
-              className="btn btn-ghost border border-[var(--signal)]/60 text-xs sm:text-sm font-semibold px-5 py-3 rounded-2xl flex items-center gap-2 cursor-pointer hover:bg-[var(--signal)]/10"
+              className="btn btn-ghost border border-[var(--signal)]/60 text-xs sm:text-sm font-semibold px-5 py-3 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-[var(--signal)]/10"
             >
               <Sparkles className="w-4 h-4 text-[var(--signal)]" />
-              <span>{isBn ? '🌟 আপডেট প্ল্যান (ধাপে ধাপে)' : '🌟 Step-by-Step Guide'}</span>
+              <span>{isBn ? 'আপডেট প্ল্যান (ধাপে ধাপে)' : 'Step-by-Step Guide'}</span>
             </button>
 
             <button
               onClick={onOpenBlindMode}
-              className="btn btn-ghost border border-rose-500/40 text-rose-300 text-xs sm:text-sm font-semibold px-4 py-3 rounded-2xl flex items-center gap-1.5 cursor-pointer hover:bg-rose-950/20"
+              className="btn btn-ghost border border-[var(--hair)] text-[var(--signal)] text-xs sm:text-sm font-semibold px-4 py-3 rounded-lg flex items-center gap-1.5 cursor-pointer hover:bg-[var(--panel-2)]"
             >
-              <EyeOff className="w-4 h-4 text-rose-400" />
+              <EyeOff className="w-4 h-4 text-[var(--signal)]" />
               <span>{isBn ? 'ব্লাইন্ড মোড' : 'Blind Mode'}</span>
             </button>
 
             <button
               onClick={onOpenSettings}
-              className="btn btn-ghost border border-[var(--line)] text-xs sm:text-sm font-semibold px-4 py-3 rounded-2xl flex items-center gap-1.5 cursor-pointer hover:border-[var(--signal)]"
+              className="btn btn-ghost border border-[var(--line)] text-xs sm:text-sm font-semibold px-4 py-3 rounded-lg flex items-center gap-1.5 cursor-pointer hover:border-[var(--signal)]"
             >
-              <Settings className="w-4 h-4 text-teal-400" />
+              <Settings className="w-4 h-4 text-[var(--signal)]" />
               <span>{isBn ? 'সেটিংস' : 'Settings'}</span>
             </button>
           </div>
@@ -110,7 +110,7 @@ export const GameHome: React.FC<Props> = ({
 
         {/* Tactical Mission Thumbnail / Character Avatar */}
         <div className="relative shrink-0 flex flex-col items-center gap-3">
-          <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-cyan-500 p-1 shadow-2xl border-2 border-[var(--signal)] flex items-center justify-center overflow-hidden">
+          <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-lg p-1 border-2 border-[var(--signal)] flex items-center justify-center overflow-hidden bg-[var(--panel)]">
             <img
               src="/images/game/nasa_satellite_drone_mesh.jpg"
               alt="NASA Satellite Drone Mesh"
@@ -118,11 +118,11 @@ export const GameHome: React.FC<Props> = ({
             />
           </div>
           <div className="text-center">
-            <span className="chip border-[var(--signal)] text-[var(--signal)] text-3xs font-mono font-semibold">
+            <span className="chip border-[var(--signal)] text-[var(--signal)] text-2xs font-mono font-semibold">
               {cadetRank}
             </span>
             <div className="text-xs font-mono font-semibold text-[var(--ink)] mt-1">
-              ⭐ {totalStars} / 12 Stars Earned
+              {totalStars} / 12 Stars Earned
             </div>
           </div>
         </div>
@@ -144,12 +144,11 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 02: Adventure Hub */}
           <div
             onClick={onOpenHub}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <span className="text-xl">🗺️</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
+                                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '০২. অ্যাডভেঞ্চার হাব (Adventure Hub)' : '02. Adventure Hub'}
                 </h3>
               </div>
@@ -168,12 +167,11 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 03: Mission Center */}
           <div
             onClick={onOpenMissions}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--fire)] transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--fire)] transition cursor-pointer flex flex-col justify-between gap-3 group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <span className="text-xl">🔥</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-amber-400 transition">
+                                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '০৩. মিশন সেন্টার (Mission Center)' : '03. Mission Center'}
                 </h3>
               </div>
@@ -183,7 +181,7 @@ export const GameHome: React.FC<Props> = ({
                   : '4 NASA data missions: Tactical Wildfire Command, Bengal Monsoon Rescue, Pacific Ocean Submarine, and Orbital Harmonizer.'}
               </p>
             </div>
-            <span className="text-2xs font-semibold text-amber-400 flex items-center gap-1">
+            <span className="text-2xs font-semibold text-[var(--signal)] flex items-center gap-1">
               <span>{isBn ? 'মিশন খেলুন' : 'Deploy Missions'}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </span>
@@ -192,12 +190,11 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 04: Earth Explorer */}
           <div
             onClick={onOpenExplorer}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-cyan-400 transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <span className="text-xl">🌐</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-cyan-400 transition">
+                                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '০৪. আর্থ এক্সপ্লোরার (Earth Explorer)' : '04. Earth Explorer'}
                 </h3>
               </div>
@@ -207,7 +204,7 @@ export const GameHome: React.FC<Props> = ({
                   : 'Interactive 3D Earth paired with Earth Information Center (EIC) visual frames and real-time mathematical sonification.'}
               </p>
             </div>
-            <span className="text-2xs font-semibold text-cyan-400 flex items-center gap-1">
+            <span className="text-2xs font-semibold text-[var(--signal)] flex items-center gap-1">
               <span>{isBn ? '৩ডি গ্লোব এক্সপ্লোর' : 'Open Explorer'}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </span>
@@ -216,12 +213,11 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 05: Blind Explorer Mode */}
           <div
             onClick={onOpenBlindMode}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-rose-500/30 hover:border-rose-400 transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--hair)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <span className="text-xl">🎧</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-rose-400 transition">
+                                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '০৫. ব্লাইন্ড এক্সপ্লোরার মোড' : '05. Blind Explorer Mode'}
                 </h3>
               </div>
@@ -231,7 +227,7 @@ export const GameHome: React.FC<Props> = ({
                   : 'True audio-first gaming. 3D spatial audio beacons, natural language spoken navigation, and keyboard-only controls.'}
               </p>
             </div>
-            <span className="text-2xs font-semibold text-rose-400 flex items-center gap-1">
+            <span className="text-2xs font-semibold text-[var(--signal)] flex items-center gap-1">
               <span>{isBn ? 'অডিও মিশন খেলুন' : 'Audio-First Mode'}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </span>
@@ -240,12 +236,11 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 06: Kids Learning Zone */}
           <div
             onClick={onOpenKidsZone}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-emerald-400 transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <span className="text-xl">🧒</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-emerald-400 transition">
+                                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '০৬. কিডস লার্নিং জোন' : '06. Kids Learning Zone'}
                 </h3>
               </div>
@@ -255,7 +250,7 @@ export const GameHome: React.FC<Props> = ({
                   : 'Ages 8–14. 3 difficulty tiers (Beginner, Explorer, Advanced), Sound Detective quiz, and zero-failure learning.'}
               </p>
             </div>
-            <span className="text-2xs font-semibold text-emerald-400 flex items-center gap-1">
+            <span className="text-2xs font-semibold text-[var(--signal)] flex items-center gap-1">
               <span>{isBn ? 'কিডস জোনে যান' : 'Enter Kids Zone'}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </span>
@@ -264,12 +259,11 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 07: Earth DJ Studio */}
           <div
             onClick={onOpenDJ}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-purple-400 transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <span className="text-xl">🎛️</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-purple-400 transition">
+                                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '০৭. আর্থ ডিজে স্টুডিও' : '07. Earth DJ Studio'}
                 </h3>
               </div>
@@ -279,7 +273,7 @@ export const GameHome: React.FC<Props> = ({
                   : 'Interactive 4-track remix desk. Balance precipitation rhythms, wildfire crackles, and ocean sub-bass drones.'}
               </p>
             </div>
-            <span className="text-2xs font-semibold text-purple-400 flex items-center gap-1">
+            <span className="text-2xs font-semibold text-[var(--signal)] flex items-center gap-1">
               <span>{isBn ? 'সাউন্ড মিক্স করুন' : 'Open DJ Studio'}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </span>
@@ -288,12 +282,12 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 08: Earth Time Machine */}
           <div
             onClick={onOpenTimeMachine}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-indigo-400 transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
                 <span className="text-xl">⏳</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-indigo-400 transition">
+                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '০৮. আর্থ টাইম মেশিন (1981 vs 2025)' : '08. Earth Time Machine'}
                 </h3>
               </div>
@@ -303,7 +297,7 @@ export const GameHome: React.FC<Props> = ({
                   : 'Listen to multi-decade climate shifts between 1981 baseline and 2025 observations through acoustic pitch deltas.'}
               </p>
             </div>
-            <span className="text-2xs font-semibold text-indigo-400 flex items-center gap-1">
+            <span className="text-2xs font-semibold text-[var(--signal)] flex items-center gap-1">
               <span>{isBn ? 'টাইম ট্রাভেল করুন' : 'Launch Time Travel'}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </span>
@@ -312,12 +306,11 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 09: My Earth Passport */}
           <div
             onClick={onOpenPassport}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-amber-400 transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <span className="text-xl">🛂</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-amber-400 transition">
+                                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '০৯. মাই আর্থ পাসপোর্ট' : '09. My Earth Passport'}
                 </h3>
               </div>
@@ -327,7 +320,7 @@ export const GameHome: React.FC<Props> = ({
                   : 'Track earned badges, level progression, and verifiable learning credentials backed by authentic NASA metadata.'}
               </p>
             </div>
-            <span className="text-2xs font-semibold text-amber-400 flex items-center gap-1">
+            <span className="text-2xs font-semibold text-[var(--signal)] flex items-center gap-1">
               <span>{isBn ? 'পাসপোর্ট দেখুন' : 'View Passport'}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </span>
@@ -336,12 +329,11 @@ export const GameHome: React.FC<Props> = ({
           {/* Section 10: Settings & Inclusive Co-op */}
           <div
             onClick={onOpenCoop}
-            className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] hover:border-teal-400 transition cursor-pointer flex flex-col justify-between gap-3 shadow-md group"
+            className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] hover:border-[var(--signal)] transition cursor-pointer flex flex-col justify-between gap-3 group"
           >
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <span className="text-xl">🤝</span>
-                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-teal-400 transition">
+                                <h3 className="font-display font-bold text-sm text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                   {isBn ? '১০. ইনক্লুসিভ কো-অপ (Two Players)' : '10. Inclusive Co-op & Settings'}
                 </h3>
               </div>
@@ -351,7 +343,7 @@ export const GameHome: React.FC<Props> = ({
                   : 'Two Players, One Earth: Sighted navigator + blind audio specialist collaborate to solve planetary missions.'}
               </p>
             </div>
-            <span className="text-2xs font-semibold text-teal-400 flex items-center gap-1">
+            <span className="text-2xs font-semibold text-[var(--signal)] flex items-center gap-1">
               <span>{isBn ? 'কো-অপ মোড' : 'Launch Co-op'}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </span>

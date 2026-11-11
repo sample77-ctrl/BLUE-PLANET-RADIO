@@ -55,3 +55,25 @@ test('the fixed header keeps a sane height on every view (the Jukebox adds one r
     expect(Math.abs(h - v), hash).toBeLessThan(2); // --header-h = the header's height (v5: the ruled header is flush with the top, so there is no 10 px gap any more)
   }
 });
+
+// WCAG 2.5.8 / the documented 44px on coarse pointers (header, collections row, carousel dots, EIC link).
+test.describe('touch targets at 375px', () => {
+  test.use({ viewport: { width: 375, height: 760 }, hasTouch: true, isMobile: true });
+  const small = (page: import('@playwright/test').Page, sel: string, min: number) => page.evaluate(([s, m]) => [...document.querySelectorAll(s as string)].map((e) => e.getBoundingClientRect()).filter((r) => r.width > 0 && (r.width < (m as number) || r.height < (m as number))).length, [sel, min] as const);
+  test('header controls and carousel dots are at least 44px, on one row', async ({ page }) => {
+    await offline(page);
+    await open(page, '');
+    await expect(page.locator('.world-dot')).toHaveCount(4);
+    expect(await small(page, 'header > div button', 44)).toBe(0);
+    expect(await small(page, '.world-dot', 44)).toBe(0);
+    expect(await noHorizontalScroll(page)).toBe(true);
+    const tops = await page.evaluate(() => new Set([...document.querySelectorAll('header > div button')].filter((e) => e.getBoundingClientRect().width).map((e) => Math.round(e.getBoundingClientRect().top))).size);
+    expect(tops).toBe(1);
+  });
+  test('Jukebox collection links are at least 44px tall', async ({ page }) => {
+    await offline(page);
+    await open(page, 'track=jukebox&story=gistemp');
+    await expect(page.locator('header nav[aria-label="Collections"] .nav-link').first()).toBeVisible();
+    expect(await small(page, 'header nav[aria-label="Collections"] .nav-link', 44)).toBe(0);
+  });
+});

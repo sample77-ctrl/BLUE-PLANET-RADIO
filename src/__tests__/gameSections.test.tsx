@@ -279,6 +279,6 @@ describe('Sonic Earth Adventure: Master Game Sections', () => {
     // Switch to Satellite Downlink
     const satBtn = screen.getByRole('button', { name: /Satellite Downlink/i });
     fireEvent.click(satBtn);
-    expect(satBtn.className).toContain('bg-emerald-500');
+    expect(satBtn.getAttribute('aria-pressed')).toBe('true'); // was asserted via the old bg-emerald-500 class; same behaviour
   });
 });

@@ -93,7 +93,7 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
         <button ref={menuBtn} className="btn btn-ghost btn-icon lg:hidden" aria-expanded={menu} aria-controls="site-menu" onClick={() => setMenu(!menu)} aria-label={t('menu')}>
           {menu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
-        <button onClick={onHome} className="flex items-center gap-2 cursor-pointer shrink-0" aria-label={`${t('appName')}, ${t('home')}`}>
+        <button onClick={onHome} className="flex items-center justify-center gap-2 cursor-pointer shrink-0 pointer-coarse:min-h-[44px] pointer-coarse:min-w-[44px]" aria-label={`${t('appName')}, ${t('home')}`}>
           <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">{/* a needle over a frame: the mark of the Frame Jukebox */}
             <rect x="1" y="3" width="24" height="20" fill="none" stroke="var(--ink)" strokeWidth="1.5" />
             <path d="M1 17 L7 11 L12 15 L18 7 L25 13" fill="none" stroke="var(--signal)" strokeWidth="1.5" strokeLinejoin="round" />
@@ -110,13 +110,13 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
 
         <div className="ml-auto flex items-center gap-1.5 min-w-0">
           {active && (
-            <button className="chip max-w-[11rem] sm:max-w-[16rem] min-h-[36px] cursor-pointer border-[var(--signal)] text-[var(--ink)]" onClick={pause} aria-label={t('pausePlayback', { label: active.label })}>
+            <button className="chip max-w-[11rem] sm:max-w-[16rem] min-h-[36px] pointer-coarse:min-h-[44px] cursor-pointer border-[var(--signal)] text-[var(--ink)]" onClick={pause} aria-label={t('pausePlayback', { label: active.label })}>
               <Pause className="w-3.5 h-3.5 shrink-0 text-[var(--signal)]" />
               <span className="truncate">{t('playingNow', { label: active.label })}</span>
             </button>
           )}
           {!activeAny && !onLanding && <button className="btn hidden md:inline-flex" onClick={onListen}><Play className="w-4 h-4" />{t('listenNow')}</button>}
-          <button className="btn btn-ghost px-2.5 min-h-[36px] font-semibold" lang={lang === 'bn' ? 'en' : 'bn'} aria-label={t('switchLang')} title={t('switchLang')} onClick={() => set({ lang: lang === 'bn' ? 'en' : 'bn' })}>{lang === 'bn' ? 'EN' : 'বাংলা'}</button>
+          <button className="btn btn-ghost px-2.5 min-h-[36px] pointer-coarse:min-h-[44px] pointer-coarse:min-w-[44px] font-semibold" lang={lang === 'bn' ? 'en' : 'bn'} aria-label={t('switchLang')} title={t('switchLang')} onClick={() => set({ lang: lang === 'bn' ? 'en' : 'bn' })}>{lang === 'bn' ? 'EN' : 'বাংলা'}</button>
           {onOpenHarmonium && (
             <button
               className="btn btn-ghost hidden md:inline-flex items-center gap-1.5 border border-[var(--line)] px-2.5"
