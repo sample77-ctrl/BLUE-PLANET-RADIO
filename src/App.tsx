@@ -299,7 +299,7 @@ export function App() {
       {showHero && <Landing fireObs={landingFire} onPick={(tr) => withViewTransition(() => { void pickTrack(tr); }, document.querySelector('main'))}
         onTour={startTour} onListen={listenNow} onSilent={() => { setShowHero(false); setTrack('atlas'); }} onAbout={goAbout} onTopic={openJukebox} onFrame={(id) => withViewTransition(() => { openCollection('frames', id); }, document.querySelector('main'))} onOpenHarmonium={() => setHarmoniumOpen(true)} />}
 
-      <Header track={track} onLanding={showHero} onTrack={(tr) => { navigate(tr); setShowHero(false); setTourOpen(false); }} lastJukebox={lastJukebox}
+      <Header track={track} onLanding={showHero} onTrack={(tr) => withViewTransition(() => { navigate(tr); setShowHero(false); setTourOpen(false); }, document.querySelector('main'))} lastJukebox={lastJukebox}
         audioReady={audioReady} soundState={soundState} onToggleAudio={() => (audioReady ? soundOff() : soundOn())} onListen={listenNow}
         onHome={() => { setShowHero(true); setTourOpen(false); }} onTour={startTour} onData={() => setDataOpen(true)} onSettings={() => setSettingsOpen(true)} settingsOpen={settingsOpen} onOpenHarmonium={() => setHarmoniumOpen(true)} />
 

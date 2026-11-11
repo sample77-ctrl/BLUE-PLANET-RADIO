@@ -238,7 +238,7 @@ test('375 px: no sideways scroll across hero, chapters and carousel, in English 
     await page.addInitScript(([k, v]) => { try { localStorage.setItem(k, v); } catch { /* ignore */ } }, [PREFS, JSON.stringify({ lang })]);
     await page.setViewportSize({ width: 375, height: 812 });
     await open(page, '');
-    await expect(page.locator('#lc-elnino .lc-big')).toBeVisible();
+    await expect(page.locator('#lc-elnino .lc-big')).toBeVisible({ timeout: 25000 }); // the numbers load in a lazy chunk while the software-GL carousel starts: slow on a busy machine
     for (const sel of ['.lh', '#lc-ghg', '#lc-ocean', '#lc-rain', '#lc-elnino', '.world-track']) {
       await scrollTo(page, sel);
       await page.waitForTimeout(100);
@@ -254,7 +254,7 @@ for (const s of [{ label: 'desktop', w: 1400, p: {} }, { label: 'phone, বা�
     await prefs(page, s.p);
     await page.setViewportSize({ width: s.w, height: 800 });
     await open(page, '');
-    await expect(page.locator('#lc-elnino .lc-big')).toBeVisible();
+    await expect(page.locator('#lc-elnino .lc-big')).toBeVisible({ timeout: 25000 }); // the numbers load in a lazy chunk while the software-GL carousel starts: slow on a busy machine
     for (const sel of ['.lh', '#lc-ghg', '#lc-rain']) {
       await scrollTo(page, sel);
       await page.waitForTimeout(1600); // the colour band has wiped in

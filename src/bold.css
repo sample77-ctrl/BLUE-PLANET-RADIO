@@ -255,7 +255,15 @@ html.hc .np-full::before { display: none; }
 /* View Transitions: the page is captured as one root layer, and the WebGL canvas is never given a name (so it is not a capture group of its own) */
 main canvas { view-transition-name: none; }
 ::view-transition-group(np-title) { animation-duration: .28s; animation-timing-function: var(--ease-out, ease-out); }
-::view-transition-old(root), ::view-transition-new(root) { animation-duration: .2s; }
+/* A view change wipes in across a field of the signal colour: the old view fades off, the new one is revealed left to right over --signal (document-level or scoped to <main>, which is where Chrome 147+ puts the pseudo-elements). Plain fade in high contrast. */
+::view-transition-group(root), main::view-transition-group(root) { background: var(--signal); }
+::view-transition-old(root), main::view-transition-old(root) { animation: vt-off .18s ease-in both; }
+::view-transition-new(root), main::view-transition-new(root) { animation: vt-wipe .46s var(--ease-out) both; }
+@keyframes vt-off { to { opacity: 0; } }
+@keyframes vt-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+html.hc::view-transition-group(root), html.hc main::view-transition-group(root) { background: #000; }
+html.hc::view-transition-new(root), html.hc main::view-transition-new(root) { animation: vt-fade .2s ease-out both; }
+@keyframes vt-fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
 .np-full [role='tab'][aria-selected='true'] { color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }
 
