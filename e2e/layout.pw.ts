@@ -73,7 +73,7 @@ test.describe('touch targets at 375px', () => {
   test('Jukebox collection links are at least 44px tall', async ({ page }) => {
     await offline(page);
     await open(page, 'track=jukebox&story=gistemp');
-    await expect(page.locator('header nav[aria-label] .nav-link').first()).toBeVisible();
-    expect(await small(page, 'header nav[aria-label] .nav-link', 44)).toBe(0);
+    await expect(page.locator('header nav[aria-label="Collections"] .nav-link').first()).toBeVisible();
+    expect(await small(page, 'header nav[aria-label="Collections"] .nav-link', 44)).toBe(0);
   });
 });

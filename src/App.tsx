@@ -93,13 +93,18 @@ export function App() {
   const [sheet, setSheet] = useState<'layers' | 'hearing' | 'country' | null>(null);
   const [harmoniumOpen, setHarmoniumOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
-  const cty = useCountry(initialShare?.c, !showHero);
+  // Lazy data (roadmap §3 weight): the NASA snapshots are for the landing numbers, the Atlas and the Jukebox country profiles; the borders for the Atlas, Jukebox and the palette. Once wanted, they stay.
+  const [dataWanted, setDataWanted] = useState(false), [bordersWanted, setBordersWanted] = useState(false);
+  if (!dataWanted && (showHero || track === 'atlas' || track === 'jukebox')) setDataWanted(true);
+  if (!bordersWanted && ((!showHero && (track === 'atlas' || track === 'jukebox')) || paletteOpen)) setBordersWanted(true);
+  const cty = useCountry(initialShare?.c, bordersWanted);
 
   useEffect(() => { if (initialShare?.lang && initialShare.lang !== lang) set({ lang: initialShare.lang }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    if (!dataWanted) return;
     DatasetAdapter.loadDatasets('live').then(setData).catch(() => DatasetAdapter.loadDatasets('demo').then(setData));
-  }, []);
+  }, [dataWanted]);
 
   const slices: DatasetTimeSlice[] = useMemo(() => data?.slices ?? [], [data]);
   const slice = slices[day] ?? slices[0];
