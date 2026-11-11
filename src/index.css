@@ -379,3 +379,14 @@ html.rm *, html.rm *::before, html.rm *::after { animation-duration: 0.001ms !im
 
 .sr-only-focusable:not(:focus) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .scroll-thin::-webkit-scrollbar { width: 6px; }
+
+/* Outside any @layer on purpose: these must beat the min-h-* / h-* utilities on individual controls. */
+/* a link that stands on its own line (a list of sources), not one inside a sentence: 24px always, 44px on touch */
+.tap-link { display: inline-flex; align-items: center; min-height: 24px; }
+/* Touch targets: 44x44 for every pointer control on coarse pointers (the decorative aria-hidden vinyl button and sr-only skip links excepted); the 24px floor (WCAG 2.5.8) is set below for all pointers. Inline links inside a sentence are exempt. */
+@media (pointer: coarse) {
+  button:not(.sr-only):not([aria-hidden='true']), summary, select, [role='button']:not([aria-hidden='true']), [role='tab'], [role='switch'], .tap { min-height: 44px; min-width: 44px; }
+  .tap-link, input[type='range'] { min-height: 44px; }
+  label:has(> input[type='checkbox']:not(.sr-only)), label:has(> input[type='radio']:not(.sr-only)) { min-height: 44px; }
+  input[type='checkbox']:not(.sr-only), input[type='radio']:not(.sr-only) { min-width: 24px; min-height: 24px; }
+}

@@ -375,6 +375,8 @@ export const BangladeshMonsoon: React.FC = () => {
                         }
                       }}
                     >
+                      {/* 44x44 on-screen hit area (the dot itself can be 8px); neighbouring cities are further apart than this */}
+                      <circle cx={px(c.lon)} cy={py(c.lat)} r={22 / (mapW > 0 ? mapW / W : 1)} fill="transparent" />
                       {/* Pulse animation for high rain */}
                       {mm > 15 && (
                         <circle

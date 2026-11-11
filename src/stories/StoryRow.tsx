@@ -69,8 +69,8 @@ export const StoryRow = memo(function StoryRow({ stories, activeId, onSelect, sp
                 </button>
                 {s.visual === 'chart' && onQueue && !active && (
                   <span className="absolute bottom-2 right-2 flex gap-1">
-                    <button type="button" className="btn btn-icon !min-h-[32px] !w-8 !p-0" aria-pressed={queued?.includes(s.id) || undefined} aria-label={t('jbPlayNext', { title: lang === 'bn' ? s.titleBn : s.title })} onClick={() => onPlayNext?.(s.id)}><SkipForward className="w-3.5 h-3.5" aria-hidden="true" /></button>
-                    <button type="button" className="btn btn-icon !min-h-[32px] !w-8 !p-0" aria-pressed={queued?.includes(s.id) || undefined} aria-label={t('jbQueueAdd', { title: lang === 'bn' ? s.titleBn : s.title })} onClick={() => onQueue(s.id)}><ListPlus className="w-3.5 h-3.5" aria-hidden="true" /></button>
+                    <button type="button" className="btn btn-icon !min-h-[32px] !w-8 !p-0 pointer-coarse:!min-h-[44px] pointer-coarse:!w-11" aria-pressed={queued?.includes(s.id) || undefined} aria-label={t('jbPlayNext', { title: lang === 'bn' ? s.titleBn : s.title })} onClick={() => onPlayNext?.(s.id)}><SkipForward className="w-3.5 h-3.5" aria-hidden="true" /></button>
+                    <button type="button" className="btn btn-icon !min-h-[32px] !w-8 !p-0 pointer-coarse:!min-h-[44px] pointer-coarse:!w-11" aria-pressed={queued?.includes(s.id) || undefined} aria-label={t('jbQueueAdd', { title: lang === 'bn' ? s.titleBn : s.title })} onClick={() => onQueue(s.id)}><ListPlus className="w-3.5 h-3.5" aria-hidden="true" /></button>
                   </span>)}
               </li>);
           })}

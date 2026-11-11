@@ -87,7 +87,7 @@ export const AboutPage: React.FC<{ onOpenMethod: () => void }> = ({ onOpenMethod
                   return (
                     <tr key={l.id} className="border-b border-[var(--line)] last:border-0 align-top">
                       <th scope="row" className="p-3 font-semibold sm:whitespace-nowrap"><span className="dot mr-2" style={{ background: l.color }} aria-hidden="true" />{t(l.name)}</th>
-                      <td data-label={t('colVariable')} className="p-3">{m.variableName}, {m.unit}<div className="label mt-1"><a className="link" href={m.sourceUrl} target="_blank" rel="noreferrer">{m.provider}</a></div></td>
+                      <td data-label={t('colVariable')} className="p-3">{m.variableName}, {m.unit}<div className="label mt-1"><a className="link tap-link" href={m.sourceUrl} target="_blank" rel="noreferrer">{m.provider}</a></div></td>
                       <td data-label={t('colResolution')} className="p-3">{m.spatialResolution}<div className="label mt-1">{m.temporalResolution}</div></td>
                       <td data-label={t('colToNumber')} className="p-3"><code className="text-xs break-words">{m.normalizationFormula}</code></td>
                       <td data-label={t('colToSound')} className="p-3 text-[var(--ink-2)]">{m.audioFormula}</td>
@@ -132,7 +132,7 @@ export const AboutPage: React.FC<{ onOpenMethod: () => void }> = ({ onOpenMethod
           <ul className="grid sm:grid-cols-2 gap-3 text-sm">
             {SOURCES.map((s) => (
               <li key={s.name} className="panel-solid p-3">
-                <a className="link font-medium" href={s.url} target="_blank" rel="noreferrer">{s.name}</a>
+                <a className="link tap-link font-medium" href={s.url} target="_blank" rel="noreferrer">{s.name}</a>
                 <p className="mt-1 text-[var(--ink-2)]">{t(s.what)}</p>
               </li>
             ))}
