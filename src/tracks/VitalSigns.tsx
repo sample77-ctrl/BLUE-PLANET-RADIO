@@ -24,6 +24,7 @@ const META: Record<Exclude<Tab, 'all'>, { en: string; bn: string; color: string;
 
 export const VitalSigns: React.FC = () => {
   const { t, lang, narration } = usePrefs();
+  const fs = lang === 'bn' ? 13 : 12; // SVG text stays on the 12px (EN) / 13px (বাংলা) floor
   const [data, setData] = useState<Record<string, Series> | null>(null);
   const [tab, setTab] = useState<Tab>('temp');
   const [own, setOwn] = useState<{ name: string; points: Pt[] } | null>(null);
@@ -143,8 +144,8 @@ export const VitalSigns: React.FC = () => {
     const unit = s.unit;
     chart = (
       <svg viewBox={`0 0 ${W} ${H + 22}`} className="w-full h-auto" role="img" aria-label={`${m.en}, ${first.year} to ${last.year}: from ${first.value} to ${last.value} ${unit}. Highest ${maxP.year}, lowest ${minP.year}.`}>
-        {tab === 'temp' && <><line x1={pad} x2={W} y1={y(0)} y2={y(0)} stroke="#7f96a3" strokeDasharray="4 4" /><text x={0} y={y(0) + 4} fontSize={11} fill="var(--ink-3)">0°</text></>}
-        {[min, max].map((v) => <text key={v} x={0} y={y(v) + 4} fontSize={10} fill="var(--ink-3)">{v.toFixed(tab === 'co2' ? 0 : 1)}</text>)}
+        {tab === 'temp' && <><line x1={pad} x2={W} y1={y(0)} y2={y(0)} stroke="#7f96a3" strokeDasharray="4 4" /><text x={0} y={y(0) + 4} fontSize={fs} fill="var(--ink-3)">0°</text></>}
+        {[min, max].map((v) => <text key={v} x={0} y={y(v) + 4} fontSize={fs} fill="var(--ink-3)">{v.toFixed(tab === 'co2' ? 0 : 1)}</text>)}
         {tab === 'temp'
           ? pts.map((p, k) => { const top = Math.min(y(p.value), y(0)); return <rect key={p.year} x={pad + k * bw} y={top} width={Math.max(1, bw - 0.8)} height={Math.max(1, Math.abs(y(p.value) - y(0)))} fill={p.value >= 0 ? 'var(--warm)' : 'var(--cold)'} opacity={i < 0 || k <= i ? 0.95 : 0.25} />; })
           : <>
@@ -152,8 +153,8 @@ export const VitalSigns: React.FC = () => {
               <polyline fill="none" stroke={m.color} strokeWidth={2.5} points={pts.slice(0, i < 0 ? pts.length : i + 1).map((p, k) => `${pad + k * bw + bw / 2},${y(p.value)}`).join(' ')} />
             </>}
         {i >= 0 && <line x1={pad + i * bw + bw / 2} x2={pad + i * bw + bw / 2} y1={0} y2={H} stroke="var(--signal)" strokeWidth={2} />}
-        <text x={pad} y={H + 16} fontSize={11} fill="var(--ink-3)">{yr(first.year)}</text>
-        <text x={W} y={H + 16} fontSize={11} fill="var(--ink-3)" textAnchor="end">{yr(last.year)}</text>
+        <text x={pad} y={H + 16} fontSize={fs} fill="var(--ink-3)">{yr(first.year)}</text>
+        <text x={W} y={H + 16} fontSize={fs} fill="var(--ink-3)" textAnchor="end">{yr(last.year)}</text>
       </svg>
     );
     const cur = i >= 0 ? pts[i] : null;
@@ -177,8 +178,8 @@ export const VitalSigns: React.FC = () => {
           return <polyline key={id} fill="none" stroke={META[id as 'temp'].color} strokeWidth={2.5} points={pts.map((v, k) => `${pad + k * bw + bw / 2},${10 + (1 - (v - mn) / (mx - mn)) * (H - 20)}`).join(' ')} />;
         })}
         {i >= 0 && <line x1={pad + i * bw + bw / 2} x2={pad + i * bw + bw / 2} y1={0} y2={H} stroke="var(--signal)" strokeWidth={2} />}
-        <text x={pad} y={H + 16} fontSize={11} fill="var(--ink-3)">{yr(view.years[0])}</text>
-        <text x={W} y={H + 16} fontSize={11} fill="var(--ink-3)" textAnchor="end">{yr(view.years.at(-1)!)}</text>
+        <text x={pad} y={H + 16} fontSize={fs} fill="var(--ink-3)">{yr(view.years[0])}</text>
+        <text x={W} y={H + 16} fontSize={fs} fill="var(--ink-3)" textAnchor="end">{yr(view.years.at(-1)!)}</text>
       </svg>
     );
     readout = <div className="tnum font-display text-4xl font-bold">{yr(i >= 0 ? view.years[i] : view.years[0])}</div>;

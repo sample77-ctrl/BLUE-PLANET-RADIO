@@ -287,7 +287,10 @@ html.rm .world-stage .lv[data-on='true'] { translate: none; }
 
 /* Landing on desktop: everything sized in rem (text, spacing, cards, buttons' padding) is set at 90%, the scale the page was designed at.
    It is relative, so a larger browser font size still scales it up. Planets are sized in vmin/dvh and are not affected. */
-@media (min-width: 768px) { html.landing-open { font-size: 90%; } }
+@media (min-width: 768px) {
+  html.landing-open { font-size: 90%; --fs-2xs: .8334rem; --fs-xs: .9028rem; } /* the small sizes are rescaled so they still land on 12px / 13px */
+  html[lang='bn'].landing-open { --fs-2xs: .9028rem; --fs-sm: .9028rem; } /* বাংলা floor is 13px */
+}
 
 /* Landing, below the carousel: no solid layer, the starfield shows through; the cards are glass. Titles share the carousel's serif voice. */
 .landing-more { position: relative; z-index: 1; } /* above the pinned stage */

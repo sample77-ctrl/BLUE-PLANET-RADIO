@@ -191,10 +191,10 @@ html.rm .sound-btn svg { animation: none !important; }
 /* Now-Playing bar (src/player) */
 .np-bar { position: relative; flex: none; z-index: 30; display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; padding: .5rem .75rem; border-radius: 0; border-inline: 0; border-bottom: 0; }
 .np-title { font-family: var(--font-display); font-stretch: var(--wide-mid); font-weight: 700; font-size: var(--fs-sm, .875rem); }
-.np-sub { font-size: .75rem; color: var(--ink-3); display: flex; gap: .4rem; align-items: center; }
-.np-badge { min-height: 0; padding: 0 .4rem; font-size: .7rem; }
+.np-sub { font-size: var(--fs-2xs); color: var(--ink-3); display: flex; gap: .4rem; align-items: center; }
+.np-badge { min-height: 0; padding: 0 .4rem; font-size: var(--fs-2xs); }
 .np-main { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; min-width: 0; }
-.np-read { font-size: .8rem; color: var(--ink-2); white-space: nowrap; }
+.np-read { font-size: var(--fs-xs); color: var(--ink-2); white-space: nowrap; }
 .np-side { display: flex; align-items: center; gap: .4rem; }
 .np-vol { width: 6rem; }
 .np-scrub { position: relative; flex: 1 1 8rem; min-width: 8rem; height: 2rem; }
