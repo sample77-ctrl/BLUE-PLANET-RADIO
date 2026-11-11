@@ -385,3 +385,13 @@ Results are reported as actually run. Failures are listed, not suppressed.
 - User test results (`docs/user-testing.md`, `JUDGE_QA` §6, `[User quote]` in `DEMO_SCRIPT`).
 - Video length and format rules, and who submits.
 - `origin/docs/user-testing` and `origin/fix/lint-and-cleanup` aren't merged into `main` by ref. Their commits look like they were brought in another way ("docs: add user-testing kit", "fix: attach keyboard listener once…" are on `main`). Diff them against `main`, then merge or delete them.
+
+## v4 UI upgrade (plan: next-gen player) — progress
+
+| Phase | Status | Notes |
+|---|---|---|
+| P0 Housekeeping | ✅ | React 19.3.1, `@tailwindcss/vite` to devDependencies. Groq key in `src/harmonium/groqPredictor.ts` left in place by decision; **still needs revoking**. |
+| P1 Player core + Now-Playing bar | 🟡 Jukebox only | `src/player/` store, bar and sparkline scrubber; Jukebox publishes to it; header chip hidden while the bar shows; EN·বাংলা toggle in header; Jukebox hash no longer adds a history entry per step. Atlas, FrameJukebox, Monsoon, VitalSigns not yet wired. |
+
+P1 checks: `npm run lint` clean, `npm test` 262 passed, `npm run build` ok, size budget ok (main JS 157.7 kB of 175, CSS 26.1 kB of 32). Playwright e2e/axe not run. Jukebox bar seen in the dev preview at 800 px width only.
+Next safe action: wire the Atlas `TimelineBar` and the other three tracks as adapters. The Jukebox engine is owned by `JukeboxView`, so the bar disappears when the user leaves the Jukebox; keeping audio playing across views needs the player hoisted, which is an architecture change to confirm first.

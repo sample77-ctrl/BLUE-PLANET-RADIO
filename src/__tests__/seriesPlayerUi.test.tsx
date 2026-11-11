@@ -5,13 +5,14 @@ import { dataFile } from './fixtures';
 import { PrefsProvider } from '../lib/prefs';
 import { JukeboxView } from '../jukebox/JukeboxView';
 import { Transport } from '../jukebox/PlayerControls';
+import { NowPlayingBar } from '../player/NowPlayingBar';
 import { clearStoryCache } from '../stories/loadStory';
 import { AudioContextManager } from '../audio/audioContext';
 import { seriesDiagnostics } from '../sonification/series/SeriesPlayer';
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); clearStoryCache(); window.history.replaceState(null, '', '/'); });
 const stubFiles = () => vi.stubGlobal('fetch', async (u: string) => ({ ok: true, status: 200, json: async () => dataFile(u) }));
-const wrap = (ui: React.ReactNode) => render(<PrefsProvider>{ui}</PrefsProvider>);
+const wrap = (ui: React.ReactNode) => render(<PrefsProvider>{ui}<NowPlayingBar /></PrefsProvider>); // the shared bar hosts the transport
 const countries = { list: [], country: null, point: null, onSelect: () => {} };
 
 /** A context whose clock is real time, with nodes that only record calls. */

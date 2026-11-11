@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Volume2, VolumeX, Settings, Database, Compass, Menu, X, Pause, Play } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 import { usePlayback } from '../lib/playbackContext';
+import { useNowPlaying } from '../player/nowPlaying';
 import { JUKEBOX_TRACKS, sectionOf, type Section, type Track } from '../lib/nav';
 import type { StringKey } from '../lib/strings';
 
@@ -26,8 +27,10 @@ interface Props {
 }
 
 export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox, audioReady, soundState = audioReady ? 'on' : 'off', onToggleAudio, onHome, onListen, onTour, onData, onSettings, settingsOpen, onOpenHarmonium }) => {
-  const { t } = usePrefs();
-  const { active, pause } = usePlayback();
+  const { t, lang, set } = usePrefs();
+  const { active: activeAny, pause } = usePlayback();
+  const barShown = !!useNowPlaying() && !onLanding; // the Now-Playing bar replaces the header chip
+  const active = barShown ? null : activeAny;
   const [menu, setMenu] = useState(false);
   const menuBtn = useRef<HTMLButtonElement>(null);
   const menuPanel = useRef<HTMLDivElement>(null);
@@ -111,7 +114,8 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
               <span className="truncate">{t('playingNow', { label: active.label })}</span>
             </button>
           )}
-          {!active && !onLanding && <button className="btn hidden md:inline-flex" onClick={onListen}><Play className="w-4 h-4" />{t('listenNow')}</button>}
+          {!activeAny && !onLanding && <button className="btn hidden md:inline-flex" onClick={onListen}><Play className="w-4 h-4" />{t('listenNow')}</button>}
+          <button className="btn btn-ghost px-2.5 min-h-[36px] font-semibold" lang={lang === 'bn' ? 'en' : 'bn'} aria-label={t('switchLang')} title={t('switchLang')} onClick={() => set({ lang: lang === 'bn' ? 'en' : 'bn' })}>{lang === 'bn' ? 'EN' : 'বাংলা'}</button>
           {onOpenHarmonium && (
             <button
               className="btn btn-ghost hidden md:inline-flex items-center gap-1.5 border border-[var(--line)] px-2.5"

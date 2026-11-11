@@ -19,10 +19,11 @@ import { useJukebox, visibleTimes, type Origin } from './useJukebox';
 import { TimelineFilters } from './TimelineFilters';
 import { TimelineView } from './TimelineView';
 import { StoryPanel, type StoryLoad } from './StoryPanel';
-import { timeLabel } from './format';
+import { digits, timeLabel, valueLabel } from './format';
+import { publishNowPlaying } from '../player/nowPlaying';
 import { captionFor } from './caption';
 import { useSeriesPlayer } from './useSeriesPlayer';
-import { SoundOptions, Transport } from './PlayerControls';
+import { SoundOptions } from './PlayerControls';
 import { DEFAULT_SOUND, type SoundSettings } from './soundSettings';
 import { MappingLegend } from './MappingLegend';
 import { VinylHero } from './VinylHero';
@@ -106,10 +107,8 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
     } else {
       const nextUrl = buildUrl(nextShare);
       const nextHash = '#' + encodeShare(nextShare);
-      if (window.location.pathname + window.location.search !== nextUrl) {
-        history.replaceState(null, '', nextUrl);
-      }
-      window.location.hash = nextHash;
+      // replaceState only: assigning location.hash would add a history entry per cursor step (Back would walk the timeline).
+      if (window.location.pathname + window.location.search + window.location.hash !== nextUrl + nextHash) history.replaceState(null, '', nextUrl + nextHash);
     }
   }, [s.storyId, s.cursor]);
 
@@ -166,9 +165,29 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
   const vt = visibleTimes(s), ci = s.cursor ? vt.indexOf(s.cursor) : -1;
   const isPicture = isPictureStory(story);
 
+  // Publish to the shared Now-Playing bar (src/player). The engine stays here; the bar only gets state and controls.
+  const npSpark = useMemo(() => points.map((p) => p.v ?? NaN), [points]);
+  useEffect(() => {
+    if (!story || isPictureStory(story) || !series || vt.length === 0) { publishNowPlaying(null, 'jukebox'); return; }
+    const cp = ci >= 0 ? points.find((p) => p.t === s.cursor) : undefined;
+    publishNowPlaying({
+      id: 'jukebox', title: lang === 'bn' ? story.titleBn : story.title,
+      subtitle: [series.source, digits(series.period, lang), series.unit].filter(Boolean).join(' · '), badge: series.isSample ? 'sample' : 'snapshot',
+      state: pstate === 'playing' ? 'playing' : pstate === 'paused' ? 'paused' : pstate === 'loading' || pstate === 'idle' ? 'busy' : 'ready',
+      index: ci, count: vt.length, label: ci >= 0 ? timeLabel(vt[ci], lang) : '', valueText: cp && cp.v != null ? valueLabel(cp.v, series.unit, lang) : '',
+      spark: npSpark, volume: snd.volume, muted: snd.muted, speed: snd.speed,
+      controls: {
+        toggle: () => { if (pstate === 'playing') player.pause(); else void play(); }, stop: () => player.stop(),
+        step: (by) => dispatch({ type: 'step', by, origin: 'user' }), seek: (i) => { if (vt[i]) onCursor(vt[i], 'user'); },
+        setVolume: (v) => setSnd((o) => ({ ...o, volume: v })), setMuted: (m) => setSnd((o) => ({ ...o, muted: m })), setSpeed: (x) => setSnd((o) => ({ ...o, speed: x })),
+      },
+    });
+  });
+  useEffect(() => () => publishNowPlaying(null, 'jukebox'), []);
+
   return (
     <div className="h-full overflow-y-auto overflow-x-hidden scroll-thin pt-[var(--header-h)]">
-      <div className="max-w-[1600px] mx-auto px-3 sm:px-5 pt-4 pb-24 md:pb-6 space-y-4">
+      <div className="max-w-[1600px] mx-auto px-3 sm:px-5 pt-4 pb-28 space-y-4">
         <header className="flex flex-wrap items-end justify-between gap-2">
           <div>
             <h1 className="font-display text-2xl sm:text-3xl font-bold">{t('navJukebox')}</h1>
@@ -226,14 +245,6 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
         </div>
       </div>
 
-      {story && !isPicture && vt.length > 0 && (
-        <div className="jb-stepbar sticky bottom-0 z-20 glass-strong rounded-none border-x-0 border-b-0 safe-pb">
-          <div className="max-w-[1600px] mx-auto px-3 sm:px-5 pt-2">
-            <Transport state={pstate} index={ci} count={vt.length} label={(i) => timeLabel(vt[i], lang)}
-              onPlay={play} onPause={() => player.pause()} onStop={() => player.stop()}
-              onStep={(by) => dispatch({ type: 'step', by, origin: 'user' })} onSeek={(i) => vt[i] && onCursor(vt[i], 'user')} />
-          </div>
-        </div>)}
     </div>
   );
 }

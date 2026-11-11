@@ -20,6 +20,7 @@ import { LayersPanel } from './atlas/LayersPanel';
 import { HearingPanel } from './atlas/HearingPanel';
 import { TimelineBar } from './atlas/TimelineBar';
 import { TourBar } from './demo/TourBar';
+import { NowPlayingBar } from './player/NowPlayingBar';
 import { usePrefs } from './lib/prefs';
 import { useCountry } from './countries/useCountry';
 import { CountryPanel } from './countries/CountryPanel';
@@ -216,6 +217,8 @@ export function App() {
       <Header track={track} onLanding={showHero} onTrack={(tr) => { navigate(tr); setShowHero(false); setTourOpen(false); }} lastJukebox={lastJukebox}
         audioReady={audioReady} soundState={soundState} onToggleAudio={() => (audioReady ? soundOff() : soundOn())} onListen={listenNow}
         onHome={() => { setShowHero(true); setTourOpen(false); }} onTour={startTour} onData={() => setDataOpen(true)} onSettings={() => setSettingsOpen(true)} settingsOpen={settingsOpen} onOpenHarmonium={() => setHarmoniumOpen(true)} />
+
+      <NowPlayingBar hidden={showHero} />
 
       <p className="sr-only" role="status" aria-live="polite">{soundState === 'on' ? t('soundOn') : soundState === 'starting' ? t('soundStarting') : soundState === 'blocked' ? t('audioBlocked') : ''}</p>
       {soundState === 'blocked' && (
