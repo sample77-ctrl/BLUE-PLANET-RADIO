@@ -13,6 +13,7 @@ import {
   Music,
   Printer,
   X,
+  Globe,
 } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 import { Overlay } from '../components/Overlay';
@@ -65,9 +66,9 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       nameBn: 'আমাজন ফরেস্ট সেন্টিনেল',
       descEn: 'Mastered NASA FIRMS fire crackle sonification & protected canopy.',
       descBn: 'আমাজনের অগ্নিকাণ্ডের শব্দ বিশ্লেষণ ও বন রক্ষা সম্পন্ন করেছে।',
-      icon: <Flame className="w-5 h-5 text-amber-400" />,
+      icon: <Flame className="w-5 h-5 text-[var(--signal)]" />,
       unlocked: true,
-      color: 'border-amber-500/40 bg-amber-950/20',
+      color: 'border-[var(--hair)] bg-[var(--panel-2)]',
     },
     {
       id: 'rain',
@@ -75,9 +76,9 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       nameBn: 'বাংলা রেইন ট্র্যাকার',
       descEn: 'Decoded NASA POWER precipitation droplets & flood gauges.',
       descBn: 'সিলেটের বৃষ্টির ফোঁটার শব্দ পরিমাপ ও প্লাবন উদ্ধার সম্পন্ন করেছে।',
-      icon: <CloudRain className="w-5 h-5 text-sky-400" />,
+      icon: <CloudRain className="w-5 h-5 text-[var(--signal)]" />,
       unlocked: true,
-      color: 'border-sky-500/40 bg-sky-950/20',
+      color: 'border-[var(--hair)] bg-[var(--panel-2)]',
     },
     {
       id: 'ocean',
@@ -85,9 +86,9 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       nameBn: 'মারিয়ানা অ্যাবিস ডাইভার',
       descEn: 'Operated JPL MUR SST depth sonars & ocean thermal beacons.',
       descBn: 'প্রশান্ত মহাসাগরের গভীর তাপমাত্রা ও সোনার পিং পরিচালনা করেছে।',
-      icon: <Waves className="w-5 h-5 text-teal-400" />,
+      icon: <Waves className="w-5 h-5 text-[var(--signal)]" />,
       unlocked: true,
-      color: 'border-teal-500/40 bg-teal-950/20',
+      color: 'border-[var(--hair)] bg-[var(--panel-2)]',
     },
     {
       id: 'orbital',
@@ -95,9 +96,9 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       nameBn: 'অরবিটাল হারমোনাইজার',
       descEn: 'Synchronized 4 NASA satellite telemetry beams across space.',
       descBn: 'মহাকাশ থেকে ৪টি স্যাটেলাইটের জলবায়ু সুর সমন্বয় করেছে।',
-      icon: <Radio className="w-5 h-5 text-purple-400" />,
+      icon: <Radio className="w-5 h-5 text-[var(--signal)]" />,
       unlocked: totalStars >= 6,
-      color: 'border-purple-500/40 bg-purple-950/20',
+      color: 'border-[var(--hair)] bg-[var(--panel-2)]',
     },
     {
       id: 'timemachine',
@@ -105,9 +106,9 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       nameBn: 'জলবায়ু টাইম ট্রাভেলার',
       descEn: 'Compared 145-year GISTEMP acoustics from 1880 to 2025.',
       descBn: '১৪৫ বছরের ঐতিহাসিক তাপমাত্রা পরিবর্তনের শব্দ প্রত্যক্ষ করেছে।',
-      icon: <Clock className="w-5 h-5 text-indigo-400" />,
+      icon: <Clock className="w-5 h-5 text-[var(--signal)]" />,
       unlocked: true,
-      color: 'border-indigo-500/40 bg-indigo-950/20',
+      color: 'border-[var(--hair)] bg-[var(--panel-2)]',
     },
     {
       id: 'blind',
@@ -115,9 +116,9 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       nameBn: 'ইনক্লুসিভ নেভিগেটর',
       descEn: 'Navigated 100% audio-first 3D soundscapes via binaural cues.',
       descBn: 'চোখ বন্ধ রেখে স্থানিক শব্দ শুনে সেন্সর খুঁজে বের করেছে।',
-      icon: <EyeOff className="w-5 h-5 text-rose-400" />,
+      icon: <EyeOff className="w-5 h-5 text-[var(--signal)]" />,
       unlocked: true,
-      color: 'border-rose-500/40 bg-rose-950/20',
+      color: 'border-[var(--hair)] bg-[var(--panel-2)]',
     },
     {
       id: 'dj',
@@ -125,9 +126,9 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       nameBn: 'মাস্টার আর্থ ডিজে',
       descEn: 'Layered authentic NASA environmental audio streams.',
       descBn: 'নাসার আসল তথ্য দিয়ে পৃথিবীর লাইভ সুর তৈরি করেছে।',
-      icon: <Music className="w-5 h-5 text-emerald-400" />,
+      icon: <Music className="w-5 h-5 text-[var(--signal)]" />,
       unlocked: true,
-      color: 'border-emerald-500/40 bg-emerald-950/20',
+      color: 'border-[var(--hair)] bg-[var(--panel-2)]',
     },
   ];
 
@@ -140,17 +141,17 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
+            className="btn btn-ghost p-2 rounded-lg border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
             aria-label="Back to Game Home"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-emerald-500 p-0.5 shadow-md flex items-center justify-center">
-            <Award className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 rounded-lg p-0.5 flex items-center justify-center bg-[var(--panel)]">
+            <Award className="w-6 h-6 text-[var(--ink)]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="chip border-amber-500/40 bg-amber-950/40 text-amber-300 text-3xs font-mono font-semibold uppercase">
+              <span className="chip border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)] text-2xs font-mono font-semibold uppercase">
                 {isBn ? 'সেকশন ০৯ · মাই আর্থ পাসপোর্ট' : 'SECTION 09 · MY EARTH PASSPORT'}
               </span>
               <span className="text-xs font-mono text-[var(--ink-3)]">
@@ -165,7 +166,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
 
         <button
           onClick={() => setShowCertificate(true)}
-          className="btn btn-brass text-xs font-semibold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-lg hover:scale-105 cursor-pointer"
+          className="btn btn-brass text-xs font-semibold px-4 py-2.5 rounded-lg flex items-center gap-2 hover:scale-105 cursor-pointer"
         >
           <Printer className="w-4 h-4" />
           <span>{isBn ? 'সনদপত্র প্রিন্ট করুন' : 'View Official Certificate'}</span>
@@ -173,13 +174,11 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       </div>
 
       {/* Cadet Profile Card */}
-      <div className="p-6 rounded-3xl bg-gradient-to-br from-blue-950/30 via-[var(--panel)] to-amber-950/20 border-2 border-[var(--signal)]/50 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+      <div className="p-6 rounded-lg border-2 border-[var(--signal)]/50 flex flex-col sm:flex-row items-center justify-between gap-6 bg-[var(--panel)]">
         <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
           <div className="relative">
-            <div className="w-20 h-20 rounded-3xl bg-[var(--signal)]/20 border-2 border-[var(--signal)] flex items-center justify-center shadow-lg">
-              <span className="text-4xl">🧑‍🚀</span>
-            </div>
-            <span className="absolute -bottom-1 -right-1 p-1 rounded-full bg-emerald-500 text-black">
+            <div className="w-20 h-20 rounded-full overflow-hidden border border-[var(--hair)] bg-[var(--panel-2)]"><img src="/images/ninja_cadet_avatar_sm.jpg" alt="" width={80} height={80} className="w-full h-full object-cover" /></div>
+            <span className="absolute -bottom-1 -right-1 p-1 rounded-full bg-[var(--signal)] text-[var(--on-signal)]">
               <ShieldCheck className="w-3.5 h-3.5" />
             </span>
           </div>
@@ -192,7 +191,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
                   defaultValue={callsign}
                   onBlur={(e) => handleSaveCallsign(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSaveCallsign((e.target as HTMLInputElement).value)}
-                  className="bg-black/60 border border-[var(--signal)] rounded-xl px-2.5 py-1 text-sm font-semibold text-white"
+                  className="bg-[var(--ground)]/60 border border-[var(--signal)] rounded-lg px-2.5 py-1 text-sm font-semibold text-[var(--ink)]"
                   autoFocus
                 />
               ) : (
@@ -204,7 +203,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
                   <h3 className="text-xl sm:text-2xl font-display font-bold text-[var(--ink)] group-hover:text-[var(--signal)] transition">
                     {callsign}
                   </h3>
-                  <span className="text-3xs text-[var(--ink-3)] font-mono opacity-60 group-hover:opacity-100">
+                  <span className="text-2xs text-[var(--ink-3)] font-mono opacity-60 group-hover:opacity-100">
                     ✎
                   </span>
                 </div>
@@ -221,27 +220,27 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
             </p>
 
             <div className="flex items-center gap-3 mt-3 text-xs font-mono">
-              <span className="text-amber-300 font-semibold">⭐ {xpEarned} Total XP</span>
+              <span className="text-[var(--signal)] font-semibold">{xpEarned} Total XP</span>
               <span className="text-[var(--ink-3)]">·</span>
-              <span className="text-emerald-300 font-semibold">🏆 {unlockedCount} / {badges.length} Badges</span>
+              <span className="text-[var(--signal)] font-semibold">{unlockedCount} / {badges.length} Badges</span>
               <span className="text-[var(--ink-3)]">·</span>
-              <span className="text-sky-300 font-semibold">🌟 {totalStars} Stars</span>
+              <span className="text-[var(--signal)] font-semibold">{totalStars} Stars</span>
             </div>
           </div>
         </div>
 
-        <div className="w-full sm:w-48 bg-black/40 border border-[var(--line)] rounded-2xl p-3 flex flex-col gap-1.5">
-          <div className="flex justify-between text-3xs font-mono text-[var(--ink-2)]">
+        <div className="w-full sm:w-48 bg-[var(--ground)]/40 border border-[var(--line)] rounded-lg p-3 flex flex-col gap-1.5">
+          <div className="flex justify-between text-2xs font-mono text-[var(--ink-2)]">
             <span>XP TO NEXT LEVEL</span>
             <span>{xpEarned % 300} / 300 XP</span>
           </div>
-          <div className="w-full h-2 rounded-full bg-black/60 overflow-hidden">
+          <div className="w-full h-2 rounded-full bg-[var(--ground)]/60 overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-[var(--signal)] to-emerald-400"
+              className="h-full bg-[var(--panel)]"
               style={{ width: `${Math.min(100, ((xpEarned % 300) / 300) * 100)}%` }}
             />
           </div>
-          <span className="text-3xs font-mono text-[var(--ink-3)] text-right">
+          <span className="text-2xs font-mono text-[var(--ink-3)] text-right">
             Level {cadetLevel + 1} Unlocks Master DJ Loops
           </span>
         </div>
@@ -258,9 +257,9 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
           {badges.map((b) => (
             <div
               key={b.id}
-              className={`p-4 rounded-2xl border flex items-start gap-3.5 transition ${b.color} shadow-md`}
+              className={`p-4 rounded-lg border flex items-start gap-3.5 transition ${b.color} `}
             >
-              <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 shrink-0">
+              <div className="p-2.5 rounded-lg bg-[var(--ground)]/40 border border-[var(--hair)] shrink-0">
                 {b.icon}
               </div>
               <div className="flex flex-col gap-1">
@@ -268,7 +267,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
                   <span className="text-xs font-semibold text-[var(--ink)]">
                     {isBn ? b.nameBn : b.nameEn}
                   </span>
-                  <span className="text-3xs font-mono text-emerald-400 font-semibold flex items-center gap-1">
+                  <span className="text-2xs font-mono text-[var(--signal)] font-semibold flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" />
                     UNLOCKED
                   </span>
@@ -283,36 +282,36 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
       </div>
 
       {/* Verified NASA Checksum Card */}
-      <div className="p-5 rounded-2xl bg-black/60 border border-emerald-500/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-inner">
+      <div className="p-5 rounded-lg bg-[var(--ground)]/60 border border-[var(--hair)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-6 h-6 text-emerald-400" />
+          <div className="w-10 h-10 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-6 h-6 text-[var(--signal)]" />
           </div>
           <div>
-            <span className="text-2xs font-mono uppercase tracking-wider text-emerald-300 font-semibold">
+            <span className="text-2xs font-mono uppercase tracking-wider text-[var(--signal)] font-semibold">
               AUTHENTIC NASA DATASET CHECKSUM
             </span>
             <div className="text-xs font-mono text-[var(--ink-2)] mt-0.5">
-              Hash: <span className="text-white font-semibold">#SEAP-2026-NASA-VALIDATED</span>
+              Hash: <span className="text-[var(--ink)] font-semibold">#SEAP-2026-NASA-VALIDATED</span>
             </div>
-            <p className="text-3xs text-[var(--ink-3)] mt-0.5">
+            <p className="text-2xs text-[var(--ink-3)] mt-0.5">
               Verified: FIRMS VIIRS 375m FRP · POWER Daily PRECTOTCORR · JPL MUR SST · GISS GISTEMP v4
             </p>
           </div>
         </div>
 
-        <span className="chip border-emerald-500/40 bg-emerald-950/40 text-emerald-300 text-3xs font-mono uppercase font-semibold">
+        <span className="chip border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)] text-2xs font-mono uppercase font-semibold">
           100% SCIENTIFIC INTEGRITY
         </span>
       </div>
 
       {/* Printable Certificate Modal */}
       {showCertificate && (
-        <Overlay><div className="fixed inset-0 z-[70] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fade-in" onClick={() => setShowCertificate(false)}>
-          <div ref={certRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="certificate-title" onClick={(e) => e.stopPropagation()} className="relative max-w-2xl w-full bg-[var(--panel)] border-4 border-[var(--signal)] rounded-3xl p-8 sm:p-10 shadow-2xl flex flex-col gap-6 text-center my-8">
+        <Overlay><div className="fixed inset-0 z-[70] bg-[var(--ground)]/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-fade-in" onClick={() => setShowCertificate(false)}>
+          <div ref={certRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="certificate-title" onClick={(e) => e.stopPropagation()} className="relative max-w-2xl w-full bg-[var(--panel)] border-4 border-[var(--signal)] rounded-lg p-8 sm:p-10 flex flex-col gap-6 text-center my-8">
             <button
               onClick={() => setShowCertificate(false)}
-              className="absolute top-4 right-4 p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
+              className="absolute top-4 right-4 p-2 rounded-lg bg-[var(--ground)]/40 border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
               aria-label="Close Certificate"
             >
               <X className="w-4 h-4" />
@@ -320,13 +319,11 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
 
             {/* Official Seal */}
             <div className="flex flex-col items-center gap-2">
-              <div className="w-16 h-16 rounded-full bg-[var(--signal)]/20 border-2 border-[var(--signal)] flex items-center justify-center">
-                <span className="text-3xl">🌍</span>
-              </div>
+              <div className="w-16 h-16 rounded-full border border-[var(--signal)] flex items-center justify-center"><Globe className="w-8 h-8 text-[var(--signal)]" aria-hidden="true" /></div>
               <span className="text-2xs font-mono uppercase tracking-widest text-[var(--signal)] font-semibold">
                 NASA SPACE APPS CHALLENGE 2026 · THE EARTH INFORMATION JUKEBOX
               </span>
-              <h2 id="certificate-title" className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+              <h2 id="certificate-title" className="text-2xl sm:text-3xl font-display font-bold text-[var(--ink)] tracking-tight">
                 CERTIFICATE OF COMPLETION
               </h2>
               <p className="text-xs text-[var(--ink-2)] max-w-md">
@@ -345,30 +342,30 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
             </div>
 
             {/* Achievement details */}
-            <div className="grid grid-cols-3 gap-2 text-3xs font-mono text-[var(--ink-2)]">
-              <div className="p-2 rounded-xl bg-black/40 border border-[var(--line)]">
+            <div className="grid grid-cols-3 gap-2 text-2xs font-mono text-[var(--ink-2)]">
+              <div className="p-2 rounded-lg bg-[var(--ground)]/40 border border-[var(--line)]">
                 <div>XP ACCUMULATED</div>
-                <div className="text-xs font-semibold text-white mt-0.5">{xpEarned} XP</div>
+                <div className="text-xs font-semibold text-[var(--ink)] mt-0.5">{xpEarned} XP</div>
               </div>
-              <div className="p-2 rounded-xl bg-black/40 border border-[var(--line)]">
+              <div className="p-2 rounded-lg bg-[var(--ground)]/40 border border-[var(--line)]">
                 <div>BADGES UNLOCKED</div>
-                <div className="text-xs font-semibold text-white mt-0.5">{unlockedCount} / {badges.length}</div>
+                <div className="text-xs font-semibold text-[var(--ink)] mt-0.5">{unlockedCount} / {badges.length}</div>
               </div>
-              <div className="p-2 rounded-xl bg-black/40 border border-[var(--line)]">
+              <div className="p-2 rounded-lg bg-[var(--ground)]/40 border border-[var(--line)]">
                 <div>CHECKSUM</div>
-                <div className="text-3xs font-semibold text-emerald-400 mt-0.5">#SEAP-2026</div>
+                <div className="text-2xs font-semibold text-[var(--signal)] mt-0.5">#SEAP-2026</div>
               </div>
             </div>
 
             {/* Footer Signatures */}
-            <div className="flex items-center justify-between border-t border-[var(--line)] pt-4 text-3xs font-mono text-[var(--ink-3)]">
+            <div className="flex items-center justify-between border-t border-[var(--line)] pt-4 text-2xs font-mono text-[var(--ink-3)]">
               <div className="flex flex-col items-start">
                 <span>VERIFIED BY:</span>
-                <span className="font-semibold text-white">Sonic Earth Atlas Research Council</span>
+                <span className="font-semibold text-[var(--ink)]">Sonic Earth Atlas Research Council</span>
               </div>
               <div className="flex flex-col items-end">
                 <span>DATE ISSUED:</span>
-                <span className="font-semibold text-white">{issueDate}</span>
+                <span className="font-semibold text-[var(--ink)]">{issueDate}</span>
               </div>
             </div>
 
@@ -376,7 +373,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, totalStars = 12 }) =>
             <div className="flex justify-center gap-3">
               <button
                 onClick={() => window.print()}
-                className="btn btn-brass text-xs font-semibold px-6 py-2.5 rounded-xl flex items-center gap-2 cursor-pointer shadow-lg hover:scale-105"
+                className="btn btn-brass text-xs font-semibold px-6 py-2.5 rounded-lg flex items-center gap-2 cursor-pointer hover:scale-105"
               >
                 <Printer className="w-4 h-4" />
                 <span>Print Certificate</span>
