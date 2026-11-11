@@ -1,3 +1,4 @@
+import { useElementWidth } from '../lib/useElementWidth';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Play, Square, Loader2, Upload } from 'lucide-react';
 import { AudioContextManager } from '../audio/audioContext';
@@ -24,7 +25,8 @@ const META: Record<Exclude<Tab, 'all'>, { en: string; bn: string; color: string;
 
 export const VitalSigns: React.FC = () => {
   const { t, lang, narration } = usePrefs();
-  const fs = lang === 'bn' ? 13 : 12; // SVG text stays on the 12px (EN) / 13px (বাংলা) floor
+  const fs = lang === 'bn' ? 13 : 12; // on-screen floor for SVG text: 12px EN / 13px বাংলা
+  const [svgRef, W] = useElementWidth<SVGSVGElement>(900); // viewBox as wide as the svg, so 1 unit = 1px and the text renders at fs
   const [data, setData] = useState<Record<string, Series> | null>(null);
   const [tab, setTab] = useState<Tab>('temp');
   const [own, setOwn] = useState<{ name: string; points: Pt[] } | null>(null);
@@ -122,7 +124,7 @@ export const VitalSigns: React.FC = () => {
   } : null);
   if (!data) return <div className="h-full grid place-items-center"><Loader2 className="w-5 h-5 animate-spin" /></div>;
 
-  const W = 900, H = 240, pad = 34;
+  const H = W < 600 ? 200 : 240, pad = 34;
   const tabs: { id: Tab; label: string }[] = [
     { id: 'temp', label: lang === 'bn' ? 'তাপমাত্রা' : 'Temperature' },
     { id: 'co2', label: 'CO₂' },
@@ -143,7 +145,7 @@ export const VitalSigns: React.FC = () => {
     rule = lang === 'bn' ? m.ruleBn : m.rule; source = s.source;
     const unit = s.unit;
     chart = (
-      <svg viewBox={`0 0 ${W} ${H + 22}`} className="w-full h-auto" role="img" aria-label={`${m.en}, ${first.year} to ${last.year}: from ${first.value} to ${last.value} ${unit}. Highest ${maxP.year}, lowest ${minP.year}.`}>
+      <svg ref={svgRef} viewBox={`0 0 ${W} ${H + 22}`} width="100%" height={H + 22} className="block" role="img" aria-label={`${m.en}, ${first.year} to ${last.year}: from ${first.value} to ${last.value} ${unit}. Highest ${maxP.year}, lowest ${minP.year}.`}>
         {tab === 'temp' && <><line x1={pad} x2={W} y1={y(0)} y2={y(0)} stroke="#7f96a3" strokeDasharray="4 4" /><text x={0} y={y(0) + 4} fontSize={fs} fill="var(--ink-3)">0°</text></>}
         {[min, max].map((v) => <text key={v} x={0} y={y(v) + 4} fontSize={fs} fill="var(--ink-3)">{v.toFixed(tab === 'co2' ? 0 : 1)}</text>)}
         {tab === 'temp'
@@ -171,7 +173,7 @@ export const VitalSigns: React.FC = () => {
     rule = lang === 'bn' ? 'প্রতি বছর তিনটি সুর একসাথে: তাপমাত্রা বাম কানে, CO₂ মাঝে, বরফ ডান কানে। প্রথম দুটি উপরে ওঠে, বরফ নিচে নামে।' : 'Each year plays three notes at once: temperature in your left ear, CO₂ in the centre, Arctic ice on the right. Two lines climb while the ice falls.';
     source = 'NASA GISS GISTEMP v4 · NOAA GML Mauna Loa · NSIDC Sea Ice Index';
     chart = (
-      <svg viewBox={`0 0 ${W} ${H + 22}`} className="w-full h-auto" role="img" aria-label={`Temperature, CO2 and Arctic sea ice, ${view.years[0]} to ${view.years.at(-1)}, each scaled from its own lowest to highest value.`}>
+      <svg ref={svgRef} viewBox={`0 0 ${W} ${H + 22}`} width="100%" height={H + 22} className="block" role="img" aria-label={`Temperature, CO2 and Arctic sea ice, ${view.years[0]} to ${view.years.at(-1)}, each scaled from its own lowest to highest value.`}>
         {view.ids.map((id) => {
           const pts = view.years.map((yv) => data[id].points.find((p) => p.year === yv)!.value);
           const mn = Math.min(...pts), mx = Math.max(...pts);

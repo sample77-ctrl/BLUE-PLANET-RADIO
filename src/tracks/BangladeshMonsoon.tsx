@@ -1,3 +1,4 @@
+import { useElementWidth } from '../lib/useElementWidth';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Play, Square, Loader2, Calendar, Droplets, Info, ChevronLeft, ChevronRight, Award, Compass } from 'lucide-react';
 import { AudioContextManager } from '../audio/audioContext';
@@ -35,7 +36,10 @@ const py = (lat: number) => H - ((lat - LAT0) / (LAT1 - LAT0)) * H;
 
 export const BangladeshMonsoon: React.FC = () => {
   const { t, lang, narration } = usePrefs();
-  const fs = lang === 'bn' ? 13 : 12; // SVG text stays on the 12px (EN) / 13px (বাংলা) floor
+  const fs = lang === 'bn' ? 13 : 12; // on-screen floor for SVG text: 12px EN / 13px বাংলা
+  const [mapRef, mapW] = useElementWidth<SVGSVGElement>(W); // map is drawn in a fixed 360x420 box and scaled to fit: divide by the live scale to keep labels at the floor
+  const mapFs = fs / (mapW > 0 ? mapW / W : 1);
+  const [chartRef, chartW] = useElementWidth<SVGSVGElement>(640); // bar chart: viewBox as wide as the svg, 1 unit = 1px
   const [data, setData] = useState<Monsoon | null>(null);
   const [err, setErr] = useState(false);
   const [year, setYear] = useState<2026 | 2025>(2026);
@@ -157,7 +161,7 @@ export const BangladeshMonsoon: React.FC = () => {
   const fc = data.cities.find((c) => c.name === focus) ?? data.cities[0];
   const fcS = stats.find((s) => s.c.name === focus) ?? stats[0];
   const rankIndex = stats.findIndex((s) => s.c.name === focus);
-  const chartW = 640, chartH = 150, bw = chartW / dates.length;
+  const chartH = 150, bw = chartW / dates.length;
   const yMax = 190;
 
   return (
@@ -342,6 +346,7 @@ export const BangladeshMonsoon: React.FC = () => {
               </div>
 
               <svg
+                ref={mapRef}
                 viewBox={`0 0 ${W} ${H}`}
                 className="w-full h-auto"
                 role="group"
@@ -397,7 +402,7 @@ export const BangladeshMonsoon: React.FC = () => {
                         x={c.lon > 91.3 && c.lat < 23.5 ? px(c.lon) - r - 4 : px(c.lon) + r + 4}
                         textAnchor={c.lon > 91.3 && c.lat < 23.5 ? 'end' : 'start'}
                         y={py(c.lat) + 4}
-                        fontSize={13}
+                        fontSize={mapFs}
                         fontWeight={sel ? 'bold' : 'normal'}
                         fill={sel ? 'var(--signal)' : 'var(--ink)'}
                         paintOrder="stroke"
@@ -443,8 +448,11 @@ export const BangladeshMonsoon: React.FC = () => {
 
               <div className="relative">
                 <svg
+                  ref={chartRef}
                   viewBox={`0 0 ${chartW} ${chartH + 20}`}
-                  className="w-full h-auto cursor-pointer"
+                  width="100%"
+                  height={chartH + 20}
+                  className="block cursor-pointer"
                   role="img"
                   aria-label={t('bdChartLabel', { city: cityName(fc), year: lang === 'bn' ? bnNum(year) : year, mm: num(Math.max(...series(fc)), 0) })}
                 >
@@ -474,7 +482,7 @@ export const BangladeshMonsoon: React.FC = () => {
                     strokeWidth={1.5}
                     points={dates.map((iso, i) => `${i * bw},${chartH - (fc.climP[+iso.slice(5, 7) - 1] / yMax) * chartH}`).join(' ')}
                   />
-                  {dates.map((iso, i) => (iso.endsWith('-01') ? <text key={iso} x={i * bw} y={chartH + 14} fontSize={fs} fill="var(--ink-3)">{fmtDate(iso)}</text> : null))}
+                  {dates.map((iso, i) => (iso.endsWith('-01') ? <text key={iso} x={i * bw} y={chartH + 16} fontSize={fs} fill="var(--ink-3)" textAnchor={i * bw > chartW - 70 ? 'end' : 'start'}>{fmtDate(iso)}</text> : null))}
                 </svg>
               </div>
               <figcaption className="text-xs text-[var(--ink-3)] flex justify-between items-center">
