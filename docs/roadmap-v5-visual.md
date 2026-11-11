@@ -283,3 +283,21 @@ Removed: Bricolage Grotesque, Cormorant Garamond, IBM Plex Sans (two files) and 
 **Not verified:** `navigator.share` in a real browser (tested with a stub; headless Chromium has none), card fonts on Safari/Firefox (the card uses the page's own font stack), listening (state and cursor only).
 **Not done / for later:** a share card for a series or for Side A/B pairs; the score for the Jukebox's own story view (it keeps its own chart); the card shows the link of the page it was made on (a localhost link in dev).
 **Next safe action:** V5 (Globe 2.0, light pillars that pulse with the voices) on `visual/v5-globe` cut from this branch, or V6 first if time is short (V5 can be cut).
+
+### V5 · Globe 2.0 linked to sound: core done (branch `visual/v5-globe`, cut from `visual/v4-score` at 60aaaf5)
+**Built**
+- **Light pillars** (`src/globe/pillars.ts` pure, `GlobeCanvas.tsx`): every visible data point stands on a thin additive beam pointing out of the surface, as tall as its value (0.10 to 0.65 globe units) and a little thicker when stronger. The marker shapes (sphere / drop / diamond) stay, so colour is still never the only cue, and the markers are still the only things you can click or hover (beams are not raycast). While a point's voice sounds (`getActiveVoiceDetails`) its beam lights up and is lifted by the beat (sharp attack, decays like a note) and the ripple ring on the surface expands in step; louder voices beat faster. At rest the beams are dim.
+- **One beam geometry and two shared materials per colour** (resting, lit): a lit beam swaps material and scales its length, so a few hundred beams stay a few hundred cheap draws. Geometry and materials are disposed when the points change and on unmount.
+- **Reduced motion or a calm background:** the ring and the beam hold still (steady ring, steady lit beam) while the voice sounds; this also fixes the old rings, which kept expanding under reduced motion.
+- **Atmosphere:** the horizon halo now leans toward `--signal` (the playing dataset's colour, or the default signal), not only the dataset name, and re-tints when the signal changes. Plain blue in high contrast.
+- `data-pillars` (count) and `data-pulsing` (sounding count) on the globe container, for tests.
+
+**Not built (cut list items 1 and optional bullets):** Black Marble night side with the terminator, and bloom. They need a texture we do not have bundled (a download of a large NASA image) and the bloom pass would cost frame time on the software GL we test with; the roadmap marks both cuttable and the pillars were the part that had to stay.
+
+**Tests**
+- New: `src/__tests__/pillars.test.ts` (8: length and width bounds, clamping, brightness order, beat shape and ranges, louder beats faster, stillness under reduced motion, negative time); `e2e/globe.pw.ts` (3: every visible point has a pillar and nothing pulses before sound; turning sound on makes 12 pillars pulse and turning it off settles them; reduced motion + high contrast build without errors).
+- Changed on purpose: nothing existing was changed or loosened.
+
+**Checks (real numbers)**: `npm run lint` clean; `npm test` 372 passed (39 files; 364 before); `npm run build` ok; `npm run check:size`: main JS **136.4 kB** gzip (175), CSS 29.7 kB (32), globe chunk **131.8 kB** (150, unchanged: the pillar code is small and sits in the lazy `GlobeCanvas` chunk). Playwright `globe` + `smoke` + `a11y` + `no-webgl` + `identity` = **43 passed, 0 failed**. The full suite is re-run in V6.
+**Seen** (`docs/v5-shots/v5/`, made by `scripts/v5-globe.mjs`): the Atlas at 375 and 1440 px at rest and with sound on (opened the 1440 px one: the sounding beams are bright and long over the Amazon and North America, the rest dim, the halo orange-tinted). Not seen: বাংলা, high contrast, the pillars on a real GPU, a very dense day (beams overlap near clusters, e.g. Brazil).
+**Next safe action:** V6 (polish and proof) on `visual/v6-polish`.
