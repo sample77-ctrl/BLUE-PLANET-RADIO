@@ -1,29 +1,39 @@
 @import "tailwindcss";
 
-/* ===================== Sonic Earth Atlas design tokens (the only set) ===================== */
+/* ===================== Sonic Earth Atlas design tokens: v5 "Instrument" (the only set) =====================
+   Near-black neutral ground, 1 px hairlines, ONE loud signal colour that comes from what is being heard (a dataset colour, or a colour sampled from the
+   frame under the needle). Neutrals and the data colours below are oklch values written as hex, so contrast.test.ts can read them:
+   neutrals L .145 / .19 / .23 / .32 and ink L .96 / .81 / .66 at chroma 0 to .008; every data colour is oklch L .77 (equal lightness), chroma .12 to .20 clamped to sRGB. */
 :root {
-  --abyss: #071019;
-  --panel: #0d1b27;
-  --panel-2: #12273a;
-  --line: #22384a;
-  --ink: #e8f0f2;
-  --ink-2: #a9bcc6;
-  --ink-3: #7f96a3;
-  --brass: #e9c46a;
-  --brass-ink: #1b1405;
-  --fire: #ff7a3d;
-  --rain: #4cc3ff;
-  --warm: #f25c8a;
-  --cold: #5b8cff;
-  --teal: #3fd1b5;
+  --ground: #0a0a0a;
+  --panel: #121212;
+  --panel-2: #1b1b1b;
+  --hair: #2e2e2e;
+  --ink: #f3f2ec;
+  --ink-2: #bfbeb8;
+  --ink-3: #93928d;
+  /* Legacy names stay as aliases of the new ones (hundreds of call sites) */
+  --abyss: var(--ground);
+  --line: var(--hair);
+  /* Data colours, equal lightness (oklch L .77) so none shouts louder than another */
+  --fire: #ff9555;
+  --rain: #2fc5fa;
+  --warm: #ff89b4;
+  --cold: #9faefe;
+  --teal: #0cd1af;
+  --brass: #d4b201; /* greenhouse gases; no longer the interface accent: that is --signal */
+  /* The signal colour: --signal-default until something plays, then the dataset colour (html[data-dataset]) or a colour sampled from the frame (--signal-live,
+     set by src/lib/signal.ts, lightness clamped so text stays 4.5:1 on the ground). --on-signal is the text colour on a signal-coloured field. */
+  --signal-default: #baed3f;
+  --accent: var(--signal-default);
+  --signal: var(--signal-live, var(--accent));
+  --on-signal-default: #0a0a0a;
+  --on-signal: var(--on-signal-live, var(--on-signal-default));
   /* Roles (aliases, so high contrast overrides flow through) */
   --surface: var(--panel);
-  --accent: var(--rain);
-  --accent-warm: var(--brass);
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
+  --accent-warm: var(--signal-default);
+  /* Squared, not pillowy: 0 to 4 px. (Tailwind's rounded-* read these too.) */
+  --radius-xs: 1px; --radius-sm: 2px; --radius-md: 3px; --radius-lg: 4px; --radius-xl: 4px; --radius-2xl: 4px; --radius-3xl: 4px;
   --space-1: .25rem;
   --space-2: .5rem;
   --space-3: .75rem;
@@ -38,29 +48,30 @@
   --dur-slow: 600ms;
   --header-row: 3.5rem; /* the top row of the header; --header-h (set from the real header height) adds the Jukebox collections row */
   --header-h: var(--header-row);
-  /* Glass surfaces (one recipe; .panel is an alias). Every panel and card is see-through and blurred, so the sky and the Earth show behind it.
-     48% is the lightest tint that keeps --ink-2 at 4.5:1 over a lit ocean pixel (see contrast.test.ts); the blur does the rest. */
-  --glass-bg: color-mix(in srgb, var(--panel) 50%, transparent);
-  --glass-bg-strong: color-mix(in srgb, var(--panel) 56%, transparent);
-  --glass-border: rgb(255 255 255 / .09);
-  --glass-hi: inset 0 1px 0 rgb(255 255 255 / .06);
-  --glass-shadow: 0 10px 30px -12px rgb(0 0 0 / .55);
+  /* Glass: ONLY the Now-Playing bar, controls floating over the frame or the globe, and pop-ups. Cards and pages are opaque (.panel).
+     The tint is dense enough that --ink stays at 4.5:1 even over a white pixel of an EIC frame (see contrast.test.ts). */
+  --glass-bg: color-mix(in srgb, var(--panel) 62%, transparent);
+  --glass-bg-strong: color-mix(in srgb, var(--panel) 74%, transparent);
+  --glass-border: rgb(255 255 255 / .1);
+  --glass-hi: inset 0 1px 0 rgb(255 255 255 / .05);
+  --glass-shadow: 0 10px 30px -12px rgb(0 0 0 / .6);
   --glass-blur: 16px;
-  --glass-blur-strong: 32px;
-  /* Pop-ups (dropdowns, menus, tooltips, dialogs, drawers) float over other text: a heavy blur and a dense tint so nothing underneath reads through.
-     The tint matters most when a pop-up sits inside another blurred panel: a nested backdrop-filter can only blur what is inside that parent. */
-  --glass-bg-pop: color-mix(in srgb, var(--panel) 86%, transparent);
-  --glass-blur-pop: 44px;
-  --font-display: 'Bricolage Grotesque', 'Bricolage Fallback', 'IBM Plex Sans', system-ui, sans-serif;
-  --font-serif: 'Cormorant Garamond', 'Serif Fallback', Georgia, 'Times New Roman', serif; /* landing carousel titles; বাংলা falls back to the display face below */
-  --font-body: 'IBM Plex Sans', 'Plex Fallback', 'Noto Sans Bengali', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --glass-blur-strong: 28px;
+  /* Pop-ups (dropdowns, menus, tooltips, dialogs, drawers) float over other text: a heavy blur and a dense tint so nothing underneath reads through. */
+  --glass-bg-pop: color-mix(in srgb, var(--panel) 90%, transparent);
+  --glass-blur-pop: 40px;
+  /* One variable family (Mona Sans: weight 200-900, width 75-125, optical size) replaces Bricolage, Cormorant and Plex Sans. Plex Mono stays for readouts. */
+  --font-display: 'Mona Sans', 'Mona Fallback', system-ui, sans-serif;
+  --font-serif: var(--font-display); /* the old serif role (landing titles) now uses the wide cut */
+  --font-body: 'Mona Sans', 'Mona Fallback', 'Noto Sans Bengali', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --wide: 125%; --wide-mid: 112%; /* font-stretch of the wide cut (wordmark, headlines, numerals) */
   /* Type scale (1.2-ish ratio). 12 px is the floor in English, 13 px in বাংলা (see html[lang='bn']). Display sizes are fluid. */
   --fs-2xs: .75rem; --fs-xs: .8125rem; --fs-sm: .875rem; --fs-base: 1rem; --fs-lg: 1.125rem; --fs-xl: 1.25rem; --fs-2xl: 1.5rem;
   --fs-3xl: clamp(1.75rem, 3.5vw, 2.25rem); --fs-4xl: clamp(2rem, 5vw, 3rem); --fs-hero: clamp(2.5rem, 7.5vw, 5.25rem);
-  --lh-ui: 1.35; --lh-body: 1.6; --lh-head: 1.15;
+  --lh-ui: 1.35; --lh-body: 1.6; --lh-head: 1.1;
 }
-/* বাংলা: Noto leads, the floor is 13 px, line heights grow by 0.1 and display tracking is 0 (negative tracking squeezes conjuncts) */
-html[lang='bn'] { --font-serif: 'Noto Sans Bengali', 'Cormorant Garamond', system-ui, sans-serif; --font-body: 'Noto Sans Bengali', 'IBM Plex Sans', 'Plex Fallback', system-ui, sans-serif; --font-display: 'Noto Sans Bengali', 'Bricolage Grotesque', system-ui, sans-serif; --fs-2xs: .8125rem; --lh-ui: 1.45; --lh-body: 1.7; --lh-head: 1.3;
+/* বাংলা: Noto leads (it has a width axis too, 62.5-100), the floor is 13 px, line heights grow by 0.1 and display tracking is 0 (negative tracking squeezes conjuncts) */
+html[lang='bn'] { --font-display: 'Noto Sans Bengali', 'Mona Sans', system-ui, sans-serif; --font-body: 'Noto Sans Bengali', 'Mona Sans', 'Mona Fallback', system-ui, sans-serif; --wide: 100%; --wide-mid: 100%; --fs-2xs: .8125rem; --lh-ui: 1.45; --lh-body: 1.7; --lh-head: 1.3;
   --text-xs--line-height: 1.5; --text-sm--line-height: 1.55; --text-base--line-height: 1.7; --text-lg--line-height: 1.6; --text-xl--line-height: 1.45; --text-2xl--line-height: 1.35; }
 
 @theme {
@@ -81,60 +92,71 @@ html.rm { --dur-fast: 0ms; --dur-med: 0ms; --dur-slow: 0ms; }
 @media (prefers-reduced-motion: reduce) { :root { --dur-fast: 0ms; --dur-med: 0ms; --dur-slow: 0ms; } }
 
 @layer base {
-  html { font-synthesis: none; line-height: var(--lh-body); }
-  h1, h2, h3, h4 { line-height: var(--lh-head); }
+  html { font-synthesis: none; line-height: var(--lh-body); font-optical-sizing: auto; }
+  h1, h2, h3, h4 { line-height: var(--lh-head); text-wrap: balance; }
+  p, li, figcaption { text-wrap: pretty; }
   button, input, select, label { line-height: var(--lh-ui); }
   html, body { margin: 0; padding: 0; width: 100%; max-width: 100vw; height: 100%; overflow-x: hidden !important; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; touch-action: manipulation; }
   *, *::before, *::after { box-sizing: border-box; }
 }
 html, body { font-family: var(--font-body); color: var(--ink); }
-.font-display { font-family: var(--font-display); letter-spacing: -0.02em; }
+/* The wide cut: display type is Mona Sans at 112-125% width. Headings and big numerals use it; the body stays at normal width. */
+.font-display { font-family: var(--font-display); font-stretch: var(--wide-mid); letter-spacing: -0.015em; }
 html[lang='bn'] .font-display { letter-spacing: 0; }
+h1.font-display, .font-wide { font-stretch: var(--wide); }
+@supports (text-box: trim-both cap alphabetic) { .hero-title, .vinyl-read dd.big { text-box: trim-both cap alphabetic; } html[lang='bn'] .hero-title, html[lang='bn'] .vinyl-read dd.big { text-box: normal; } } /* big display numerals and the hero headline sit on their cap line, so the gaps around them are the layout's, not the font's */
 html[lang='bn'] #hero-title { line-height: 1.1; }
 .font-mono, code, kbd, samp { font-variant-numeric: tabular-nums; } /* the family comes from --font-mono (theme) */
 .tnum { font-variant-numeric: tabular-nums; }
+/* Mono lab-readout label: small caps-ish mono over a value */
+.readout { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+html[lang='bn'] .readout { text-transform: none; letter-spacing: .02em; }
 .safe-pb { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
 .safe-pt { padding-top: max(0.75rem, env(safe-area-inset-top)); }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: var(--abyss); }
-::-webkit-scrollbar-thumb { background: var(--panel-2); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--line); }
+::-webkit-scrollbar-track { background: var(--ground); }
+::-webkit-scrollbar-thumb { background: var(--hair); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-3); }
 
 /* While the landing page is open, only the header, the landing layer and the globe show (dialogs live in #overlay-root, outside this tree) */
 .hero-open main > :not(:first-child) { visibility: hidden; }
 
 @layer components {
-.glass, .panel { background: var(--glass-bg); border: 1px solid var(--glass-border); box-shadow: var(--glass-hi), var(--glass-shadow); border-radius: var(--radius-lg); backdrop-filter: blur(var(--glass-blur)) saturate(140%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%); }
-.glass-flat { background: var(--glass-bg-strong); border: 1px solid var(--glass-border); box-shadow: var(--glass-hi), var(--glass-shadow); border-radius: var(--radius-lg); backdrop-filter: blur(var(--glass-blur)) saturate(140%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%); } /* cards: the strong tint with the normal blur */
-.glass-strong { background: var(--glass-bg-strong); border: 1px solid var(--glass-border); box-shadow: var(--glass-hi), var(--glass-shadow); border-radius: var(--radius-lg); backdrop-filter: blur(var(--glass-blur-strong)) saturate(140%); -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(140%); }
-/* .panel-solid keeps its name for the track pages, but it is glass too now */
-.panel-solid { background: var(--glass-bg-strong); border: 1px solid var(--glass-border); box-shadow: var(--glass-hi); border-radius: var(--radius-lg); backdrop-filter: blur(var(--glass-blur)) saturate(140%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%); }
+/* Opaque cards: the ground, a 1 px hairline, a 0 to 4 px radius. No blur, no shadow. (.panel-solid and .glass-flat are old names for the same card.) */
+.panel, .panel-solid, .glass-flat { background: var(--panel); border: 1px solid var(--hair); border-radius: var(--radius-lg); }
+/* Glass, on purpose and only for: the Now-Playing bar, controls floating over the frame or the globe, pop-ups (.glass-pop) */
+.glass, .glass-strong { background: var(--glass-bg); border: 1px solid var(--glass-border); box-shadow: var(--glass-hi), var(--glass-shadow); border-radius: var(--radius-lg); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%); backdrop-filter: blur(var(--glass-blur)) saturate(140%); }
+.glass-strong { background: var(--glass-bg-strong); -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(140%); backdrop-filter: blur(var(--glass-blur-strong)) saturate(140%); }
 /* Behind dialogs and sheets: a light dim, so the glass panel on top still shows the page through its blur */
-.scrim { background: rgb(2 6 14 / .38); }
-@supports not (backdrop-filter: blur(1px)) { .glass, .panel, .glass-strong, .glass-flat, .panel-solid, .glass-pop { background: var(--panel); } .scrim { background: rgb(0 0 0 / .6); } }
-.glass-pop { background: var(--glass-bg-pop); border: 1px solid var(--glass-border); box-shadow: var(--glass-hi), 0 18px 48px -12px rgb(0 0 0 / .7); border-radius: var(--radius-lg); backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); -webkit-backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); }
+.scrim { background: rgb(0 0 0 / .5); }
+@supports not (backdrop-filter: blur(1px)) { .glass, .glass-strong, .glass-pop { background: var(--panel); } .scrim { background: rgb(0 0 0 / .7); } }
+.glass-pop { background: var(--glass-bg-pop); border: 1px solid var(--glass-border); box-shadow: var(--glass-hi), 0 18px 48px -12px rgb(0 0 0 / .75); border-radius: var(--radius-lg); -webkit-backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); }
 @media (max-width: 640px) { :root { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28px; } }
 html.calm { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 40px; padding: 0 .9rem; border-radius: var(--radius-md); border: 1px solid var(--line); background: color-mix(in srgb, var(--panel-2) 62%, transparent); color: var(--ink); font-weight: 500; font-size: var(--fs-sm); line-height: var(--lh-ui); cursor: pointer; white-space: nowrap; transition: background var(--dur-fast), border-color var(--dur-fast); }
-.btn:hover { border-color: #3b5a72; background: color-mix(in srgb, #183248 78%, transparent); }
-.btn[aria-pressed='true'] { border-color: var(--brass); color: var(--brass); }
-.btn-brass { background: var(--brass); color: var(--brass-ink); border-color: var(--brass); font-weight: 600; }
-.btn-brass:hover { background: #f3d58a; border-color: #f3d58a; }
+/* Chrome-only progressive enhancement: squircle corners (the radius is doubled because the curve starts further in) */
+@supports (corner-shape: squircle) { .btn, .panel, .panel-solid, .glass-flat, .glass, .glass-strong, .glass-pop, .chip { corner-shape: squircle; border-radius: calc(var(--radius-lg) * 2); } .chip { border-radius: calc(var(--radius-sm) * 3); } }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 40px; padding: 0 .9rem; border-radius: var(--radius-md); border: 1px solid var(--hair); background: transparent; color: var(--ink); font-weight: 500; font-size: var(--fs-sm); line-height: var(--lh-ui); cursor: pointer; white-space: nowrap; transition: background var(--dur-fast), border-color var(--dur-fast), color var(--dur-fast); }
+.btn:hover { border-color: var(--ink-3); background: var(--panel-2); }
+.btn[aria-pressed='true'] { border-color: var(--signal); color: var(--signal); }
+/* .btn-brass is the primary button: a field of the signal colour (name kept for the many call sites) */
+.btn-brass { background: var(--signal); color: var(--on-signal); border-color: var(--signal); font-weight: 650; }
+.btn-brass:hover { background: color-mix(in oklch, var(--signal) 86%, white); border-color: color-mix(in oklch, var(--signal) 86%, white); }
 .btn-ghost { background: transparent; border-color: transparent; color: var(--ink-2); }
-.btn-ghost:hover { background: var(--panel-2); color: var(--ink); }
+.btn-ghost:hover { background: var(--panel-2); color: var(--ink); border-color: transparent; }
 .btn-icon { padding: 0; width: 40px; }
 @media (pointer: coarse) { .btn { min-height: 44px; } .btn-icon { width: 44px; } input[type='range'] { min-height: 32px; } }
-.chip { display: inline-flex; align-items: center; gap: .35rem; padding: .15rem .55rem; border-radius: 999px; font-size: var(--fs-2xs); line-height: var(--lh-ui); border: 1px solid var(--line); color: var(--ink-2); }
+.chip { display: inline-flex; align-items: center; gap: .35rem; padding: .15rem .5rem; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--fs-2xs); line-height: var(--lh-ui); border: 1px solid var(--hair); color: var(--ink-2); }
 .label { font-size: var(--fs-xs); color: var(--ink-3); }
 .dot { width: .6rem; height: .6rem; border-radius: 999px; display: inline-block; flex: none; }
-.nav-link { height: 2.25rem; padding: 0 .75rem; border-radius: var(--radius-md); font-size: var(--fs-sm); display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; white-space: nowrap; color: var(--ink-2); border: 1px solid transparent; transition: color var(--dur-fast), background var(--dur-fast); }
-.nav-link:hover { color: var(--ink); }
-.nav-link[aria-current='page'] { color: var(--ink); background: rgb(255 255 255 / .07); border-color: rgb(255 255 255 / .08); box-shadow: inset 0 -2px 0 var(--brass), 0 0 18px -8px rgb(233 196 106 / .6); }
+/* Header text nav: no pills; the current item has a signal underline */
+.nav-link { height: 2.25rem; padding: 0 .75rem; border-radius: 0; font-size: var(--fs-sm); font-weight: 500; display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; white-space: nowrap; color: var(--ink-2); border: 0; background: none; transition: color var(--dur-fast), box-shadow var(--dur-fast); }
+.nav-link:hover { color: var(--ink); box-shadow: inset 0 -1px 0 var(--ink-3); }
+.nav-link[aria-current='page'] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--signal); }
 .prose-sea p { line-height: 1.65; color: var(--ink-2); max-width: 72ch; }
 .prose-sea a, a.link { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 }
-:focus-visible { outline: 2px solid var(--focus-ring, var(--brass)) !important; outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 2px solid var(--focus-ring, var(--signal)) !important; outline-offset: 2px; border-radius: 2px; }
 
 /* Wide tables become one card per row on phones; each cell shows its column name from data-label */
 @media (max-width: 639px) {
@@ -150,15 +172,16 @@ html.calm { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28p
 .fade-x { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); }
 [dir=rtl] .fade-x { -webkit-mask-image: none; mask-image: none; }
 
-/* Glass header: fixed, content scrolls under it; denser once the page has scrolled */
-.site-header { position: fixed; inset-inline: .75rem; top: 10px; background: color-mix(in srgb, var(--panel) 62%, transparent); border: 1px solid var(--glass-border); border-radius: 18px; box-shadow: var(--glass-hi), 0 18px 40px -22px rgb(0 0 0 / .8); backdrop-filter: blur(28px) saturate(150%); -webkit-backdrop-filter: blur(28px) saturate(150%); transition: background var(--dur-med), box-shadow var(--dur-med); }
-.site-header[data-scrolled='true'] { background: color-mix(in srgb, var(--panel) 82%, transparent); box-shadow: 0 8px 24px -14px rgb(0 0 0 / .7); }
-@supports not (backdrop-filter: blur(1px)) { .site-header { background: color-mix(in srgb, var(--panel) 92%, transparent); } }
-html.hc .site-header { background: #000; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--line); border-radius: 0; inset-inline: 0; top: 0; }
+/* Ruled header: full width, opaque ground, one hairline under it (the page scrolls beneath it) */
+.site-header { position: fixed; inset-inline: 0; top: 0; background: var(--ground); border-bottom: 1px solid var(--hair); }
+.site-header[data-scrolled='true'] { border-bottom-color: var(--ink-3); }
+/* The wordmark: the wide cut, tracked, upper case (বাংলা keeps its own script) */
+.wordmark { font-family: var(--font-display); font-stretch: var(--wide); font-weight: 760; font-size: .95rem; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+html[lang='bn'] .wordmark { text-transform: none; letter-spacing: 0; font-size: 1rem; }
 
 /* ===== Landing world carousel (Phase 9): three levels; only transform and opacity move ===== */
-.font-serif { font-family: var(--font-serif); font-weight: 500; letter-spacing: .02em; }
-html[lang='bn'] .font-serif { letter-spacing: 0; font-weight: 600; }
+.font-serif { font-family: var(--font-display); font-stretch: var(--wide); font-weight: 720; letter-spacing: -.01em; }
+html[lang='bn'] .font-serif { letter-spacing: 0; font-weight: 700; }
 /* The stage stays stuck for the whole landing page. The spacer after it is the scroll room for the three levels (`--span` screens);
    the sections below come after it and scroll in over the stage, so the Earth is their backdrop. */
 .world-track { position: relative; }
@@ -235,7 +258,7 @@ html[lang='bn'] .world-pill { letter-spacing: 0; text-transform: none; }
 @media (min-width: 768px) { .world-stage[data-level='2'] .world-nav { top: auto; bottom: 1.25rem; } .world-stage[data-level='2'] .world-nav-prev { left: calc(75vw - 12rem); } .world-stage[data-level='2'] .world-nav-next { right: auto; left: calc(75vw + 1rem); } }
 .lv3 { right: clamp(.75rem, 4vw, 4rem); bottom: clamp(.75rem, 4vw, 3rem); width: min(calc(100% - 1.5rem), 34rem); padding: 1.5rem; }
 @media (max-width: 767px) { .lv2 { top: 46dvh; bottom: 0; padding: .5rem 1.25rem 1rem; justify-content: flex-start; } .world-stage[data-level='2'] .world-nav { top: 22dvh; } .lv1 { top: calc(var(--header-h) + 6.5rem); } .world-id p { font-size: var(--fs-2xs); } .world-id img { height: 2rem; } }
-.world-back { z-index: 3; background: color-mix(in srgb, var(--abyss) 60%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); left: clamp(.5rem, 3vw, 3rem); top: calc(var(--header-h) + .75rem); }
+.world-back { z-index: 3; background: color-mix(in srgb, var(--abyss) 60%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); left: clamp(.5rem, 3vw, 3rem); top: calc(var(--header-h) + .75rem); }
 .world-nav { z-index: 3; top: 52%; display: inline-flex; align-items: center; gap: .25rem; min-height: 44px; padding: .25rem .5rem; color: var(--ink-2); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .2em; cursor: pointer; border-radius: var(--radius-md); background: none; border: 0; }
 .world-nav:hover { color: var(--ink); }
 .world-nav-prev { left: .25rem; } .world-nav-next { right: .25rem; }
@@ -244,7 +267,7 @@ html[lang='bn'] .world-nav { letter-spacing: 0; text-transform: none; }
 .world-foot { z-index: 3; left: 0; right: 0; bottom: .75rem; display: flex; flex-direction: column; align-items: center; gap: .25rem; }
 .world-dot { width: 12px; height: 12px; padding: 0; border-radius: 50%; border: 1px solid var(--ink-2); background: transparent; cursor: pointer; position: relative; }
 .world-dot::after { content: ''; position: absolute; inset: -16px -4px; } /* a bigger hit area than the dot */
-.world-dot[aria-current='true'] { background: var(--brass); border-color: var(--brass); }
+.world-dot[aria-current='true'] { background: var(--signal); border-color: var(--signal); }
 html.hc .lv1, html.hc .lv2 { background: #000; }
 /* Scroll-scrubbed copy: the text follows the planet. Level 1 lifts away as the Earth starts to move, level 2 slides in from the left as the Earth glides right
    (and fades before the zoom), the level 3 card rises once the Earth fills the screen. `visibility` still flips with data-on, so hidden text stays out of the tab order. */
@@ -260,12 +283,12 @@ html.rm .world-stage .lv[data-on='true'] { translate: none; }
 
 /* Landing, below the carousel: no solid layer, the starfield shows through; the cards are glass. Titles share the carousel's serif voice. */
 .landing-more { position: relative; z-index: 1; } /* above the pinned stage */
-.land-title { font-family: var(--font-serif); font-weight: 500; font-size: clamp(2rem, 4.4vw, 3.25rem); line-height: 1.05; letter-spacing: .02em; text-transform: uppercase; }
-html[lang='bn'] .land-title { text-transform: none; line-height: 1.25; letter-spacing: 0; font-weight: 600; }
+.land-title { font-family: var(--font-display); font-stretch: var(--wide); font-weight: 760; font-size: clamp(2rem, 4.4vw, 3.25rem); line-height: 1; letter-spacing: -.01em; text-transform: uppercase; }
+html[lang='bn'] .land-title { text-transform: none; line-height: 1.25; letter-spacing: 0; font-weight: 700; }
 .world-rule.land-rule { margin: 1.1rem 0 1.25rem; }
 .land-lead { color: var(--ink-2); max-width: 60ch; }
 .how-step { padding: 1.25rem; display: grid; gap: .4rem; align-content: start; }
-.how-num { font-family: var(--font-serif); font-size: 2.5rem; line-height: 1; color: var(--brass); }
+.how-num { font-family: var(--font-display); font-stretch: var(--wide); font-weight: 760; font-size: 2.5rem; line-height: 1; color: var(--signal); }
 
 /* Landing: the sections below the carousel reveal as they scroll in (scroll-driven animation where supported) */
 @keyframes reveal { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
@@ -285,7 +308,7 @@ html.rm .reveal { animation: none !important; }
   .jb-grid { grid-template-columns: minmax(0, 1.6fr) minmax(200px, .8fr); grid-template-areas: 'story timeline'; }
   .jb-grid > [data-col='story'] { grid-area: story; } .jb-grid > [data-col='timeline'] { grid-area: timeline; }
   .jb-grid > [data-col='filters'] { display: none; }
-  .jb-grid[data-drawer='true'] > [data-col='filters'] { display: block; position: fixed; z-index: 60; top: var(--header-h); bottom: 0; left: 0; width: min(360px, 90vw); overflow-y: auto; padding: var(--space-3); background: var(--glass-bg-pop); border-right: 1px solid var(--glass-border); backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); -webkit-backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); }
+  .jb-grid[data-drawer='true'] > [data-col='filters'] { display: block; position: fixed; z-index: 60; top: var(--header-h); bottom: 0; left: 0; width: min(360px, 90vw); overflow-y: auto; padding: var(--space-3); background: var(--glass-bg-pop); border-right: 1px solid var(--glass-border); -webkit-backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); backdrop-filter: blur(var(--glass-blur-pop)) saturate(150%); }
   .jb-backdrop { position: fixed; inset: var(--header-h) 0 0 0; z-index: 55; background: rgb(0 0 0 / .55); border: 0; }
 }
 @media (min-width: 1024px) { .jb-grid { grid-template-columns: minmax(0, 2.4fr) minmax(240px, 1fr); } }
@@ -295,7 +318,7 @@ html.rm .lift:hover { transform: none; }
 @media (prefers-reduced-motion: reduce) { .lift:hover { transform: none; } }
 .tl-marker { transition: transform var(--dur-med) var(--ease-out), background-color var(--dur-fast); }
 [aria-current='true'] > .tl-marker { transform: scale(1.2); }
-.jb-range { accent-color: var(--brass); min-height: 40px; }
+.jb-range { accent-color: var(--signal); min-height: 40px; }
 .story-row { scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scroll-padding-inline: var(--space-2); }
 .story-card { scroll-snap-align: center; width: min(78vw, 240px); }
 @media (min-width: 1024px) { .story-card { width: 260px; } }
@@ -309,9 +332,12 @@ html.rm .topic-stage { animation-name: topic-fade; }
 @media (prefers-reduced-motion: reduce) { .topic-stage { animation-name: topic-fade; } }
 
 /* High contrast mode */
-html.hc { --panel: #000; --panel-2: #0b0b0b; --line: #f5f5f5; --ink: #fff; --ink-2: #fff; --ink-3: #e5e5e5; --brass: #ffd60a; }
+html.hc { --ground: #000; --hair: #f5f5f5; --panel: #000; --panel-2: #0b0b0b; --line: #f5f5f5; --ink: #fff; --ink-2: #fff; --ink-3: #e5e5e5; --brass: #ffd60a; --signal-default: #ffd60a; }
+/* High contrast: a black ground, and the signal colour is used as text and lines only, never as a filled field */
+html.hc .btn-brass { background: #000; color: var(--signal); border: 2px solid var(--signal); }
+html.hc .btn-brass:hover { background: #000; border-color: #fff; color: #fff; }
 /* Dataset theme: the accent follows what is playing (set on <html data-dataset>). Colours come from the data tokens above, so high contrast still overrides them. */
-@property --accent { syntax: '<color>'; inherits: true; initial-value: #4cc3ff; }
+@property --accent { syntax: '<color>'; inherits: true; initial-value: #baed3f; }
 :root { transition: --accent var(--dur-med) var(--ease-out); --accent-soft: color-mix(in oklch, var(--accent) 22%, transparent); --accent-surface: color-mix(in oklch, var(--accent) 12%, var(--panel)); }
 html[data-dataset='fire'] { --accent: var(--fire); }
 html[data-dataset='rain'] { --accent: var(--rain); }
@@ -321,15 +347,15 @@ html[data-dataset='teal'] { --accent: var(--teal); }
 html[data-dataset='brass'] { --accent: var(--brass); }
 /* The focus ring follows the dataset too, except in high contrast (which keeps its yellow). Every theme is >= 4.5:1 on the dark surfaces (datasetTheme.test.ts), above the 3:1 a focus ring needs. */
 html[data-dataset]:not(.hc) { --focus-ring: var(--accent); }
-/* Glass is the default. These people asked for less see-through (or the browser forces colours): solid surfaces, no blur. Safari and Firefox do not report
-   prefers-reduced-transparency, so the in-app high contrast switch below is the fallback for them. */
+/* Glass is for the Now-Playing bar, floating controls and pop-ups only. These people asked for less see-through (or the browser forces colours): solid surfaces, no blur.
+   Safari and Firefox do not report prefers-reduced-transparency, so the in-app high contrast switch below is the fallback for them. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
-  .glass-flat, .glass, .glass-strong, .panel, .panel-solid, .glass-pop, .site-header, .np-bar, .np-full { background: var(--panel); backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--line); box-shadow: none; }
+  .glass, .glass-strong, .glass-pop, .np-bar, .np-full, .world-back { background: var(--panel); -webkit-backdrop-filter: none; backdrop-filter: none; border-color: var(--line); box-shadow: none; }
 }
-@media (forced-colors: active) { .glass-flat, .glass, .glass-strong, .panel, .panel-solid, .glass-pop, .site-header, .np-bar, .np-full { background: Canvas; border: 1px solid CanvasText; } }
+@media (forced-colors: active) { .panel, .panel-solid, .glass-flat, .glass, .glass-strong, .glass-pop, .site-header, .np-bar, .np-full { background: Canvas; border: 1px solid CanvasText; } .btn-brass { forced-color-adjust: none; background: ButtonFace; color: ButtonText; border-color: ButtonText; } }
 html.hc .np-full { background: #000; backdrop-filter: none; }
-html.hc .glass-flat, html.hc .glass, html.hc .glass-strong, html.hc .panel, html.hc .panel-solid, html.hc .glass-pop { background: #000; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: var(--line); box-shadow: none; }
-html.hc .scrim { background: rgb(0 0 0 / .8); }
+html.hc .glass, html.hc .glass-strong, html.hc .glass-pop, html.hc .world-back { background: #000; -webkit-backdrop-filter: none; backdrop-filter: none; border-color: var(--line); box-shadow: none; }
+html.hc .scrim { background: rgb(0 0 0 / .85); }
 
 /* Reduced motion (user setting or OS) */
 html.rm *, html.rm *::before, html.rm *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }

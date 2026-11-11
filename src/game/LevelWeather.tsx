@@ -127,7 +127,7 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-2">
-          <span className="chip border-[var(--brass)] text-[var(--brass)] font-semibold">
+          <span className="chip border-[var(--signal)] text-[var(--signal)] font-semibold">
             {isBn ? 'লেভেল ৩' : 'Level 3'}
           </span>
           <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--ink)]">
@@ -140,7 +140,7 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
               key={i}
               className={`w-3 h-3 rounded-full transition-colors ${
                 i < currentIdx || (i === currentIdx && isAnswered && isCurrentCorrect)
-                  ? 'bg-[var(--brass)]'
+                  ? 'bg-[var(--signal)]'
                   : i === currentIdx
                   ? 'bg-[var(--rain)] ring-2 ring-[var(--rain)] ring-offset-2 ring-offset-[var(--abyss)]'
                   : 'bg-[var(--line)]'
@@ -175,7 +175,7 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
             <button
               onClick={() => handlePlay('A')}
               className={`btn btn-ghost border border-[var(--line)] px-6 py-4 rounded-xl flex items-center gap-2.5 w-full justify-center transition-all ${
-                playingWhich === 'A' ? 'border-[var(--brass)] bg-[var(--panel-2)] text-[var(--brass)]' : 'hover:border-[var(--brass)]'
+                playingWhich === 'A' ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)]' : 'hover:border-[var(--signal)]'
               }`}
             >
               <Volume2 className={`w-5 h-5 ${playingWhich === 'A' ? 'animate-bounce' : ''}`} />
@@ -191,7 +191,7 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
                   ? cur.soundA.isExtreme
                     ? 'bg-emerald-600 text-white border-emerald-500'
                     : 'bg-rose-600 text-white border-rose-500'
-                  : 'bg-[var(--panel-2)] text-[var(--ink)] border-[var(--line)] hover:border-[var(--brass)]'
+                  : 'bg-[var(--panel-2)] text-[var(--ink)] border-[var(--line)] hover:border-[var(--signal)]'
               }`}
             >
               {isBn ? 'এটিই চরম দুর্যোগ!' : 'Select as Extreme Event'}
@@ -206,7 +206,7 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
             <button
               onClick={() => handlePlay('B')}
               className={`btn btn-ghost border border-[var(--line)] px-6 py-4 rounded-xl flex items-center gap-2.5 w-full justify-center transition-all ${
-                playingWhich === 'B' ? 'border-[var(--brass)] bg-[var(--panel-2)] text-[var(--brass)]' : 'hover:border-[var(--brass)]'
+                playingWhich === 'B' ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)]' : 'hover:border-[var(--signal)]'
               }`}
             >
               <Volume2 className={`w-5 h-5 ${playingWhich === 'B' ? 'animate-bounce' : ''}`} />
@@ -222,7 +222,7 @@ export const LevelWeather: React.FC<Props> = ({ onComplete }) => {
                   ? cur.soundB.isExtreme
                     ? 'bg-emerald-600 text-white border-emerald-500'
                     : 'bg-rose-600 text-white border-rose-500'
-                  : 'bg-[var(--panel-2)] text-[var(--ink)] border-[var(--line)] hover:border-[var(--brass)]'
+                  : 'bg-[var(--panel-2)] text-[var(--ink)] border-[var(--line)] hover:border-[var(--signal)]'
               }`}
             >
               {isBn ? 'এটিই চরম দুর্যোগ!' : 'Select as Extreme Event'}

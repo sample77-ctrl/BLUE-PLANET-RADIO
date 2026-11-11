@@ -47,7 +47,7 @@ export function MappingLegend({ spec, unit, points, mapped, cursor, caption, pla
         : <>
           <p className="text-sm font-semibold tnum" data-legend-now>{t('lgNote', { v: v(p.v), note: m.note, hz: digits(Math.round(m.freq), lang) })}
             <span className="sr-only">, </span><span className="ml-2 inline-flex gap-0.5 align-middle" aria-hidden="true">
-              {Array.from({ length: MAX_PULSES }, (_, k) => <span key={k} className={`inline-block w-1.5 h-1.5 rounded-full ${k < m.pulses ? 'bg-[var(--brass)]' : 'border border-[var(--line)]'}`} />)}</span></p>
+              {Array.from({ length: MAX_PULSES }, (_, k) => <span key={k} className={`inline-block w-1.5 h-1.5 rounded-full ${k < m.pulses ? 'bg-[var(--signal)]' : 'border border-[var(--line)]'}`} />)}</span></p>
           <ul className="text-xs text-[var(--ink-2)] space-y-0.5 list-disc pl-4">{why.map((w) => <li key={w}>{w}</li>)}</ul>
         </>}
       <p role="status" aria-live="polite" className="sr-only">{live}</p>

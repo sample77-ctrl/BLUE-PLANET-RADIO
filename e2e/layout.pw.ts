@@ -52,6 +52,6 @@ test('the fixed header keeps a sane height on every view (the Jukebox adds one r
     const { h, v } = await page.evaluate(() => ({ h: document.querySelector('header.site-header')!.getBoundingClientRect().height, v: parseFloat(document.documentElement.style.getPropertyValue('--header-h')) }));
     expect(h, hash).toBeGreaterThan(40);
     expect(h, hash).toBeLessThan(120);
-    expect(Math.abs(h + 10 - v), hash).toBeLessThan(2); // --header-h = the floating header's height + its 10 px gap from the top
+    expect(Math.abs(h - v), hash).toBeLessThan(2); // --header-h = the header's height (v5: the ruled header is flush with the top, so there is no 10 px gap any more)
   }
 });

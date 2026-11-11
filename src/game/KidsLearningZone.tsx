@@ -217,7 +217,7 @@ export const KidsLearningZone: React.FC<Props> = ({
       <div className="glass panel p-6 sm:p-8 rounded-3xl border border-[var(--line)] flex flex-col gap-6 shadow-2xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-lg bg-[var(--abyss)] text-[var(--brass)] border border-[var(--line)]">
+            <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-lg bg-[var(--abyss)] text-[var(--signal)] border border-[var(--line)]">
               {isBn ? `চ্যালেঞ্জ #${(currentIdx % currentQuestions.length) + 1}` : `Challenge #${(currentIdx % currentQuestions.length) + 1}`}
             </span>
             <span className="text-xs text-[var(--ink-3)] font-mono">
@@ -281,8 +281,8 @@ export const KidsLearningZone: React.FC<Props> = ({
                     : showFeedback && isSelected && !opt.isCorrect
                     ? 'bg-red-950/40 border-red-400 text-red-200'
                     : isSelected
-                    ? 'bg-[var(--brass)] text-black font-semibold border-[var(--brass)]'
-                    : 'bg-[var(--abyss)]/60 border-[var(--line)] hover:border-[var(--brass)] text-[var(--ink)]'
+                    ? 'bg-[var(--signal)] text-black font-semibold border-[var(--signal)]'
+                    : 'bg-[var(--abyss)]/60 border-[var(--line)] hover:border-[var(--signal)] text-[var(--ink)]'
                 }`}
               >
                 <div className="p-2 rounded-xl bg-black/40 shrink-0">

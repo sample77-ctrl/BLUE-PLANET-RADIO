@@ -54,9 +54,9 @@ export function SeriesChart({ points, cursor, unit, label, onCursor }: { points:
         {points.length <= 60 && points.map((p, i) => p.v !== null && <circle key={p.t} cx={g.x(i)} cy={g.y(p.v)} r={2.2} fill={`url(#lg${uid})`} />)}
         {cp && (
           <g data-cursor={cp.t}>
-            <line x1={g.x(ci)} x2={g.x(ci)} y1={T} y2={H - B} stroke="var(--brass)" strokeWidth={1.5} />
-            {cp.v !== null ? <circle cx={g.x(ci)} cy={g.y(cp.v)} r={6} fill="var(--brass)" stroke="var(--abyss)" strokeWidth={2} filter={`url(#gl${uid})`} />
-              : <text x={g.x(ci) + 4} y={T + 12} fontSize="11" fill="var(--brass)">{t('jbGap')}</text>}
+            <line x1={g.x(ci)} x2={g.x(ci)} y1={T} y2={H - B} stroke="var(--signal)" strokeWidth={1.5} />
+            {cp.v !== null ? <circle cx={g.x(ci)} cy={g.y(cp.v)} r={6} fill="var(--signal)" stroke="var(--abyss)" strokeWidth={2} filter={`url(#gl${uid})`} />
+              : <text x={g.x(ci) + 4} y={T + 12} fontSize="11" fill="var(--signal)">{t('jbGap')}</text>}
           </g>
         )}
       </svg>

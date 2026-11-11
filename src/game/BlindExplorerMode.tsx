@@ -296,7 +296,7 @@ export const BlindExplorerMode: React.FC<Props> = ({ onBack, onComplete }) => {
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--brass)] cursor-pointer"
+            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
             aria-label="Back to Game Home"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -325,7 +325,7 @@ export const BlindExplorerMode: React.FC<Props> = ({ onBack, onComplete }) => {
             className="btn btn-ghost border border-[var(--line)] text-xs font-semibold py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer"
             aria-label="Speak Compass Heading"
           >
-            <Compass className="w-4 h-4 text-[var(--brass)]" />
+            <Compass className="w-4 h-4 text-[var(--signal)]" />
             <span>{isBn ? 'কম্পাস দিক শুনুন (M)' : 'Compass Status (M)'}</span>
           </button>
         </div>
@@ -357,7 +357,7 @@ export const BlindExplorerMode: React.FC<Props> = ({ onBack, onComplete }) => {
 
         {/* Live Feedback Spoken Banner */}
         <div className="z-10 bg-[var(--abyss)]/80 border border-[var(--line)] rounded-2xl px-5 py-3 max-w-md w-full shadow-lg">
-          <p className="text-xs font-mono text-[var(--brass)]">
+          <p className="text-xs font-mono text-[var(--signal)]">
             {screenReaderAnnouncement || (isBn ? 'স্পেস চেপে সোনার পিং করুন...' : 'Press Space to send sonar ping...')}
           </p>
         </div>
@@ -420,33 +420,33 @@ export const BlindExplorerMode: React.FC<Props> = ({ onBack, onComplete }) => {
       {/* Keyboard Quick Navigation Controls Card */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 rounded-2xl bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-2">
-          <span className="text-2xs font-mono uppercase tracking-wider text-[var(--brass)] font-semibold">
+          <span className="text-2xs font-mono uppercase tracking-wider text-[var(--signal)] font-semibold">
             {isBn ? 'কীবোর্ড নেভিগেশন' : 'KEYBOARD NAVIGATION'}
           </span>
           <div className="grid grid-cols-3 gap-1.5 text-center text-xs font-mono mt-1">
             <span />
             <button
               onClick={() => handleMove(0, 1)}
-              className="p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--brass)]"
+              className="p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--signal)]"
             >
               W (↑)
             </button>
             <span />
             <button
               onClick={() => handleTurn(-45)}
-              className="p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--brass)]"
+              className="p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--signal)]"
             >
               A (←)
             </button>
             <button
               onClick={() => handleMove(0, -1)}
-              className="p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--brass)]"
+              className="p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--signal)]"
             >
               S (↓)
             </button>
             <button
               onClick={() => handleTurn(45)}
-              className="p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--brass)]"
+              className="p-2 rounded-xl bg-black/40 border border-[var(--line)] hover:border-[var(--signal)]"
             >
               D (→)
             </button>
@@ -454,7 +454,7 @@ export const BlindExplorerMode: React.FC<Props> = ({ onBack, onComplete }) => {
         </div>
 
         <div className="p-4 rounded-2xl bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-2">
-          <span className="text-2xs font-mono uppercase tracking-wider text-[var(--brass)] font-semibold">
+          <span className="text-2xs font-mono uppercase tracking-wider text-[var(--signal)] font-semibold">
             {isBn ? 'অ্যাকশন শর্টকাট' : 'ACTION SHORTCUTS'}
           </span>
           <div className="flex flex-col gap-1.5 text-xs text-[var(--ink-2)]">

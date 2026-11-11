@@ -44,7 +44,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
       {/* Top Profile & Rank Bar */}
       <div className="glass panel p-5 rounded-3xl border border-[var(--line)] flex flex-wrap items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-3.5">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--brass)] flex items-center justify-center overflow-hidden shrink-0">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--signal)] flex items-center justify-center overflow-hidden shrink-0">
             <img src="/images/ninja_cadet_avatar_sm.jpg" decoding="async" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
           </div>
           <div>
@@ -52,7 +52,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
               <h2 className="text-lg sm:text-xl font-display font-bold text-[var(--ink)]">
                 {isBn ? 'ইকো-নিনজা ক্যাডেট পাইপ' : 'Eco-Ninja Cadet Pip'}
               </h2>
-              <span className="chip border-[var(--brass)] text-[var(--brass)] text-2xs font-semibold">
+              <span className="chip border-[var(--signal)] text-[var(--signal)] text-2xs font-semibold">
                 {cadetRank}
               </span>
             </div>
@@ -66,10 +66,10 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 p-2.5 px-4 rounded-2xl bg-[var(--abyss)] border border-[var(--line)]">
-            <Sparkles className="w-5 h-5 text-[var(--brass)] animate-spin" />
+            <Sparkles className="w-5 h-5 text-[var(--signal)] animate-spin" />
             <div className="flex flex-col">
               <span className="text-2xs font-mono text-[var(--ink-3)] uppercase">{isBn ? 'মোট স্টার' : 'Total Stars'}</span>
-              <span className="text-base font-semibold font-mono text-[var(--brass)]">{totalStars} / 12 ⭐</span>
+              <span className="text-base font-semibold font-mono text-[var(--signal)]">{totalStars} / 12 ⭐</span>
             </div>
           </div>
 
@@ -87,7 +87,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
       <div className="relative rounded-3xl overflow-hidden border-2 border-[var(--line)] bg-[var(--panel)] p-6 sm:p-8 flex flex-col gap-6 shadow-2xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-[var(--line)] pb-4">
           <div>
-            <span className="text-2xs font-mono uppercase tracking-widest text-[var(--brass)] font-semibold">
+            <span className="text-2xs font-mono uppercase tracking-widest text-[var(--signal)] font-semibold">
               NASA SOUND MISSIONS
             </span>
             <h3 className="text-2xl sm:text-3xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -107,7 +107,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
                 key={m.id}
                 className={`relative rounded-3xl p-6 border-2 transition-all flex flex-col justify-between gap-5 overflow-hidden ${
                   m.unlocked
-                    ? `${m.borderColor} ${m.bgGradient} shadow-xl hover:scale-[1.01] hover:border-[var(--brass)]`
+                    ? `${m.borderColor} ${m.bgGradient} shadow-xl hover:scale-[1.01] hover:border-[var(--signal)]`
                     : 'border-[var(--line)] bg-[var(--abyss)] opacity-60'
                 }`}
               >
@@ -123,7 +123,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-2xs font-mono font-semibold uppercase tracking-wider text-[var(--brass)]">
+                        <span className="text-2xs font-mono font-semibold uppercase tracking-wider text-[var(--signal)]">
                           {isBn ? `মিশন ${idx + 1}` : `Mission ${idx + 1}`}
                         </span>
                         {m.stars === 3 && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
@@ -144,7 +144,7 @@ export const WorldMapHub: React.FC<Props> = ({ missions, onSelectMission, onOpen
                     <span className="text-2xs font-mono text-[var(--ink-3)]">
                       {m.nasaData}
                     </span>
-                    <div className="flex items-center gap-0.5 mt-0.5 text-xs text-[var(--brass)]">
+                    <div className="flex items-center gap-0.5 mt-0.5 text-xs text-[var(--signal)]">
                       {'⭐'.repeat(m.stars) || <span className="text-2xs text-[var(--ink-3)] font-mono">{isBn ? 'স্টার নেই' : '0 Stars'}</span>}
                     </div>
                   </div>

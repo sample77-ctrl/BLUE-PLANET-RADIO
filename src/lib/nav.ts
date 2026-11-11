@@ -1,6 +1,6 @@
 /** Views and the v3 sections they belong to (roadmap D2). */
 export type Track = 'atlas' | 'frames' | 'monsoon' | 'pulse' | 'about' | 'jukebox' | 'quest';
-export type Section = 'explore' | 'jukebox' | 'quest' | 'about';
+export type Section = 'frames' | 'explore' | 'jukebox' | 'quest' | 'about';
 type TrackKey = 'track1' | 'track2' | 'track3' | 'track4';
 export const TRACKS: { id: Exclude<Track, 'about' | 'jukebox' | 'quest'>; key: TrackKey; code: string }[] = [
   { id: 'atlas', key: 'track1', code: 'A1' },
@@ -8,9 +8,9 @@ export const TRACKS: { id: Exclude<Track, 'about' | 'jukebox' | 'quest'>; key: T
   { id: 'monsoon', key: 'track3', code: 'B1' },
   { id: 'pulse', key: 'track4', code: 'B2' },
 ];
-/** The Data Jukebox holds A2/B1/B2 as collections. */
-export const JUKEBOX_TRACKS = TRACKS.filter((t) => t.id !== 'atlas');
-export const sectionOf = (t: Track): Section => (t === 'atlas' ? 'explore' : t === 'about' ? 'about' : t === 'quest' ? 'quest' : 'jukebox');
+/** v5: Frames (A2) is its own first section. The Data Jukebox holds B1/B2 as collections next to its stories. */
+export const JUKEBOX_TRACKS = TRACKS.filter((t) => t.id !== 'atlas' && t.id !== 'frames');
+export const sectionOf = (t: Track): Section => (t === 'frames' ? 'frames' : t === 'atlas' ? 'explore' : t === 'about' ? 'about' : t === 'quest' ? 'quest' : 'jukebox');
 
 export const REPO_URL = 'https://github.com/morsad01/SONIC-EARTH-ATLAS';
 export const SOURCE_LINKS: { name: string; url: string }[] = [

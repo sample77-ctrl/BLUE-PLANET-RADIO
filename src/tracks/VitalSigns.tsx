@@ -19,7 +19,7 @@ const META: Record<Exclude<Tab, 'all'>, { en: string; bn: string; color: string;
   temp: { en: 'Global temperature', bn: 'বৈশ্বিক তাপমাত্রা', color: 'var(--warm)', wave: 'sawtooth', rule: 'Higher pitch = warmer year. A soft low tone marks the 1951–1980 average.', ruleBn: 'উঁচু সুর = উষ্ণ বছর। একটি নরম নিচু সুর ১৯৫১–১৯৮০-র গড় চিহ্নিত করে।' },
   co2: { en: 'Carbon dioxide', bn: 'কার্বন ডাই অক্সাইড', color: '#c9a7ff', wave: 'sine', rule: 'Higher pitch = more CO₂ in the air at Mauna Loa.', ruleBn: 'উঁচু সুর = বাতাসে বেশি CO₂।' },
   ice: { en: 'Arctic sea ice (September)', bn: 'আর্কটিক সমুদ্র বরফ (সেপ্টেম্বর)', color: '#9be7ff', wave: 'triangle', rule: 'Higher pitch = more ice, so the melody falls as the ice shrinks.', ruleBn: 'উঁচু সুর = বেশি বরফ, তাই বরফ কমলে সুর নামে।' },
-  own: { en: 'Your data', bn: 'আপনার ডেটা', color: 'var(--brass)', wave: 'triangle', rule: 'Higher pitch = higher value in your file.', ruleBn: 'উঁচু সুর = আপনার ফাইলে বড় মান।' },
+  own: { en: 'Your data', bn: 'আপনার ডেটা', color: 'var(--signal)', wave: 'triangle', rule: 'Higher pitch = higher value in your file.', ruleBn: 'উঁচু সুর = আপনার ফাইলে বড় মান।' },
 };
 
 function parseCsv(text: string): Pt[] {
@@ -160,7 +160,7 @@ export const VitalSigns: React.FC = () => {
               <polyline fill="none" stroke={m.color} strokeOpacity={0.35} strokeWidth={2} points={pts.map((p, k) => `${pad + k * bw + bw / 2},${y(p.value)}`).join(' ')} />
               <polyline fill="none" stroke={m.color} strokeWidth={2.5} points={pts.slice(0, i < 0 ? pts.length : i + 1).map((p, k) => `${pad + k * bw + bw / 2},${y(p.value)}`).join(' ')} />
             </>}
-        {i >= 0 && <line x1={pad + i * bw + bw / 2} x2={pad + i * bw + bw / 2} y1={0} y2={H} stroke="var(--brass)" strokeWidth={2} />}
+        {i >= 0 && <line x1={pad + i * bw + bw / 2} x2={pad + i * bw + bw / 2} y1={0} y2={H} stroke="var(--signal)" strokeWidth={2} />}
         <text x={pad} y={H + 16} fontSize={11} fill="var(--ink-3)">{yr(first.year)}</text>
         <text x={W} y={H + 16} fontSize={11} fill="var(--ink-3)" textAnchor="end">{yr(last.year)}</text>
       </svg>
@@ -185,7 +185,7 @@ export const VitalSigns: React.FC = () => {
           const mn = Math.min(...pts), mx = Math.max(...pts);
           return <polyline key={id} fill="none" stroke={META[id as 'temp'].color} strokeWidth={2.5} points={pts.map((v, k) => `${pad + k * bw + bw / 2},${10 + (1 - (v - mn) / (mx - mn)) * (H - 20)}`).join(' ')} />;
         })}
-        {i >= 0 && <line x1={pad + i * bw + bw / 2} x2={pad + i * bw + bw / 2} y1={0} y2={H} stroke="var(--brass)" strokeWidth={2} />}
+        {i >= 0 && <line x1={pad + i * bw + bw / 2} x2={pad + i * bw + bw / 2} y1={0} y2={H} stroke="var(--signal)" strokeWidth={2} />}
         <text x={pad} y={H + 16} fontSize={11} fill="var(--ink-3)">{yr(view.years[0])}</text>
         <text x={W} y={H + 16} fontSize={11} fill="var(--ink-3)" textAnchor="end">{yr(view.years.at(-1)!)}</text>
       </svg>
@@ -205,9 +205,9 @@ export const VitalSigns: React.FC = () => {
         <p className="mt-2 max-w-[68ch] text-[var(--ink-2)]">{lang === 'bn' ? 'NASA যে তিনটি মূল সংকেত দিয়ে জলবায়ু পরিবর্তন দেখায়, প্রতি বছরে একটি সুর।' : 'Three of the signals NASA uses to show climate change, one note per year. Or bring your own data.'}</p>
         <p className="mt-1 text-sm text-[var(--ink-3)]">
           {lang === 'bn' ? 'এই তথ্য নাসার আর্থ ইনফরমেশন সেন্টারেও দেখা যায়: ' : 'These records also appear in NASA’s Earth Information Center: '}
-          <a href="https://earth.gov/themes/greenhouse-gases" target="_blank" rel="noreferrer" className="underline text-[var(--brass)]">{lang === 'bn' ? 'গ্রিনহাউস গ্যাস' : 'greenhouse gases'}</a>
+          <a href="https://earth.gov/themes/greenhouse-gases" target="_blank" rel="noreferrer" className="underline text-[var(--signal)]">{lang === 'bn' ? 'গ্রিনহাউস গ্যাস' : 'greenhouse gases'}</a>
           {' · '}
-          <a href="https://earth.gov/themes/sea-level-change" target="_blank" rel="noreferrer" className="underline text-[var(--brass)]">{lang === 'bn' ? 'সমুদ্রস্তর পরিবর্তন' : 'sea level change'}</a>
+          <a href="https://earth.gov/themes/sea-level-change" target="_blank" rel="noreferrer" className="underline text-[var(--signal)]">{lang === 'bn' ? 'সমুদ্রস্তর পরিবর্তন' : 'sea level change'}</a>
         </p>
 
         <div className="mt-5 flex flex-wrap gap-2" role="group" aria-label={t('seriesLabel')}>

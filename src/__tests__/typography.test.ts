@@ -19,7 +19,7 @@ describe('type system (Phase 8D)', () => {
     const html: string = fs.readFileSync('index.html', 'utf8'), fonts: string = fs.readFileSync('src/fonts.css', 'utf8'), css: string = fs.readFileSync('src/index.css', 'utf8');
     expect(html).not.toMatch(/fonts\.(googleapis|gstatic)\.com/);
     const urls = [...fonts.matchAll(/url\('(\/fonts\/[^']+)'\)/g)].map((m) => m[1]);
-    expect(urls.length).toBeGreaterThanOrEqual(5);
+    expect(urls.length).toBeGreaterThanOrEqual(4);
     for (const u of urls) expect(fs.existsSync(path.join('public', u)), u).toBe(true);
     expect(css).toContain('font-synthesis: none');
     expect(css).toMatch(/html\[lang='bn'\][^}]*--fs-2xs: \.8125rem/);
@@ -27,7 +27,7 @@ describe('type system (Phase 8D)', () => {
   });
   it('keeps the self-hosted font payload small', () => {
     const size = fs.readdirSync('public/fonts').reduce((n: number, f: string) => n + fs.statSync(path.join('public/fonts', f)).size, 0);
-    expect(size).toBeLessThan(350_000);
+    expect(size).toBeLessThan(560_000); // v5: Mona Sans (weight + width + optical size, 308 kB) and the Bengali variable font with its width axis (190 kB) replace five smaller files; see roadmap v5 §5
   });
 });
 

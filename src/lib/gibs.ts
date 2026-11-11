@@ -17,6 +17,8 @@ export interface NasaFrame {
   longBn?: string;
   soundRegion?: Rect; // only this part of a bundled image makes sound (fractions of the image), e.g. the chart without its axes
   soundIgnore?: Rect[]; // parts inside the region that stay silent, e.g. a title
+  /** A time axis printed on the chart, measured from the picture: x0/x1 are where the ticks v0/v1 sit (fractions of the image width); the chart is only valid from lo to hi. Used for the "1998" readout. */
+  axis?: { x0: number; x1: number; v0: number; v1: number; lo: number; hi: number };
 }
 
 export const GIBS_WMS = 'https://gibs.earthdata.nasa.gov/wms/epsg4326/best/wms.cgi';

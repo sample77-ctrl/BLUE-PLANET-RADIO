@@ -114,7 +114,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--brass)] cursor-pointer"
+            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
             aria-label="Back to Game Home"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -142,7 +142,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
             onClick={onExploreGlobe}
             className="btn btn-ghost border border-[var(--line)] text-xs font-semibold py-2 px-3.5 rounded-xl flex items-center gap-1.5 cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[var(--brass)]" />
+            <Sparkles className="w-3.5 h-3.5 text-[var(--signal)]" />
             <span>{isBn ? '৩ডি গ্লোবে দেখুন' : 'Explore Globe'}</span>
           </button>
         )}
@@ -254,7 +254,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
             <TrendingUp className="w-6 h-6 text-amber-400" />
           </div>
           <div>
-            <span className="text-2xs font-mono uppercase tracking-wider text-[var(--brass)] font-semibold">
+            <span className="text-2xs font-mono uppercase tracking-wider text-[var(--signal)] font-semibold">
               {isBn ? 'বৈজ্ঞানিক পার্থক্য ও পিচ পরিবর্তন' : 'ACOUSTIC DELTA (Δf & ΔT)'}
             </span>
             <div className="flex items-baseline gap-2 mt-0.5">
@@ -300,7 +300,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs font-mono font-semibold text-[var(--brass)] px-3 py-1 rounded-xl bg-black/40 border border-[var(--line)]">
+            <span className="text-xs font-mono font-semibold text-[var(--signal)] px-3 py-1 rounded-xl bg-black/40 border border-[var(--line)]">
               {scrubberYear} · {recordScrub.anomaly > 0 ? `+${recordScrub.anomaly}` : recordScrub.anomaly}°C ({freqScrub} Hz)
             </span>
           </div>
@@ -314,7 +314,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
             max={2025}
             value={scrubberYear}
             onChange={(e) => handleScrubberChange(Number(e.target.value))}
-            className="w-full accent-[var(--brass)] cursor-pointer h-2 bg-black/40 rounded-lg appearance-none"
+            className="w-full accent-[var(--signal)] cursor-pointer h-2 bg-black/40 rounded-lg appearance-none"
             aria-label="Climate Year Timeline"
           />
           <div className="flex justify-between text-3xs font-mono text-[var(--ink-3)]">
@@ -331,7 +331,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
       {/* Provenance Footer */}
       <div className="p-4 rounded-2xl bg-black/40 border border-[var(--line)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-2xs text-[var(--ink-3)]">
         <div className="flex items-center gap-2">
-          <Info className="w-4 h-4 text-[var(--brass)] shrink-0" />
+          <Info className="w-4 h-4 text-[var(--signal)] shrink-0" />
           <span>
             {isBn
               ? 'উৎস: নাসা গিস সারফেস টেম্পারেচার অ্যানালাইসিস (GISTEMP v4), বেসলাইন ১৯৫১-১৯৮০।'

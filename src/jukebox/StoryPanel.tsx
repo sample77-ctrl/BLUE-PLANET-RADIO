@@ -49,7 +49,7 @@ export function StoryPanel({ story, load, points, cursor, sound, noteScale, onCu
           </>)}
 
       {coll && <div className="rounded-lg border border-[var(--line)] p-2.5 space-y-2">
-        <p className="text-xs text-[var(--ink-2)] flex gap-2"><Headphones className="w-4 h-4 shrink-0 text-[var(--brass)]" aria-hidden="true" />{t(frame ? 'plNoSound' : 'jbSoundNote')}</p>
+        <p className="text-xs text-[var(--ink-2)] flex gap-2"><Headphones className="w-4 h-4 shrink-0 text-[var(--signal)]" aria-hidden="true" />{t(frame ? 'plNoSound' : 'jbSoundNote')}</p>
         <button type="button" className="btn" onClick={() => onOpenCollection(story)}>{t('jbOpenCollection', { name: t(coll.key) })}</button>
       </div>}
     </article>

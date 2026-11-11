@@ -21,7 +21,7 @@ interface Props {
 export function TimelineFilters({ filters: f, years, onFilter, onReset, countries: c }: Props) {
   const { t, lang } = usePrefs();
   const uid = useId();
-  const pressed = 'border-[var(--brass)] text-[var(--ink)]';
+  const pressed = 'border-[var(--signal)] text-[var(--ink)]';
   const regions: RegionKind[] = c.country ? ['global', 'country', 'bangladesh'] : ['global', 'bangladesh'];
   return (
     <div className="space-y-4">
@@ -30,7 +30,7 @@ export function TimelineFilters({ filters: f, years, onFilter, onReset, countrie
         <CountryPicker list={c.list} selected={c.country} onSelect={c.onSelect} />
         <div role="status" aria-live="polite" className="text-sm">
           {c.country ? (
-            <div className="rounded-lg border border-[var(--brass)] p-2 space-y-1">
+            <div className="rounded-lg border border-[var(--signal)] p-2 space-y-1">
               <div className="font-semibold">{countryLabel(c.country.id, c.country.name, lang)} <span className="text-[var(--ink-3)] font-normal">· {c.country.id}</span></div>
               <p className="text-xs text-[var(--ink-2)]">{t('jbCountryNote')}</p>
               <button type="button" className="btn btn-ghost min-h-[36px] px-2" onClick={() => c.onSelect(null)}><X className="w-4 h-4" aria-hidden="true" />{t('countryClear')}</button>

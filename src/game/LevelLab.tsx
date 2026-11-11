@@ -58,7 +58,7 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
       audioFn: (a) => a.playOcean(0.5, 0, 3200),
       options: [
         { key: 'ocean', labelEn: 'Ocean Heat (সমুদ্রের তাপ)', labelBn: 'সমুদ্রের তাপ (Ocean Heat)', icon: <Waves className="w-5 h-5 text-[var(--teal)]" />, correct: true },
-        { key: 'thunder', labelEn: 'Thunder (বজ্রপাত)', labelBn: 'বজ্রপাত (Thunder)', icon: <Sparkles className="w-5 h-5 text-[var(--brass)]" />, correct: false },
+        { key: 'thunder', labelEn: 'Thunder (বজ্রপাত)', labelBn: 'বজ্রপাত (Thunder)', icon: <Sparkles className="w-5 h-5 text-[var(--signal)]" />, correct: false },
         { key: 'rain', labelEn: 'Rain (বৃষ্টি)', labelBn: 'বৃষ্টি (Rain)', icon: <CloudRain className="w-5 h-5 text-[var(--rain)]" />, correct: false },
       ],
       hintEn: 'A deep, warm humming drone from the vast oceans.',
@@ -117,7 +117,7 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
       {/* Step Indicator */}
       <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-2">
-          <span className="chip border-[var(--brass)] text-[var(--brass)] font-semibold">
+          <span className="chip border-[var(--signal)] text-[var(--signal)] font-semibold">
             {isBn ? 'লেভেল ১' : 'Level 1'}
           </span>
           <h2 className="text-xl sm:text-2xl font-bold font-display text-[var(--ink)]">
@@ -130,7 +130,7 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
               key={i}
               className={`w-3 h-3 rounded-full transition-colors ${
                 i < currentIdx || (i === currentIdx && isAnswered && selectedOpt === currentQ.options.find((o) => o.correct)?.key)
-                  ? 'bg-[var(--brass)]'
+                  ? 'bg-[var(--signal)]'
                   : i === currentIdx
                   ? 'bg-[var(--rain)] ring-2 ring-[var(--rain)] ring-offset-2 ring-offset-[var(--abyss)]'
                   : 'bg-[var(--line)]'
@@ -139,7 +139,7 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
           ))}
           <div
             className={`w-3 h-3 rounded-full transition-colors ${
-              inSandboxExperiment ? 'bg-[var(--brass)]' : 'bg-[var(--line)]'
+              inSandboxExperiment ? 'bg-[var(--signal)]' : 'bg-[var(--line)]'
             }`}
           />
         </div>
@@ -164,7 +164,7 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
             <button
               onClick={handlePlaySound}
               className={`btn btn-brass text-base font-semibold px-8 py-5 rounded-full flex items-center gap-3 shadow-lg transform transition active:scale-95 ${
-                isPlaying ? 'ring-4 ring-[var(--brass)] animate-pulse' : 'hover:scale-105'
+                isPlaying ? 'ring-4 ring-[var(--signal)] animate-pulse' : 'hover:scale-105'
               }`}
               aria-label={isBn ? 'শব্দটি শোনো' : 'Play Sound'}
             >
@@ -192,7 +192,7 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
                       : isFail
                       ? 'border-rose-500 bg-rose-950/40 text-rose-200'
                       : isSelected
-                      ? 'border-[var(--brass)] bg-[var(--panel-2)]'
+                      ? 'border-[var(--signal)] bg-[var(--panel-2)]'
                       : 'border-[var(--glass-border)] bg-[var(--panel)] hover:border-[var(--line)] hover:bg-[var(--panel-2)]'
                   }`}
                 >

@@ -64,3 +64,7 @@ export function timbreWord(warm: number, green: number): 'buzzy' | 'airy' | 'sof
   if (green > 0.15) return 'airy';
   return 'soft';
 }
+
+const PENTA = [0, 2, 4, 7, 9];
+/** Pitch of one band of the picture: C3 pentatonic upwards, the top row (north) highest, like the globe's latitude tilt. */
+export const bandHz = (row: number, rows: number) => { const i = rows - 1 - row; return 130.81 * Math.pow(2, (PENTA[i % 5] + 12 * Math.floor(i / 5)) / 12); };

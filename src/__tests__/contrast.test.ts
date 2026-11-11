@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { rgbToOklch, fromHex } from '../lib/signal';
 // Loaded dynamically so the app's own type-check does not need Node types.
 const fs = await import(/* @vite-ignore */ 'node:fs' as string);
 const css: string = fs.readFileSync('src/index.css', 'utf8');
@@ -21,7 +22,10 @@ describe('colour contrast (WCAG AA, 4.5:1 for text)', () => {
       it(`--${fg} on --${bg}`, () => expect(ratio(token(fg), token(bg))).toBeGreaterThanOrEqual(4.5));
     }
   }
-  it('button text on the brass button', () => expect(ratio(token('brass-ink'), token('brass'))).toBeGreaterThanOrEqual(4.5));
+  // v5: the signal colour fills large areas (primary button, Jukebox hero, note scale) with dark text on it, and is also used as text on the ground
+  it('--on-signal-default on the default signal field', () => expect(ratio(token('on-signal-default'), token('signal-default'))).toBeGreaterThanOrEqual(4.5));
+  for (const bg of ['abyss', 'panel', 'panel-2']) it(`default signal as text on --${bg}`, () => expect(ratio(token('signal-default'), token(bg))).toBeGreaterThanOrEqual(4.5));
+  for (const th of ['fire', 'rain', 'warm', 'cold', 'teal', 'brass']) it(`--on-signal-default on a --${th} field (the signal while that dataset plays)`, () => expect(ratio(token('on-signal-default'), token(th))).toBeGreaterThanOrEqual(4.5));
   // v3 role tokens, used for links, icons and the nav marker
   for (const fg of ['accent', 'accent-warm', 'teal']) {
     for (const bg of ['abyss', 'surface', 'panel-2']) {
@@ -29,18 +33,29 @@ describe('colour contrast (WCAG AA, 4.5:1 for text)', () => {
     }
   }
   // Data colours are also used as text (legend, units, the sound-error line), so they get the text threshold.
-  for (const fg of ['fire', 'rain', 'warm', 'cold']) {
+  for (const fg of ['fire', 'rain', 'warm', 'cold', 'teal', 'brass']) {
     for (const bg of backgrounds) {
       it(`data colour --${fg} on --${bg}`, () => expect(ratio(token(fg), token(bg))).toBeGreaterThanOrEqual(4.5));
     }
   }
 });
 
+describe('data colours (v5): six colours at equal lightness', () => {
+  it('are within 0.03 of oklch L .77, so none shouts louder than another', () => {
+    for (const n of ['fire', 'rain', 'warm', 'cold', 'teal', 'brass']) expect(Math.abs(rgbToOklch(fromHex(token(n))).L - 0.77), n).toBeLessThan(0.03);
+  });
+  it('the ground is #0a0a0a and the neutrals are neutral (chroma < .01)', () => {
+    expect(token('ground')).toBe('#0a0a0a');
+    for (const n of ['panel', 'panel-2', 'hair', 'ink', 'ink-2', 'ink-3']) expect(rgbToOklch(fromHex(token(n))).C, n).toBeLessThan(0.012);
+  });
+});
+
 describe('high contrast mode (WCAG AAA, 7:1)', () => {
   const hc = Object.fromEntries([...(css.match(/html\.hc \{([^}]*)\}/)?.[1] ?? '').matchAll(/--([\w-]+):\s*#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g)].map((m) => [m[1], `#${m[2].length === 3 ? [...m[2]].map((c) => c + c).join('') : m[2]}`]));
   const hcToken = (n: string) => hc[n] ?? token(n);
-  it('overrides the text and surface tokens', () => { for (const k of ['panel', 'panel-2', 'ink', 'ink-2', 'ink-3', 'brass', 'line']) expect(hc[k]).toBeTruthy(); });
-  for (const fg of ['ink', 'ink-2', 'ink-3', 'brass', 'line']) {
+  it('overrides the text and surface tokens', () => { for (const k of ['panel', 'panel-2', 'ink', 'ink-2', 'ink-3', 'brass', 'line', 'ground', 'signal-default']) expect(hc[k]).toBeTruthy(); });
+  // the signal colour is text and lines only in high contrast (never a field), so it needs 7:1 on the black ground
+  for (const fg of ['ink', 'ink-2', 'ink-3', 'brass', 'line', 'signal-default']) {
     for (const bg of ['panel', 'panel-2']) {
       it(`--${fg} on --${bg}`, () => expect(ratio(hcToken(fg), hcToken(bg))).toBeGreaterThanOrEqual(7));
     }
@@ -64,12 +79,14 @@ describe('glass surfaces (composited over the backdrop)', () => {
   const mix = (top: string, a: number, under: string) => `#${hex(top).map((v, i) => Math.round(v * a + hex(under)[i] * (1 - a)).toString(16).padStart(2, '0')).join('')}`;
   const alpha = (name: string) => Number(css.match(new RegExp(`--${name}:\\s*color-mix\\(in srgb, var\\(--panel\\) (\\d+)%`))?.[1]) / 100;
   // Under the glass: deep space, and a lit ocean pixel of the globe as a bright case.
-  for (const under of ['#071019', '#5a7a9a']) {
+  for (const under of ['#0a0a0a', '#5a7a9a']) {
     for (const g of ['glass-bg', 'glass-bg-strong']) {
       for (const fg of ['ink', 'ink-2']) {
         it(`--${fg} on --${g} over ${under}`, () => expect(ratio(token(fg), mix(token('panel'), alpha(g), under))).toBeGreaterThanOrEqual(4.5));
       }
     }
   }
-  it('--ink-3 on the strong glass over deep space', () => expect(ratio(token('ink-3'), mix(token('panel'), alpha('glass-bg-strong'), '#071019'))).toBeGreaterThanOrEqual(4.5));
+  it('--ink-3 on the strong glass over the ground', () => expect(ratio(token('ink-3'), mix(token('panel'), alpha('glass-bg-strong'), '#0a0a0a'))).toBeGreaterThanOrEqual(4.5));
+  // v5: the bar and floating controls can sit over a white pixel of an EIC frame
+  for (const fg of ['ink']) it(`--${fg} on the strong glass over a white frame pixel`, () => expect(ratio(token(fg), mix(token('panel'), alpha('glass-bg-strong'), '#ffffff'))).toBeGreaterThanOrEqual(4.5));
 });

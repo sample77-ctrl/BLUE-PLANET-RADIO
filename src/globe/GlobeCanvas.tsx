@@ -6,6 +6,7 @@ import type { EarthObservation, PhenomenonType } from '../types/dataset';
 import { SonificationEngine } from '../audio/sonificationEngine';
 import { usePrefs } from '../lib/prefs';
 import { easeK, framingTarget, idleSpin, type Framing } from './framing';
+import { pillarLength, pillarOpacity, pillarWidth, pulseAt } from './pillars';
 import { findCountrySync, latLonToXYZ, outlineSegments, xyzToLatLon, type Country } from '../countries/countries';
 import { countryLabel } from '../lib/placesBn';
 
@@ -19,7 +20,7 @@ interface GlobeCanvasProps {
   imageryUrl?: string | null;
   framing?: Framing;
   countries?: Country[]; // borders for hover/click selection
-  country?: Country | null; // selected: brass outline
+  country?: Country | null; // selected: signal-coloured outline
   countryPoint?: { lat: number; lon: number } | null; // fly-to target
   onSelectCountry?: (c: Country) => void;
   onCenter?: (lat: number, lon: number) => void; // the point facing the viewer, whole degrees, only when it changes (tune mode)
@@ -82,6 +83,9 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
   const soundWavesGroupRef = useRef<THREE.Group | null>(null);
   const markerMeshesRef = useRef<Map<string, THREE.Mesh>>(new Map());
   const waveMeshesRef = useRef<Map<string, THREE.Mesh>>(new Map());
+  const pillarsGroupRef = useRef<THREE.Group | null>(null);
+  const pillarsRef = useRef<Map<string, { mesh: THREE.Mesh; len: number; rest: THREE.Material; lit: THREE.Material }>>(new Map());
+  const pillarFreeRef = useRef<{ dispose: () => void }[]>([]); // geometry and shared materials of the current pillars
 
   // Mouse & Focus interaction state
   const isDraggingRef = useRef(false);
@@ -133,40 +137,9 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
     renderer.toneMappingExposure = 1.5;
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
-    document.documentElement.classList.add('globe-on'); // the 2D starfield stops animating: one starfield at a time
+    document.documentElement.classList.add('globe-on');
 
-    // --- Deep Space & Cosmic Starfield Background ---
-    const starGeometry = new THREE.BufferGeometry();
-    const starCount = 1800;
-    const starPositions = new Float32Array(starCount * 3);
-    const starColors = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount * 3; i += 3) {
-      starPositions[i] = (Math.random() - 0.5) * 110;
-      starPositions[i + 1] = (Math.random() - 0.5) * 110;
-      starPositions[i + 2] = -15 - Math.random() * 50;
-
-      // Color variation: cyan, deep space blue, warm white, cosmic purple
-      const c = Math.random();
-      if (c > 0.85) {
-        starColors[i] = 0.49; starColors[i + 1] = 0.83; starColors[i + 2] = 0.98; // Cyan
-      } else if (c > 0.65) {
-        starColors[i] = 0.75; starColors[i + 1] = 0.52; starColors[i + 2] = 0.99; // Purple
-      } else if (c > 0.4) {
-        starColors[i] = 0.25; starColors[i + 1] = 0.55; starColors[i + 2] = 0.95; // Blue
-      } else {
-        starColors[i] = 0.98; starColors[i + 1] = 0.96; starColors[i + 2] = 0.92; // Warm White
-      }
-    }
-    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
-    const starMaterial = new THREE.PointsMaterial({
-      size: 0.18,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.85,
-    });
-    const starField = new THREE.Points(starGeometry, starMaterial);
-    scene.add(starField);
+    // (v5: no starfield behind the Earth on the Atlas; the ground is the page's near-black. The landing hero keeps its stars.)
 
     // --- Globe Group ---
     const globeGroup = new THREE.Group();
@@ -251,19 +224,23 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
     // The horizon halo leans toward the playing dataset's colour (html[data-dataset], set by the Now-Playing bar). Plain blue in high contrast or with no dataset.
     const baseHalo = new THREE.Color(0.25, 0.6, 1.0);
     const tintHalo = () => {
-      const root = document.documentElement, name = root.dataset.dataset;
-      const css = name && !root.classList.contains('hc') ? getComputedStyle(root).getPropertyValue(`--${name}`).trim() : '';
+      const root = document.documentElement;
+      const css = !root.classList.contains('hc') ? getComputedStyle(root).getPropertyValue('--signal').trim() : ''; // the signal colour: the playing dataset's, or the default
       atmosphereMaterial.uniforms.uTint.value.copy(baseHalo);
-      if (css) atmosphereMaterial.uniforms.uTint.value.lerp(new THREE.Color(css), 0.6);
+      if (css) try { atmosphereMaterial.uniforms.uTint.value.lerp(new THREE.Color(css), 0.5); } catch { /* not a colour three understands: keep the blue */ }
     };
     tintHalo();
     const haloObserver = new MutationObserver(tintHalo);
-    haloObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-dataset', 'class'] });
+    haloObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-dataset', 'class', 'style'] });
 
     // Markers & Sound Waves Groups
     const markersGroup = new THREE.Group();
     globeGroup.add(markersGroup);
     markersGroupRef.current = markersGroup;
+
+    const pillarsGroup = new THREE.Group();
+    globeGroup.add(pillarsGroup);
+    pillarsGroupRef.current = pillarsGroup;
 
     const soundWavesGroup = new THREE.Group();
     globeGroup.add(soundWavesGroup);
@@ -337,18 +314,23 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
 
       // Synchronize visual acoustic emission beacons on Earth surface with Web Audio active voices
       const voiceDetails = SonificationEngine.getInstance().getActiveVoiceDetails();
+      // Light pillars: lit and lifted by the beat while their voice sounds, dim at rest (materials are swapped, not changed: they are shared).
+      let pulsing = 0;
+      pillarsRef.current.forEach((p, obsId) => {
+        const v = voiceDetails.get(obsId);
+        const want = v ? p.lit : p.rest;
+        if (p.mesh.material !== want) p.mesh.material = want;
+        if (v) { pulsing++; p.mesh.scale.z = p.len * pulseAt((performance.now() - v.startedAt) / 1000, v.intensity, calm).lift; }
+        else if (p.mesh.scale.z !== p.len) p.mesh.scale.z = p.len;
+      });
+      if (container.dataset.pulsing !== String(pulsing)) container.dataset.pulsing = String(pulsing);
       waveMeshesRef.current.forEach((mesh, obsId) => {
         const voiceInfo = voiceDetails.get(obsId);
         if (voiceInfo) {
           mesh.visible = true;
-          const elapsedSec = (performance.now() - voiceInfo.startedAt) / 1000;
-
-          // Pulse expansion rhythm based on intensity
-          const pulseScale = 1.0 + ((elapsedSec * (1.8 + voiceInfo.intensity * 2.0)) % 1.6);
-          const opacity = Math.max(0, 0.95 - (pulseScale - 1.0) / 1.6);
-
-          mesh.scale.set(pulseScale, pulseScale, 1);
-          (mesh.material as THREE.MeshBasicMaterial).opacity = opacity;
+          const pu = pulseAt((performance.now() - voiceInfo.startedAt) / 1000, voiceInfo.intensity, calm);
+          mesh.scale.set(pu.ripple, pu.ripple, 1);
+          (mesh.material as THREE.MeshBasicMaterial).opacity = pu.ring;
         } else {
           const isSelected = selectedObservationRef.current?.id === obsId;
           if (isSelected) {
@@ -403,8 +385,6 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       haloObserver.disconnect();
       atmosphereGeometry.dispose();
       atmosphereMaterial.dispose();
-      starGeometry.dispose();
-      starMaterial.dispose();
     };
   }, []);
 
@@ -418,13 +398,13 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
   // --- d3-geo's geoContains, loaded once for hover/click lookups ---
   useEffect(() => { let on = true; import('d3-geo').then((m) => { if (on) geoContainsRef.current = m.geoContains as never; }); return () => { on = false; }; }, []);
 
-  // --- Selected country: brass outline, and a fly-to (a jump with reduced motion, see the animation loop) ---
+  // --- Selected country: signal-coloured outline, and a fly-to (a jump with reduced motion, see the animation loop) ---
   useEffect(() => {
     const gg = globeGroupRef.current;
     if (!gg) return;
     if (selOutlineRef.current) { gg.remove(selOutlineRef.current); disposeGroup(selOutlineRef.current); selOutlineRef.current = null; }
     if (!country) return;
-    const o = makeOutline(country, 0xe9c46a, OUTLINE_R, 1);
+    const o = makeOutline(country, 0xbaed3f, OUTLINE_R, 1);
     gg.add(o); selOutlineRef.current = o;
   }, [country]);
   useEffect(() => {
@@ -487,6 +467,23 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
     }
     markerMeshesRef.current.clear();
     waveMeshesRef.current.clear();
+    const pillarsGroup = pillarsGroupRef.current;
+    if (pillarsGroup) pillarsGroup.clear();
+    pillarsRef.current.clear();
+    pillarFreeRef.current.forEach((d) => d.dispose()); pillarFreeRef.current = [];
+    // One beam geometry along +z from 0 to 1 (scaled to each length) and two shared materials per colour (resting, lit): a few hundred beams stay a few hundred cheap draws.
+    const beamGeo = new THREE.CylinderGeometry(0.45, 1, 1, 8, 1, true).translate(0, 0.5, 0).rotateX(Math.PI / 2);
+    pillarFreeRef.current.push(beamGeo);
+    const beamMats = new Map<number, { rest: THREE.Material; lit: THREE.Material }>();
+    const beamMat = (hex: number) => {
+      let m = beamMats.get(hex);
+      if (!m) {
+        const mk = (op: number) => { const x = new THREE.MeshBasicMaterial({ color: hex, transparent: true, opacity: op, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }); pillarFreeRef.current.push(x); return x; };
+        m = { rest: mk(pillarOpacity(false, false)), lit: mk(pillarOpacity(true, false)) };
+        beamMats.set(hex, m);
+      }
+      return m;
+    };
 
     const earthRadius = 2.0;
 
@@ -518,6 +515,15 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       if (isSelected) {
         markerMesh.scale.set(1.8, 1.8, 1.8);
       }
+      if (pillarsGroup) {
+        const mats = beamMat(colorHex), len = pillarLength(obs.normalizedValue), w = pillarWidth(obs.normalizedValue);
+        const beam = new THREE.Mesh(beamGeo, mats.rest);
+        beam.position.set(x * 1.02, y * 1.02, z * 1.02);
+        beam.lookAt(x * 2, y * 2, z * 2); // +z points away from the surface
+        beam.scale.set(w, w, len);
+        pillarsGroup.add(beam);
+        pillarsRef.current.set(obs.id, { mesh: beam, len, rest: mats.rest, lit: mats.lit });
+      }
       markerMesh.userData = { observation: obs };
       markersGroup.add(markerMesh);
       markerMeshesRef.current.set(obs.id, markerMesh);
@@ -545,6 +551,10 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       waveMeshesRef.current.set(obs.id, ringMesh);
     });
   }, [observations, enabledPhenomena, selectedObservation]);
+
+  // The pillar count, readable by tests and assistive tooling (the beams are decoration; every point is also in the list and the panel).
+  useEffect(() => { containerRef.current?.setAttribute('data-pillars', String(pillarsRef.current.size)); }, [observations, enabledPhenomena, selectedObservation]);
+  useEffect(() => () => { pillarFreeRef.current.forEach((d) => d.dispose()); pillarFreeRef.current = []; }, []);
 
   // --- Mouse & Touch Controls ---
   /** Surface lat/lon under a screen point, or null when it misses the globe. */
@@ -671,7 +681,7 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
     >
       <div className="globe-poster" data-ready={texReady} aria-hidden="true" />
       {onSelectCountry && (
-        <button type="button" data-ctl="reset" aria-label={t('resetView')} className="btn panel absolute z-20 left-3 top-[calc(var(--header-h)+3.5rem)] lg:left-1/2 lg:-translate-x-1/2 lg:top-[calc(var(--header-h)+4rem)] min-h-[40px]" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); flyRef.current = { lat: 0, lon: 0, until: performance.now() + 12000 }; frameRef.current = framingTarget(framingRef.current, (containerRef.current?.clientWidth ?? 1) / (containerRef.current?.clientHeight || 1)); }}>
+        <button type="button" data-ctl="reset" aria-label={t('resetView')} className="btn glass absolute z-20 left-3 top-[calc(var(--header-h)+3.5rem)] lg:left-1/2 lg:-translate-x-1/2 lg:top-[calc(var(--header-h)+4rem)] min-h-[40px]" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); flyRef.current = { lat: 0, lon: 0, until: performance.now() + 12000 }; frameRef.current = framingTarget(framingRef.current, (containerRef.current?.clientWidth ?? 1) / (containerRef.current?.clientHeight || 1)); }}>
           <RotateCcw className="w-4 h-4" aria-hidden="true" /><span className="hidden lg:inline">{t('resetView')}</span>
         </button>
       )}

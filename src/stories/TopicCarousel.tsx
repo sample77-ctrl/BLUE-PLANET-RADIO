@@ -102,7 +102,7 @@ export function TopicCarousel({ onListen }: { onListen: (storyId: string) => voi
         <button type="button" className="btn btn-icon shrink-0" onClick={() => go(1)} aria-label={t('topicNext')}><ChevronRight className="w-5 h-5" /></button>
       </div>
       <div className="flex flex-wrap justify-center gap-1.5 mt-3" role="group" aria-label={t('topicsTitle')}>
-        {TOPICS.map((tp, k) => <button key={tp.topic} type="button" className={`chip min-h-[32px] cursor-pointer ${k === i ? 'border-[var(--brass)] text-[var(--ink)]' : ''}`} aria-pressed={k === i} onClick={() => { setI(k); setStage('overview'); }}>{t(topicKey(tp.topic))}</button>)}
+        {TOPICS.map((tp, k) => <button key={tp.topic} type="button" className={`chip min-h-[32px] cursor-pointer ${k === i ? 'border-[var(--signal)] text-[var(--ink)]' : ''}`} aria-pressed={k === i} onClick={() => { setI(k); setStage('overview'); }}>{t(topicKey(tp.topic))}</button>)}
       </div>
     </section>
   );

@@ -60,7 +60,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 panel p-4">
         <div>
           <div className="flex items-center gap-2">
-            <Radio className="w-5 h-5 text-[var(--brass)]" />
+            <Radio className="w-5 h-5 text-[var(--signal)]" />
             <h2 className="font-display text-2xl font-bold">
               {t('afmList')}
             </h2>
@@ -79,7 +79,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
             }}
             className={`px-3 py-1.5 rounded-lg text-xs  font-semibold flex items-center gap-1.5 border transition ${
               speechEnabled
-                ? 'bg-[var(--rain)] text-[var(--brass-ink)] border-[var(--rain)]'
+                ? 'bg-[var(--rain)] text-[var(--on-signal)] border-[var(--rain)]'
                 : 'bg-[var(--panel-2)] text-[var(--ink-2)] border-[var(--line)] hover:bg-[var(--panel-2)]'
             }`}
             aria-pressed={speechEnabled}
@@ -106,7 +106,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
           onClick={() => setActivePhenomenonFilter('all')}
           className={`px-3 py-1 rounded text-xs  font-medium transition ${
             activePhenomenonFilter === 'all'
-              ? 'bg-[var(--ink)] text-[var(--brass-ink)] font-semibold'
+              ? 'bg-[var(--ink)] text-[var(--on-signal)] font-semibold'
               : 'bg-[var(--panel)] text-[var(--ink-2)] hover:bg-[var(--panel-2)] border border-[var(--line)]'
           }`}
         >
@@ -116,8 +116,8 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
           onClick={() => setActivePhenomenonFilter('fire')}
           className={`px-3 py-1 rounded text-xs  font-medium flex items-center gap-1.5 transition ${
             activePhenomenonFilter === 'fire'
-              ? 'bg-[var(--brass)] text-[var(--brass-ink)] font-semibold'
-              : 'bg-[var(--panel)] text-[var(--brass)] hover:bg-[var(--panel-2)] border border-[var(--line)]'
+              ? 'bg-[var(--signal)] text-[var(--on-signal)] font-semibold'
+              : 'bg-[var(--panel)] text-[var(--signal)] hover:bg-[var(--panel-2)] border border-[var(--line)]'
           }`}
         >
           <Flame className="w-3.5 h-3.5" />
@@ -127,7 +127,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
           onClick={() => setActivePhenomenonFilter('precipitation')}
           className={`px-3 py-1 rounded text-xs  font-medium flex items-center gap-1.5 transition ${
             activePhenomenonFilter === 'precipitation'
-              ? 'bg-[var(--rain)] text-[var(--brass-ink)] font-semibold'
+              ? 'bg-[var(--rain)] text-[var(--on-signal)] font-semibold'
               : 'bg-[var(--panel)] text-[var(--rain)] hover:bg-[var(--panel-2)] border border-[var(--line)]'
           }`}
         >
@@ -138,7 +138,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
           onClick={() => setActivePhenomenonFilter('sst')}
           className={`px-3 py-1 rounded text-xs  font-medium flex items-center gap-1.5 transition ${
             activePhenomenonFilter === 'sst'
-              ? 'bg-[var(--warm)] text-[var(--brass-ink)] font-semibold'
+              ? 'bg-[var(--warm)] text-[var(--on-signal)] font-semibold'
               : 'bg-[var(--panel)] text-[var(--warm)] hover:bg-[var(--panel-2)] border border-[var(--line)]'
           }`}
         >
@@ -210,7 +210,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
                     <div className="font-semibold text-sm text-white flex items-center gap-2">
                       <span>{obs.regionName}</span>
                       {isSelected && (
-                        <span className="text-2xs  px-2 py-0.5 rounded bg-[var(--rain)] text-[var(--brass-ink)] font-semibold uppercase">
+                        <span className="text-2xs  px-2 py-0.5 rounded bg-[var(--rain)] text-[var(--on-signal)] font-semibold uppercase">
                           {t('afmNow')}
                         </span>
                       )}
@@ -227,7 +227,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
                       {obs.value} <span className="text-xs text-[var(--ink-3)]">{obs.unit}</span>
                     </div>
                     {obs.delta !== undefined && (
-                      <div className={`text-2xs ${obs.delta >= 0 ? 'text-[var(--brass)]' : 'text-[var(--cold)]'}`}>
+                      <div className={`text-2xs ${obs.delta >= 0 ? 'text-[var(--signal)]' : 'text-[var(--cold)]'}`}>
                         Δ {obs.delta > 0 ? `+${obs.delta.toFixed(1)}` : obs.delta.toFixed(1)} vs day before
                       </div>
                     )}
@@ -242,7 +242,7 @@ export const AudioFirstMode: React.FC<AudioFirstModeProps> = ({
                     title={t('afmPlay')}
                     aria-label={`Play audio for ${obs.regionName}`}
                   >
-                    <Volume2 className="w-4 h-4 text-[var(--brass)]" />
+                    <Volume2 className="w-4 h-4 text-[var(--signal)]" />
                   </button>
                 </div>
               </div>

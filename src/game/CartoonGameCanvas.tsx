@@ -730,7 +730,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
         {/* Checkpoint Jump Pills */}
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 pr-2 border-r border-[var(--line)]">
-            <div className="w-8 h-8 rounded-xl overflow-hidden border border-[var(--brass)] shadow-sm shrink-0">
+            <div className="w-8 h-8 rounded-xl overflow-hidden border border-[var(--signal)] shadow-sm shrink-0">
               <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-full h-full object-cover" />
             </div>
             <span className="text-xs font-semibold font-display text-[var(--ink)] hidden lg:inline">
@@ -768,7 +768,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
           <button
             onClick={() => jumpToZone(2320)}
             className={`chip cursor-pointer py-1 px-2.5 transition text-xs font-semibold ${
-              currentZone === 'mountain' ? 'border-[var(--brass)] text-[var(--brass)] bg-[var(--brass)]/10' : 'border-[var(--line)] hover:border-[var(--brass)]'
+              currentZone === 'mountain' ? 'border-[var(--signal)] text-[var(--signal)] bg-[var(--signal)]/10' : 'border-[var(--line)] hover:border-[var(--signal)]'
             }`}
           >
             📡 {isBn ? 'নাসা চূড়া' : 'NASA Peak'}
@@ -780,8 +780,8 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
 
         {/* Star Counter & Sound Toggle */}
         <div className="flex items-center gap-2">
-          <div className="chip border-[var(--brass)] text-[var(--brass)] font-semibold flex items-center gap-1.5 py-1 px-3">
-            <Sparkles className="w-3.5 h-3.5 text-[var(--brass)] animate-spin" />
+          <div className="chip border-[var(--signal)] text-[var(--signal)] font-semibold flex items-center gap-1.5 py-1 px-3">
+            <Sparkles className="w-3.5 h-3.5 text-[var(--signal)] animate-spin" />
             <span>⭐ {starsCollected} / {TOTAL_STARS}</span>
           </div>
 
@@ -819,7 +819,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
         <canvas ref={canvasRef} className="block w-full h-[480px]" />
 
         {/* Dynamic Cartoon Speech Bubble */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 max-w-md w-11/12 p-3 rounded-2xl glass-pop border border-[var(--brass)]/60 text-center shadow-xl animate-fade-in pointer-events-none">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 max-w-md w-11/12 p-3 rounded-2xl glass-pop border border-[var(--signal)]/60 text-center shadow-xl animate-fade-in pointer-events-none">
           <p className="text-xs sm:text-sm font-semibold text-[var(--ink)]">
             {speechText}
           </p>
@@ -829,14 +829,14 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
         {gameWon && (
           <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center gap-4 animate-fade-in">
             <div className="flex items-center gap-3">
-              <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[var(--brass)] shadow-2xl">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-[var(--signal)] shadow-2xl">
                 <img src="/images/ninja_cadet_avatar.png" alt="Cadet" className="w-full h-full object-cover" />
               </div>
               <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-500 to-amber-200 flex items-center justify-center text-slate-950 shadow-2xl animate-bounce">
                 <Award className="w-10 h-10" />
               </div>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--brass)]">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-[var(--signal)]">
               {isBn ? 'অভিনন্দন! তুমি পৃথিবীর সব সুর চিনে ফেলেছ!' : 'Hooray! You Mastered All Earth Sounds!'}
             </h2>
             <p className="text-sm text-[var(--ink-2)] max-w-md">
@@ -880,7 +880,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
               onTouchEnd={() => (keysRef.current.left = false)}
               onMouseDown={() => (keysRef.current.left = true)}
               onMouseUp={() => (keysRef.current.left = false)}
-              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--brass)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
+              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
               aria-label="Walk Left"
             >
               <ArrowLeft className="w-6 h-6" />
@@ -890,7 +890,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
               onTouchEnd={() => (keysRef.current.right = false)}
               onMouseDown={() => (keysRef.current.right = true)}
               onMouseUp={() => (keysRef.current.right = false)}
-              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--brass)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
+              className="w-14 h-14 rounded-2xl bg-[var(--panel-2)] border border-[var(--line)] active:bg-[var(--signal)] active:text-slate-950 flex items-center justify-center shadow-md cursor-pointer"
               aria-label="Walk Right"
             >
               <ArrowRight className="w-6 h-6" />
@@ -907,7 +907,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
                 keysRef.current.action = true;
                 setTimeout(() => (keysRef.current.action = false), 200);
               }}
-              className="h-14 px-5 rounded-2xl bg-[var(--panel-2)] border border-[var(--brass)]/50 active:bg-[var(--brass)] active:text-slate-950 flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer text-[var(--brass)]"
+              className="h-14 px-5 rounded-2xl bg-[var(--panel-2)] border border-[var(--signal)]/50 active:bg-[var(--signal)] active:text-slate-950 flex items-center gap-2 text-xs font-semibold shadow-md cursor-pointer text-[var(--signal)]"
               aria-label="Scan or Interact"
             >
               <Sparkles className="w-5 h-5" />
@@ -923,7 +923,7 @@ export const CartoonGameCanvas: React.FC<Props> = ({ onComplete, onExploreGlobe,
                 keysRef.current.jump = true;
                 setTimeout(() => (keysRef.current.jump = false), 150);
               }}
-              className="w-14 h-14 rounded-2xl bg-[var(--brass)] text-[var(--brass-ink)] font-semibold flex items-center justify-center shadow-lg active:scale-95 cursor-pointer"
+              className="w-14 h-14 rounded-2xl bg-[var(--signal)] text-[var(--on-signal)] font-semibold flex items-center justify-center shadow-lg active:scale-95 cursor-pointer"
               aria-label="Jump"
             >
               <ArrowUp className="w-6 h-6" />

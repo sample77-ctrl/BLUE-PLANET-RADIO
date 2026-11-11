@@ -72,11 +72,11 @@ export const DiagnosticsPanel: React.FC<DiagnosticsPanelProps> = ({
           <div className="space-y-1 text-2xs">
             <div className="flex justify-between">
               <span className="text-[var(--ink-3)]">Render FPS:</span>
-              <span className={`font-semibold ${fps > 45 ? 'text-[var(--teal)]' : 'text-[var(--brass)]'}`}>{fps} FPS</span>
+              <span className={`font-semibold ${fps > 45 ? 'text-[var(--teal)]' : 'text-[var(--signal)]'}`}>{fps} FPS</span>
             </div>
             <div className="flex justify-between">
               <span className="text-[var(--ink-3)]">AudioContext:</span>
-              <span className={`font-semibold ${audioDiag.audioContextState === 'running' ? 'text-[var(--teal)]' : 'text-[var(--brass)]'}`}>
+              <span className={`font-semibold ${audioDiag.audioContextState === 'running' ? 'text-[var(--teal)]' : 'text-[var(--signal)]'}`}>
                 {audioDiag.audioContextState.toUpperCase()}
               </span>
             </div>

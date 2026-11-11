@@ -44,7 +44,7 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
-    const set = () => document.documentElement.style.setProperty('--header-h', `${el.offsetHeight + 10}px`);
+    const set = () => document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`);
     set();
     const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(set) : null;
     ro?.observe(el);
@@ -61,6 +61,7 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
   }, [viewKey]);
 
   const sections: { id: Section; label: string; go: Track }[] = [
+    { id: 'frames', label: t('navFrames'), go: 'frames' },
     { id: 'explore', label: t('navExplore'), go: 'atlas' },
     { id: 'jukebox', label: t('navJukebox'), go: lastJukebox },
     { id: 'quest', label: t('navQuest'), go: 'quest' },
@@ -93,12 +94,12 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
           {menu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
         <button onClick={onHome} className="flex items-center gap-2 cursor-pointer shrink-0" aria-label={`${t('appName')}, ${t('home')}`}>
-          <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
-            <circle cx="14" cy="14" r="12.5" fill="none" stroke="var(--brass)" strokeWidth="1.5" />
-            <circle cx="14" cy="14" r="8" fill="none" stroke="var(--brass)" strokeOpacity=".55" />
-            <circle cx="14" cy="14" r="3.2" fill="var(--brass)" />
+          <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">{/* a needle over a frame: the mark of the Frame Jukebox */}
+            <rect x="1" y="3" width="24" height="20" fill="none" stroke="var(--ink)" strokeWidth="1.5" />
+            <path d="M1 17 L7 11 L12 15 L18 7 L25 13" fill="none" stroke="var(--signal)" strokeWidth="1.5" strokeLinejoin="round" />
+            <rect x="15" y="0" width="2.5" height="26" fill="var(--signal)" />
           </svg>
-          <span className="font-display font-bold text-lg hidden sm:inline whitespace-nowrap">{t('appName')}</span>
+          <span className="wordmark hidden sm:inline">{t('appName')}</span>
         </button>
 
         <nav className="hidden lg:flex items-center gap-1 ml-4" aria-label={t('mainNav')}>
@@ -109,8 +110,8 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
 
         <div className="ml-auto flex items-center gap-1.5 min-w-0">
           {active && (
-            <button className="chip max-w-[11rem] sm:max-w-[16rem] min-h-[36px] cursor-pointer border-[var(--brass)] text-[var(--ink)]" onClick={pause} aria-label={t('pausePlayback', { label: active.label })}>
-              <Pause className="w-3.5 h-3.5 shrink-0 text-[var(--brass)]" />
+            <button className="chip max-w-[11rem] sm:max-w-[16rem] min-h-[36px] cursor-pointer border-[var(--signal)] text-[var(--ink)]" onClick={pause} aria-label={t('pausePlayback', { label: active.label })}>
+              <Pause className="w-3.5 h-3.5 shrink-0 text-[var(--signal)]" />
               <span className="truncate">{t('playingNow', { label: active.label })}</span>
             </button>
           )}
@@ -153,6 +154,7 @@ export const Header: React.FC<Props> = ({ track, onLanding, onTrack, lastJukebox
         <div ref={menuPanel} id="site-menu" className="lg:hidden absolute left-0 right-0 top-full glass-pop rounded-none p-3 max-h-[calc(100dvh-var(--header-h))] overflow-y-auto">
           <nav aria-label={t('mainNav')}>
             <ul className="flex flex-col gap-1">
+              <li><button className="nav-link w-full min-h-[44px]" onClick={() => go('frames')} aria-current={section === 'frames' ? 'page' : undefined}>{t('navFrames')}</button></li>
               <li><button className="nav-link w-full min-h-[44px]" onClick={() => go('atlas')} aria-current={section === 'explore' ? 'page' : undefined}>{t('navExplore')}</button></li>
               <li>
                 <button className="nav-link w-full min-h-[44px]" onClick={() => go(lastJukebox)} aria-current={section === 'jukebox' ? 'page' : undefined}>{t('navJukebox')}</button>

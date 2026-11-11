@@ -36,7 +36,7 @@ test('the landing hero has one primary action and shows real key numbers', async
   await offline(page);
   await page.setViewportSize({ width: 1400, height: 900 });
   await open(page, '');
-  await expect(page.getByRole('button', { name: /Press play/ })).toBeVisible();
+  await expect(page.locator('.lh').getByRole('button', { name: /Press play/ })).toBeVisible(); // the hero's preview button (the carousel below has its own)
   await expect(page.locator('.hero-tele dd').first()).toHaveText(/\d/);
   // one brass action in the first screen (the sections below the fold have their own)
   const inView = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>('.btn-brass')].filter((b) => !b.classList.contains('sr-only-focusable')).filter((b) => {

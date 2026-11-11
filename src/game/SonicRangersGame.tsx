@@ -178,7 +178,7 @@ export const SonicRangersGame: React.FC<Props> = ({
               </h1>
             </div>
             <button onClick={() => setShowBadgeModal(true)} className="btn btn-ghost text-xs border border-[var(--line)] py-1.5 px-3 rounded-xl flex items-center gap-1 whitespace-nowrap">
-              <Award className="w-4 h-4 text-[var(--brass)]" />
+              <Award className="w-4 h-4 text-[var(--signal)]" />
               <span className="hidden sm:inline">{isBn ? 'সার্টিফিকেট' : 'Badges'}</span>
             </button>
           </div>
@@ -336,7 +336,7 @@ export const SonicRangersGame: React.FC<Props> = ({
         {/* Live 3D Globe Direct Portal (the hub has its own button) */}
         {screen !== 'home' && <div className="p-5 rounded-3xl bg-gradient-to-r from-cyan-950/20 via-[var(--panel)] to-amber-950/20 border border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
           <div className="flex items-center gap-3">
-            <Compass className="w-7 h-7 text-[var(--brass)] shrink-0" />
+            <Compass className="w-7 h-7 text-[var(--signal)] shrink-0" />
             <div>
               <h2 className="font-display font-bold text-sm sm:text-base text-[var(--ink)]">
                 {isBn ? 'আসল স্যাটেলাইটের লাইভ ৩ডি গ্লোবে শব্দ শুনতে চাও?' : 'Ready to hear real NASA satellite observations on the 3D globe?'}

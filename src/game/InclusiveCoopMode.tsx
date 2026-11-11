@@ -179,7 +179,7 @@ export const InclusiveCoopMode: React.FC<Props> = ({ onBack, onComplete }) => {
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--brass)] cursor-pointer"
+            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
             aria-label="Back to Game Home"
           >
             <ArrowLeft className="w-4 h-4" />
@@ -203,7 +203,7 @@ export const InclusiveCoopMode: React.FC<Props> = ({ onBack, onComplete }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="chip bg-black/40 border-[var(--line)] text-xs font-mono text-[var(--brass)]">
+          <span className="chip bg-black/40 border-[var(--line)] text-xs font-mono text-[var(--signal)]">
             ⭐ {coopScore} Co-Op XP
           </span>
         </div>
@@ -345,10 +345,10 @@ export const InclusiveCoopMode: React.FC<Props> = ({ onBack, onComplete }) => {
       </div>
 
       {/* Synchronization & Lock-in HUD */}
-      <div className="p-5 rounded-3xl bg-black/80 border-2 border-[var(--brass)]/50 flex flex-col md:flex-row items-center justify-between gap-5 shadow-2xl">
+      <div className="p-5 rounded-3xl bg-black/80 border-2 border-[var(--signal)]/50 flex flex-col md:flex-row items-center justify-between gap-5 shadow-2xl">
         <div className="flex items-center gap-4 text-center md:text-left">
-          <div className="w-12 h-12 rounded-2xl bg-[var(--brass)]/20 border border-[var(--brass)] flex items-center justify-center shrink-0">
-            <Radio className={`w-6 h-6 text-[var(--brass)] ${syncStatus === 'locked' ? 'animate-bounce' : ''}`} />
+          <div className="w-12 h-12 rounded-2xl bg-[var(--signal)]/20 border border-[var(--signal)] flex items-center justify-center shrink-0">
+            <Radio className={`w-6 h-6 text-[var(--signal)] ${syncStatus === 'locked' ? 'animate-bounce' : ''}`} />
           </div>
           <div>
             <div className="flex items-center gap-2 justify-center md:justify-start">

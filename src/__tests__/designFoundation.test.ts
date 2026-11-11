@@ -17,8 +17,8 @@ describe('globe framing', () => {
 
 describe('navigation', () => {
   it('maps every existing track to a v3 section', () => {
-    expect(TRACKS.map((t) => sectionOf(t.id))).toEqual(['explore', 'jukebox', 'jukebox', 'jukebox']);
-    expect(JUKEBOX_TRACKS.map((t) => t.id)).toEqual(['frames', 'monsoon', 'pulse']);
+    expect(TRACKS.map((t) => sectionOf(t.id))).toEqual(['explore', 'frames', 'jukebox', 'jukebox']); // v5: Frames is its own first section
+    expect(JUKEBOX_TRACKS.map((t) => t.id)).toEqual(['monsoon', 'pulse']); // v5: Frames left the collections
     expect(sectionOf('about')).toBe('about');
     expect(sectionOf('jukebox')).toBe('jukebox');
   });

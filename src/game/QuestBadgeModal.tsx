@@ -15,7 +15,7 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 scrim backdrop-blur-md animate-fade-in">
-      <div className="glass-pop max-w-lg w-full p-6 sm:p-8 flex flex-col items-center gap-5 relative border-2 border-[var(--brass)] shadow-2xl">
+      <div className="glass-pop max-w-lg w-full p-6 sm:p-8 flex flex-col items-center gap-5 relative border-2 border-[var(--signal)] shadow-2xl">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer"
@@ -26,19 +26,19 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
 
         {/* Certificate Golden Seal & Eco-Ninja Hero Avatar */}
         <div className="flex items-center justify-center gap-4">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--brass)] overflow-hidden shrink-0">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-600 via-amber-400 to-emerald-400 p-0.5 shadow-xl border-2 border-[var(--signal)] overflow-hidden shrink-0">
             <img src="/images/ninja_cadet_avatar.png" alt="Sonic Eco-Ninja Cadet" className="w-full h-full object-cover rounded-[14px]" />
           </div>
           <div className="relative">
             <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-600 to-amber-300 flex items-center justify-center text-slate-950 shadow-xl border-4 border-amber-200">
               <Award className="w-10 h-10 animate-pulse" />
             </div>
-            <Sparkles className="w-6 h-6 text-[var(--brass)] absolute -top-1 -right-1 animate-bounce" />
+            <Sparkles className="w-6 h-6 text-[var(--signal)] absolute -top-1 -right-1 animate-bounce" />
           </div>
         </div>
 
         <div className="text-center">
-          <span className="text-xs uppercase tracking-widest text-[var(--brass)] font-semibold font-mono">
+          <span className="text-xs uppercase tracking-widest text-[var(--signal)] font-semibold font-mono">
             NASA SPACE APPS CHALLENGE 2026
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-[var(--ink)] mt-1">
@@ -61,7 +61,7 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
             type="text"
             value={cadetName}
             onChange={(e) => setCadetName(e.target.value)}
-            className="w-full text-center font-bold text-lg text-[var(--brass)] bg-[var(--panel-2)] border border-[var(--line)] rounded-lg py-1.5 px-3 focus:outline-none focus:border-[var(--brass)] font-display"
+            className="w-full text-center font-bold text-lg text-[var(--signal)] bg-[var(--panel-2)] border border-[var(--line)] rounded-lg py-1.5 px-3 focus:outline-none focus:border-[var(--signal)] font-display"
           />
         </div>
 

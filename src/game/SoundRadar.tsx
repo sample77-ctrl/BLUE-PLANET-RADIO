@@ -34,15 +34,15 @@ export const SoundRadar: React.FC<Props> = ({ pan, activeSound, intensity }) => 
         <span className="text-2xs font-mono font-semibold text-[var(--ink-3)]">L</span>
         <div className="flex items-end gap-0.5 h-4 w-7 justify-end">
           <span
-            className={`w-1 rounded-full transition-all duration-150 ${isLeft || isCenter ? 'bg-[var(--brass)]' : 'bg-[var(--line)]'}`}
+            className={`w-1 rounded-full transition-all duration-150 ${isLeft || isCenter ? 'bg-[var(--signal)]' : 'bg-[var(--line)]'}`}
             style={{ height: isLeft ? `${Math.max(30, intensity * 90)}%` : isCenter ? '40%' : '20%' }}
           />
           <span
-            className={`w-1 rounded-full transition-all duration-150 ${isLeft || isCenter ? 'bg-[var(--brass)]' : 'bg-[var(--line)]'}`}
+            className={`w-1 rounded-full transition-all duration-150 ${isLeft || isCenter ? 'bg-[var(--signal)]' : 'bg-[var(--line)]'}`}
             style={{ height: isLeft ? `${Math.max(40, intensity * 100)}%` : isCenter ? '55%' : '20%' }}
           />
           <span
-            className={`w-1 rounded-full transition-all duration-150 ${isLeft ? 'bg-[var(--brass)]' : 'bg-[var(--line)]'}`}
+            className={`w-1 rounded-full transition-all duration-150 ${isLeft ? 'bg-[var(--signal)]' : 'bg-[var(--line)]'}`}
             style={{ height: isLeft ? `${Math.max(20, intensity * 75)}%` : '20%' }}
           />
         </div>
@@ -63,15 +63,15 @@ export const SoundRadar: React.FC<Props> = ({ pan, activeSound, intensity }) => 
       <div className="flex items-center gap-1">
         <div className="flex items-end gap-0.5 h-4 w-7">
           <span
-            className={`w-1 rounded-full transition-all duration-150 ${isRight ? 'bg-[var(--brass)]' : 'bg-[var(--line)]'}`}
+            className={`w-1 rounded-full transition-all duration-150 ${isRight ? 'bg-[var(--signal)]' : 'bg-[var(--line)]'}`}
             style={{ height: isRight ? `${Math.max(20, intensity * 75)}%` : '20%' }}
           />
           <span
-            className={`w-1 rounded-full transition-all duration-150 ${isRight || isCenter ? 'bg-[var(--brass)]' : 'bg-[var(--line)]'}`}
+            className={`w-1 rounded-full transition-all duration-150 ${isRight || isCenter ? 'bg-[var(--signal)]' : 'bg-[var(--line)]'}`}
             style={{ height: isRight ? `${Math.max(40, intensity * 100)}%` : isCenter ? '55%' : '20%' }}
           />
           <span
-            className={`w-1 rounded-full transition-all duration-150 ${isRight || isCenter ? 'bg-[var(--brass)]' : 'bg-[var(--line)]'}`}
+            className={`w-1 rounded-full transition-all duration-150 ${isRight || isCenter ? 'bg-[var(--signal)]' : 'bg-[var(--line)]'}`}
             style={{ height: isRight ? `${Math.max(30, intensity * 90)}%` : isCenter ? '40%' : '20%' }}
           />
         </div>

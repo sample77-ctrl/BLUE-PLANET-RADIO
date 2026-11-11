@@ -150,7 +150,7 @@ export const BangladeshMonsoon: React.FC = () => {
     controls: { toggle: () => { if (playing) stop(); else void start(); }, stop },
   } : null);
   if (err) return <p className="p-8 text-[var(--warm)]">{t('bdLoadFail')}</p>;
-  if (!data) return <div className="h-full grid place-items-center"><Loader2 className="w-6 h-6 animate-spin text-[var(--brass)]" /></div>;
+  if (!data) return <div className="h-full grid place-items-center"><Loader2 className="w-6 h-6 animate-spin text-[var(--signal)]" /></div>;
 
   const today = [...data.cities].sort((a, b) => series(b)[day] - series(a)[day])[0];
   const fc = data.cities.find((c) => c.name === focus) ?? data.cities[0];
@@ -181,15 +181,15 @@ export const BangladeshMonsoon: React.FC = () => {
             onClick={() => setShowGuide(!showGuide)}
             className="btn btn-ghost text-xs self-start md:self-auto flex items-center gap-1.5 border border-[var(--line)]"
           >
-            <Info className="w-4 h-4 text-[var(--brass)]" />
+            <Info className="w-4 h-4 text-[var(--signal)]" />
             <span>{showGuide ? (lang === 'bn' ? 'গাইড লুকান' : 'Hide Auditory Guide') : (lang === 'bn' ? 'শব্দ নির্দেশিকা' : 'Auditory Mapping Guide')}</span>
           </button>
         </div>
 
         {/* Auditory Mapping Guide Banner */}
         {showGuide && (
-          <div className="panel p-4 bg-[color-mix(in_srgb,var(--panel)_90%,transparent)] border-[var(--brass)] animate-in fade-in duration-200">
-            <h3 className="font-display font-bold text-sm text-[var(--brass)] mb-2 flex items-center gap-1.5">
+          <div className="panel p-4 bg-[color-mix(in_srgb,var(--panel)_90%,transparent)] border-[var(--signal)] animate-in fade-in duration-200">
+            <h3 className="font-display font-bold text-sm text-[var(--signal)] mb-2 flex items-center gap-1.5">
               <Compass className="w-4 h-4" />
               {lang === 'bn' ? 'কীভাবে শব্দ এবং অবস্থান কাজ করে:' : 'How Sound & Coordinates Work:'}
             </h3>
@@ -229,7 +229,7 @@ export const BangladeshMonsoon: React.FC = () => {
               <div className="flex rounded-lg border border-[var(--line)] p-0.5 bg-[var(--panel-2)]" role="group" aria-label="Audio Playback Scope">
                 <button
                   type="button"
-                  className={`btn btn-ghost min-h-[36px] px-3 text-xs font-semibold flex items-center gap-1.5 ${playScope === 'focus' ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-sm' : 'text-[var(--ink-2)]'}`}
+                  className={`btn btn-ghost min-h-[36px] px-3 text-xs font-semibold flex items-center gap-1.5 ${playScope === 'focus' ? 'bg-[var(--signal)] text-[var(--on-signal)] shadow-sm' : 'text-[var(--ink-2)]'}`}
                   aria-pressed={playScope === 'focus'}
                   onClick={() => setPlayScope('focus')}
                   title={lang === 'bn' ? `শুধুমাত্র ${cityName(fc)} এর শব্দ শুনুন` : `Play audio for ${cityName(fc)} only`}
@@ -239,7 +239,7 @@ export const BangladeshMonsoon: React.FC = () => {
                 </button>
                 <button
                   type="button"
-                  className={`btn btn-ghost min-h-[36px] px-3 text-xs font-semibold flex items-center gap-1.5 ${playScope === 'all' ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-sm' : 'text-[var(--ink-2)]'}`}
+                  className={`btn btn-ghost min-h-[36px] px-3 text-xs font-semibold flex items-center gap-1.5 ${playScope === 'all' ? 'bg-[var(--signal)] text-[var(--on-signal)] shadow-sm' : 'text-[var(--ink-2)]'}`}
                   aria-pressed={playScope === 'all'}
                   onClick={() => setPlayScope('all')}
                   title={lang === 'bn' ? 'সকল ৮টি বিভাগের সমন্বিত শব্দ শুনুন' : 'Play spatial audio for all 8 divisions'}
@@ -254,7 +254,7 @@ export const BangladeshMonsoon: React.FC = () => {
                 {[2026, 2025].map((y) => (
                   <button
                     key={y}
-                    className={`btn btn-ghost min-h-[36px] px-3 font-semibold ${year === y ? 'bg-[var(--brass)] text-[var(--brass-ink)] shadow-sm' : ''}`}
+                    className={`btn btn-ghost min-h-[36px] px-3 font-semibold ${year === y ? 'bg-[var(--signal)] text-[var(--on-signal)] shadow-sm' : ''}`}
                     aria-pressed={year === y}
                     onClick={() => { stop(); setYear(y as 2026 | 2025); setDay(0); }}
                   >
@@ -271,7 +271,7 @@ export const BangladeshMonsoon: React.FC = () => {
               <span className="text-[var(--ink-3)]">·</span>
               <Droplets className="w-4 h-4 text-[var(--rain)]" />
               <span>
-                <strong className="text-[var(--brass)]">{cityName(today)}</strong> {num(series(today)[day], 1)} {t('unitMm')}
+                <strong className="text-[var(--signal)]">{cityName(today)}</strong> {num(series(today)[day], 1)} {t('unitMm')}
               </span>
             </div>
           </div>
@@ -280,7 +280,7 @@ export const BangladeshMonsoon: React.FC = () => {
           <div className="space-y-1.5 pt-1">
             <div className="flex items-center justify-between text-xs text-[var(--ink-3)]">
               <span>{fmtDate(dates[0])}</span>
-              <span className="font-semibold text-[var(--brass)] tnum">{lang === 'bn' ? 'দিন' : 'Day'} {num(day + 1)} / {num(dates.length)}</span>
+              <span className="font-semibold text-[var(--signal)] tnum">{lang === 'bn' ? 'দিন' : 'Day'} {num(day + 1)} / {num(dates.length)}</span>
               <span>{fmtDate(dates[dates.length - 1])}</span>
             </div>
             <div className="flex items-center gap-2">
@@ -298,7 +298,7 @@ export const BangladeshMonsoon: React.FC = () => {
                 max={dates.length - 1}
                 value={day}
                 onChange={(e) => { stop(); setDay(+e.target.value); }}
-                className="w-full h-2 rounded-lg accent-[var(--brass)] cursor-pointer bg-[var(--line)]"
+                className="w-full h-2 rounded-lg accent-[var(--signal)] cursor-pointer bg-[var(--line)]"
                 aria-label="Monsoon timeline date scrubber"
               />
               <button
@@ -319,7 +319,7 @@ export const BangladeshMonsoon: React.FC = () => {
           <figure className="panel-solid p-4 space-y-3 relative">
             <div className="flex items-center justify-between">
               <h2 className="font-display font-bold text-lg flex items-center gap-2">
-                <Compass className="w-4 h-4 text-[var(--brass)]" />
+                <Compass className="w-4 h-4 text-[var(--signal)]" />
                 {lang === 'bn' ? 'বাংলাদেশ বৃষ্টিপাত মানচিত্র' : 'Bangladesh Rainfall Map'}
               </h2>
               <span className="text-xs text-[var(--ink-3)] tnum">{lang === 'bn' ? '৮ বিভাগ' : '8 Divisions'}</span>
@@ -389,7 +389,7 @@ export const BangladeshMonsoon: React.FC = () => {
                         r={r}
                         fill="var(--rain)"
                         fillOpacity={0.35 + Math.min(0.6, mm / 120)}
-                        stroke={sel ? 'var(--brass)' : '#bfe9ff'}
+                        stroke={sel ? 'var(--signal)' : '#bfe9ff'}
                         strokeWidth={sel ? 3 : 1}
                       />
                       <text
@@ -398,7 +398,7 @@ export const BangladeshMonsoon: React.FC = () => {
                         y={py(c.lat) + 4}
                         fontSize={13}
                         fontWeight={sel ? 'bold' : 'normal'}
-                        fill={sel ? 'var(--brass)' : 'var(--ink)'}
+                        fill={sel ? 'var(--signal)' : 'var(--ink)'}
                         paintOrder="stroke"
                         stroke="#0d1b27"
                         strokeWidth={3}
@@ -412,7 +412,7 @@ export const BangladeshMonsoon: React.FC = () => {
             </div>
             <figcaption className="text-xs text-[var(--ink-3)] mt-1 flex items-center justify-between">
               <span>{t('bdCircle')}</span>
-              <span className="text-[var(--brass)] font-semibold">{cityName(fc)} {lang === 'bn' ? 'নির্বাচিত' : 'Selected'}</span>
+              <span className="text-[var(--signal)] font-semibold">{cityName(fc)} {lang === 'bn' ? 'নির্বাচিত' : 'Selected'}</span>
             </figcaption>
           </figure>
 
@@ -425,7 +425,7 @@ export const BangladeshMonsoon: React.FC = () => {
                   <h2 className="font-display text-xl font-bold flex items-center gap-2">
                     <span>{t('bdRainTitle', { city: cityName(fc), year: lang === 'bn' ? bnNum(year) : year })}</span>
                     {rankIndex === 0 && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--brass)] text-[var(--brass-ink)] font-semibold flex items-center gap-1">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-[var(--signal)] text-[var(--on-signal)] font-semibold flex items-center gap-1">
                         <Award className="w-3 h-3" /> #1 {lang === 'bn' ? 'সর্বোচ্চ বৃষ্টিপাত' : 'Wettest'}
                       </span>
                     )}
@@ -460,7 +460,7 @@ export const BangladeshMonsoon: React.FC = () => {
                       width={Math.max(1, bw - 1)}
                       y={chartH - (Math.min(v, yMax) / yMax) * chartH}
                       height={(Math.min(v, yMax) / yMax) * chartH}
-                      fill={i === day ? 'var(--brass)' : 'var(--rain)'}
+                      fill={i === day ? 'var(--signal)' : 'var(--rain)'}
                       fillOpacity={i <= day ? 0.95 : 0.4}
                       onClick={() => { stop(); setDay(i); }}
                     />
@@ -502,14 +502,14 @@ export const BangladeshMonsoon: React.FC = () => {
                       aria-pressed={isSel}
                       className={`text-left rounded-xl border p-3 cursor-pointer transition-all duration-200 relative overflow-hidden ${
                         isSel
-                          ? 'border-[var(--brass)] bg-[var(--panel-2)] shadow-lg ring-1 ring-[var(--brass)]'
-                          : 'border-[var(--glass-border)] bg-[color-mix(in_srgb,var(--panel)_50%,transparent)] hover:border-[var(--brass)] hover:bg-[var(--panel-2)]'
+                          ? 'border-[var(--signal)] bg-[var(--panel-2)] shadow-lg ring-1 ring-[var(--signal)]'
+                          : 'border-[var(--glass-border)] bg-[color-mix(in_srgb,var(--panel)_50%,transparent)] hover:border-[var(--signal)] hover:bg-[var(--panel-2)]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-sm">{cityName(s.c)}</span>
                         {idx === 0 && (
-                          <span className="text-2xs px-1.5 py-0.5 rounded bg-[var(--brass)] text-[var(--brass-ink)] font-semibold">
+                          <span className="text-2xs px-1.5 py-0.5 rounded bg-[var(--signal)] text-[var(--on-signal)] font-semibold">
                             #1
                           </span>
                         )}
@@ -527,7 +527,7 @@ export const BangladeshMonsoon: React.FC = () => {
                             className="h-full rounded-full transition-all"
                             style={{
                               width: `${Math.min(100, pct)}%`,
-                              backgroundColor: pct >= 100 ? 'var(--rain)' : 'var(--brass)',
+                              backgroundColor: pct >= 100 ? 'var(--rain)' : 'var(--signal)',
                             }}
                           />
                         </div>
