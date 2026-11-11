@@ -73,17 +73,17 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="btn btn-ghost p-2 rounded-xl border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
+            className="btn btn-ghost p-2 rounded-lg border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
             aria-label="Back to Game Home"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-teal-500 to-indigo-500 p-0.5 shadow-md flex items-center justify-center">
-            <Settings className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 rounded-lg p-0.5 flex items-center justify-center bg-[var(--panel)]">
+            <Settings className="w-6 h-6 text-[var(--ink)]" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="chip border-teal-500/40 bg-teal-950/40 text-teal-300 text-3xs font-mono font-semibold uppercase">
+              <span className="chip border-[var(--hair)] bg-[var(--panel-2)] text-[var(--signal)] text-2xs font-mono font-semibold uppercase">
                 {isBn ? 'সেকশন ১০ · সেটিংস ও অ্যাক্সেসিবিলিটি' : 'SECTION 10 · SETTINGS & ACCESSIBILITY'}
               </span>
               <span className="text-xs font-mono text-[var(--ink-3)]">
@@ -99,7 +99,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Language & Sound Settings */}
-        <div className="p-5 rounded-3xl bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-5 shadow-lg">
+        <div className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-5">
           <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
             <Globe className="w-5 h-5 text-[var(--signal)]" />
             <h3 className="font-display font-bold text-sm text-[var(--ink)]">
@@ -115,20 +115,20 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => set({ lang: 'en' })}
-                className={`py-2 px-3 rounded-xl border text-xs font-semibold cursor-pointer transition ${
+                className={`py-2 px-3 rounded-lg border text-xs font-semibold cursor-pointer transition ${
                   lang === 'en'
-                    ? 'bg-[var(--signal)] text-black border-[var(--signal)] shadow-md'
-                    : 'bg-black/30 border-[var(--line)] text-[var(--ink)] hover:border-[var(--signal)]'
+                    ? 'bg-[var(--signal)] text-[var(--on-signal)] border-[var(--signal)] '
+                    : 'bg-[var(--ground)]/30 border-[var(--line)] text-[var(--ink)] hover:border-[var(--signal)]'
                 }`}
               >
                 English (US)
               </button>
               <button
                 onClick={() => set({ lang: 'bn' })}
-                className={`py-2 px-3 rounded-xl border text-xs font-semibold cursor-pointer transition ${
+                className={`py-2 px-3 rounded-lg border text-xs font-semibold cursor-pointer transition ${
                   lang === 'bn'
-                    ? 'bg-[var(--signal)] text-black border-[var(--signal)] shadow-md'
-                    : 'bg-black/30 border-[var(--line)] text-[var(--ink)] hover:border-[var(--signal)]'
+                    ? 'bg-[var(--signal)] text-[var(--on-signal)] border-[var(--signal)] '
+                    : 'bg-[var(--ground)]/30 border-[var(--line)] text-[var(--ink)] hover:border-[var(--signal)]'
                 }`}
               >
                 বাংলা (Bengali)
@@ -140,7 +140,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
           <div className="flex flex-col gap-2">
             <div className="flex justify-between text-xs">
               <span className="text-[var(--ink-2)]">{isBn ? 'মাস্টার সাউন্ড ভলিউম:' : 'Master Volume:'}</span>
-              <span className="font-mono text-white font-semibold">{masterVolume}%</span>
+              <span className="font-mono text-[var(--ink)] font-semibold">{masterVolume}%</span>
             </div>
             <input
               type="range"
@@ -148,7 +148,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
               max={100}
               value={masterVolume}
               onChange={(e) => setMasterVolume(Number(e.target.value))}
-              className="w-full accent-[var(--signal)] cursor-pointer h-2 bg-black/40 rounded-lg appearance-none"
+              className="w-full accent-[var(--signal)] cursor-pointer h-2 bg-[var(--ground)]/40 rounded-lg appearance-none"
               aria-label="Master Volume"
             />
           </div>
@@ -163,10 +163,10 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
                 <button
                   key={scale}
                   onClick={() => setPitchScale(scale)}
-                  className={`py-1.5 px-2 rounded-xl border text-xs font-mono font-semibold capitalize cursor-pointer transition ${
+                  className={`py-1.5 px-2 rounded-lg border text-xs font-mono font-semibold capitalize cursor-pointer transition ${
                     pitchScale === scale
-                      ? 'bg-[var(--signal)] text-black border-[var(--signal)] shadow-md'
-                      : 'bg-black/30 border-[var(--line)] text-[var(--ink)]'
+                      ? 'bg-[var(--signal)] text-[var(--on-signal)] border-[var(--signal)] '
+                      : 'bg-[var(--ground)]/30 border-[var(--line)] text-[var(--ink)]'
                   }`}
                 >
                   {scale}
@@ -177,7 +177,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
 
           <button
             onClick={testAudioTone}
-            className="btn btn-ghost border border-[var(--line)] py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer hover:border-[var(--signal)]"
+            className="btn btn-ghost border border-[var(--line)] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer hover:border-[var(--signal)]"
           >
             <Volume2 className="w-4 h-4 text-[var(--signal)]" />
             <span>{isBn ? 'সাউন্ড টেস্ট করুন' : 'Test Audio Tone'}</span>
@@ -185,9 +185,9 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
         </div>
 
         {/* Speech Synthesis & Screen Reader Narration */}
-        <div className="p-5 rounded-3xl bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-5 shadow-lg">
+        <div className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-5">
           <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
-            <Sliders className="w-5 h-5 text-teal-400" />
+            <Sliders className="w-5 h-5 text-[var(--signal)]" />
             <h3 className="font-display font-bold text-sm text-[var(--ink)]">
               {isBn ? 'স্পিচ সিন্থেসিস ও ভয়েস নিয়ন্ত্রণ' : 'Web Speech API Narration'}
             </h3>
@@ -201,7 +201,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
             <select
               value={selectedVoice}
               onChange={(e) => setSelectedVoice(e.target.value)}
-              className="bg-black/50 border border-[var(--line)] rounded-xl px-2.5 py-1.5 text-xs font-mono text-white cursor-pointer"
+              className="bg-[var(--ground)]/50 border border-[var(--line)] rounded-lg px-2.5 py-1.5 text-xs font-mono text-[var(--ink)] cursor-pointer"
             >
               {availableVoices.map((v) => (
                 <option key={v.name} value={v.name}>
@@ -218,7 +218,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
           <div className="flex flex-col gap-2">
             <div className="flex justify-between text-xs">
               <span className="text-[var(--ink-2)]">{isBn ? 'বলার গতি (Rate):' : 'Speech Speed (Rate):'}</span>
-              <span className="font-mono text-white font-semibold">{speechRate.toFixed(1)}x</span>
+              <span className="font-mono text-[var(--ink)] font-semibold">{speechRate.toFixed(1)}x</span>
             </div>
             <input
               type="range"
@@ -227,7 +227,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
               step={0.1}
               value={speechRate}
               onChange={(e) => setSpeechRate(Number(e.target.value))}
-              className="w-full accent-teal-400 cursor-pointer h-2 bg-black/40 rounded-lg appearance-none"
+              className="w-full accent-[var(--signal)] cursor-pointer h-2 bg-[var(--ground)]/40 rounded-lg appearance-none"
               aria-label="Speech Speed Rate"
             />
           </div>
@@ -236,7 +236,7 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
           <div className="flex flex-col gap-2">
             <div className="flex justify-between text-xs">
               <span className="text-[var(--ink-2)]">{isBn ? 'ভয়েস পিচ (Pitch):' : 'Speech Pitch:'}</span>
-              <span className="font-mono text-white font-semibold">{speechPitch.toFixed(1)}x</span>
+              <span className="font-mono text-[var(--ink)] font-semibold">{speechPitch.toFixed(1)}x</span>
             </div>
             <input
               type="range"
@@ -245,25 +245,25 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
               step={0.1}
               value={speechPitch}
               onChange={(e) => setSpeechPitch(Number(e.target.value))}
-              className="w-full accent-teal-400 cursor-pointer h-2 bg-black/40 rounded-lg appearance-none"
+              className="w-full accent-[var(--signal)] cursor-pointer h-2 bg-[var(--ground)]/40 rounded-lg appearance-none"
               aria-label="Speech Pitch"
             />
           </div>
 
           <button
             onClick={testSpeech}
-            className="btn btn-ghost border border-[var(--line)] py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer hover:border-teal-400"
+            className="btn btn-ghost border border-[var(--line)] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer hover:border-[var(--signal)]"
           >
-            <Sparkles className="w-4 h-4 text-teal-400" />
+            <Sparkles className="w-4 h-4 text-[var(--signal)]" />
             <span>{isBn ? 'ভয়েস পরীক্ষা করুন' : 'Test Speech Narration'}</span>
           </button>
         </div>
       </div>
 
       {/* Visual Accessibility & Hearing Assist Toggles */}
-      <div className="p-5 rounded-3xl bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-4 shadow-lg">
+      <div className="p-5 rounded-lg bg-[var(--panel)] border border-[var(--line)] flex flex-col gap-4">
         <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
-          <Eye className="w-5 h-5 text-indigo-400" />
+          <Eye className="w-5 h-5 text-[var(--signal)]" />
           <h3 className="font-display font-bold text-sm text-[var(--ink)]">
             {isBn ? 'ভিজ্যুয়াল অ্যাক্সেসিবিলিটি ও বধিরবান্ধব বৈশিষ্ট্য' : 'Visual Accessibility & Deaf Inclusivity'}
           </h3>
@@ -272,65 +272,65 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div
             onClick={() => set({ highContrast: !highContrast })}
-            className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition ${
-              highContrast ? 'bg-indigo-950/30 border-indigo-400' : 'bg-black/30 border-[var(--line)]'
+            className={`p-3.5 rounded-lg border flex items-center justify-between cursor-pointer transition ${
+              highContrast ? 'bg-[var(--panel-2)] border-[var(--signal)]' : 'bg-[var(--ground)]/30 border-[var(--line)]'
             }`}
           >
             <div>
-              <span className="text-xs font-semibold text-white block">
+              <span className="text-xs font-semibold text-[var(--ink)] block">
                 {isBn ? 'উচ্চ বৈসাদৃশ্য (High Contrast)' : 'High Contrast'}
               </span>
-              <span className="text-3xs text-[var(--ink-3)]">
+              <span className="text-2xs text-[var(--ink-3)]">
                 Stronger borders & highlights
               </span>
             </div>
-            <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${highContrast ? 'bg-indigo-500 border-indigo-400' : 'border-[var(--line)]'}`}>
-              {highContrast && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
+            <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${highContrast ? 'bg-[var(--signal)] border-[var(--signal)]' : 'border-[var(--line)]'}`}>
+              {highContrast && <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ink)]" />}
             </div>
           </div>
 
           <div
             onClick={() => set({ reduceMotion: !reduceMotion })}
-            className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition ${
-              reduceMotion ? 'bg-indigo-950/30 border-indigo-400' : 'bg-black/30 border-[var(--line)]'
+            className={`p-3.5 rounded-lg border flex items-center justify-between cursor-pointer transition ${
+              reduceMotion ? 'bg-[var(--panel-2)] border-[var(--signal)]' : 'bg-[var(--ground)]/30 border-[var(--line)]'
             }`}
           >
             <div>
-              <span className="text-xs font-semibold text-white block">
+              <span className="text-xs font-semibold text-[var(--ink)] block">
                 {isBn ? 'কম অ্যানিমেশন (Reduced Motion)' : 'Reduced Motion'}
               </span>
-              <span className="text-3xs text-[var(--ink-3)]">
+              <span className="text-2xs text-[var(--ink-3)]">
                 Calm transitions for vestibular health
               </span>
             </div>
-            <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${reduceMotion ? 'bg-indigo-500 border-indigo-400' : 'border-[var(--line)]'}`}>
-              {reduceMotion && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
+            <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${reduceMotion ? 'bg-[var(--signal)] border-[var(--signal)]' : 'border-[var(--line)]'}`}>
+              {reduceMotion && <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ink)]" />}
             </div>
           </div>
 
           <div
             onClick={() => setVisualSoundWave(!visualSoundWave)}
-            className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition ${
-              visualSoundWave ? 'bg-indigo-950/30 border-indigo-400' : 'bg-black/30 border-[var(--line)]'
+            className={`p-3.5 rounded-lg border flex items-center justify-between cursor-pointer transition ${
+              visualSoundWave ? 'bg-[var(--panel-2)] border-[var(--signal)]' : 'bg-[var(--ground)]/30 border-[var(--line)]'
             }`}
           >
             <div>
-              <span className="text-xs font-semibold text-white block">
+              <span className="text-xs font-semibold text-[var(--ink)] block">
                 {isBn ? 'ভিজ্যুয়াল সাউন্ড ওয়েভ' : 'Visual Sound Spectrum'}
               </span>
-              <span className="text-3xs text-[var(--ink-3)]">
+              <span className="text-2xs text-[var(--ink-3)]">
                 Graphic bars for hard-of-hearing
               </span>
             </div>
-            <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${visualSoundWave ? 'bg-indigo-500 border-indigo-400' : 'border-[var(--line)]'}`}>
-              {visualSoundWave && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
+            <div className={`w-5 h-5 rounded-lg border flex items-center justify-center ${visualSoundWave ? 'bg-[var(--signal)] border-[var(--signal)]' : 'border-[var(--line)]'}`}>
+              {visualSoundWave && <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ink)]" />}
             </div>
           </div>
         </div>
       </div>
 
       {/* Keyboard Shortcuts Reference Guide */}
-      <div className="p-5 rounded-3xl bg-black/60 border border-[var(--line)] flex flex-col gap-3 shadow-inner">
+      <div className="p-5 rounded-lg bg-[var(--ground)]/60 border border-[var(--line)] flex flex-col gap-3">
         <div className="flex items-center gap-2 border-b border-[var(--line)] pb-2.5">
           <Keyboard className="w-5 h-5 text-[var(--signal)]" />
           <h3 className="font-display font-bold text-sm text-[var(--ink)]">
@@ -339,20 +339,20 @@ export const GameSettingsView: React.FC<Props> = ({ onBack }) => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-2xs font-mono text-[var(--ink-2)]">
-          <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-            <span className="text-white font-semibold block">W / A / S / D</span>
+          <div className="p-2 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)]">
+            <span className="text-[var(--ink)] font-semibold block">W / A / S / D</span>
             <span>Movement & Direction</span>
           </div>
-          <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-            <span className="text-white font-semibold block">Space</span>
+          <div className="p-2 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)]">
+            <span className="text-[var(--ink)] font-semibold block">Space</span>
             <span>Sonar Ping / Fire Water</span>
           </div>
-          <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-            <span className="text-white font-semibold block">Enter</span>
+          <div className="p-2 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)]">
+            <span className="text-[var(--ink)] font-semibold block">Enter</span>
             <span>Interact / Calibrate</span>
           </div>
-          <div className="p-2 rounded-xl bg-white/5 border border-white/5">
-            <span className="text-white font-semibold block">M / H / Esc</span>
+          <div className="p-2 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)]">
+            <span className="text-[var(--ink)] font-semibold block">M / H / Esc</span>
             <span>Compass / Audio Help / Exit</span>
           </div>
         </div>
