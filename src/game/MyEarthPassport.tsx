@@ -93,7 +93,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, stars }) => {
           <button
             onClick={onBack}
             className="btn btn-ghost p-2 rounded-lg border border-[var(--line)] hover:border-[var(--signal)] cursor-pointer"
-            aria-label={isBn ? 'কোয়েস্ট হোমে ফিরে যাও' : 'Back to Quest home'}
+            aria-label={isBn ? 'কোয়েস্ট হাবে ফিরে যাও' : 'Back to Quest hub'}
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
