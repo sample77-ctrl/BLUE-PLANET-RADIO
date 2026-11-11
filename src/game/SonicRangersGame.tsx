@@ -308,12 +308,12 @@ export const SonicRangersGame: React.FC<Props> = ({
             <Compass className="w-7 h-7 text-[var(--signal)] shrink-0" />
             <div>
               <h2 className="font-display font-bold text-sm sm:text-base text-[var(--ink)]">
-                {isBn ? 'আসল স্যাটেলাইটের লাইভ ৩ডি গ্লোবে শব্দ শুনতে চাও?' : 'Ready to hear real NASA satellite observations on the 3D globe?'}
+                {isBn ? 'আসল স্যাটেলাইট পর্যবেক্ষণ ৩ডি গ্লোবে শুনতে চাও?' : 'Ready to hear real NASA satellite observations on the 3D globe?'}
               </h2>
               <p className="text-2xs sm:text-xs text-[var(--ink-2)] mt-0.5">
                 {isBn
                   ? 'গেম থেকে যা শিখলে, তা দিয়ে এবার আসল পৃথিবীর ৩ডি গ্লোবে আগুন, বৃষ্টি ও সাগরের তথ্য শোনো।'
-                  : 'Take your newly trained sonic ears to explore real-time NASA observations around the world!'}
+                  : 'Take your newly trained sonic ears to explore NASA observations from around the world (bundled snapshots, not live).'}
               </p>
             </div>
           </div>
@@ -321,7 +321,7 @@ export const SonicRangersGame: React.FC<Props> = ({
             onClick={onExplore}
             className="btn btn-brass shrink-0 text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-lg flex items-center gap-2 cursor-pointer"
           >
-            <span>{isBn ? 'লাইভ ৩ডি গ্লোবে যাও' : 'Launch 3D Globe'}</span>
+            <span>{isBn ? '৩ডি গ্লোবে যাও' : 'Launch 3D Globe'}</span>
           </button>
         </div>}
 
