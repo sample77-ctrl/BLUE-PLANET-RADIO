@@ -74,6 +74,7 @@ test('high contrast: black ground, and the signal colour is text and lines only 
   await page.setViewportSize({ width: 1400, height: 900 });
   await open(page, 'track=jukebox&story=gistemp');
   await expect(page.locator('html.hc')).toHaveCount(1);
+  await expect(page.locator('.vinyl-hero')).toBeVisible(); // the Jukebox is a lazy chunk
   expect(await css(page, '.vinyl-hero', 'background-color')).toBe('rgb(0, 0, 0)');
   expect(await css(page, '.site-header', 'background-color')).toBe('rgb(0, 0, 0)');
   expect(await css(page, '#space-bg::before', 'display')).not.toBe('block');

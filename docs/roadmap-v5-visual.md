@@ -211,3 +211,33 @@ Removed: Bricolage Grotesque, Cormorant Garamond, IBM Plex Sans (two files) and 
 **Not done / for later phases:** nothing samples a frame colour yet (V2); the globe markers still use their own hex colours (V5 retunes them); the nav item "Frames" opens the old frame player until V2; the Mona Sans file is unsubsetted (308 kB).
 **Reminder:** the Groq key in `src/harmonium/groqPredictor.ts` is untouched and must still be revoked at Groq.
 **Next safe action:** branch `visual/v2-frame-stage` from this branch and build the Frame Stage (V2).
+
+### V2 · The Frame Stage: done in part (branch `visual/v2-frame-stage`, cut from `visual/v1-identity`)
+**Built**
+- The `frames` view (`src/tracks/FrameJukebox.tsx`, same needle engine) is now the Stage. The EIC frame sits on the ground at its own aspect, sized to the screen height; a needle sweeps it in real time and a column glow marks the pixels being heard. Desktop: frame left, readout column right. Phones: stacked.
+- Readout = a full field of the signal colour. The big numeral is the **year read from the chart axis** on the two frames that have one (greenhouse index: 1979–2021; ocean heat: 1957–2021; the tick positions were measured on the bundled pictures and are in `eicFrames.ts` `axis`, tested at the printed ticks and the first and last bar), otherwise the longitude (map frames) or "across the picture" in %. Beside it: pitch (note and Hz), loudness meter, timbre. Its weight (560–900) and width (112–125%) follow the analyser bands from `reactive.ts` (CSS variables on one element, no re-render).
+- **Signal colour sampled live** (`columnColor` in `src/lib/frameStage.ts`, then `applySignal` from V1): the column's pixels weighted by loudness and by how vivid they are, smoothed, clamped for 4.5:1. The whole interface re-tints (buttons, underline, chips, the bar). It is released when you leave the view. Labelled in the UI as "a colour from the image, not a measurement".
+- Source, credit link, what the picture shows, the method text (now translated; it was English-only), and a **Describe** toggle with `longEn` / `longBn`. The canvas's alt text is that long description.
+- **Side A / Side B**: before/after is two frames side by side, "Side A · left ear" and "Side B · right ear", one needle in each, one scrub. The 4 preset pairs are chips; custom pair and the GIBS imagery are under "More frames and imagery".
+- **Hear the data behind it**: the greenhouse frame opens the CO₂ story in the Data Jukebox. The ocean-heat frame opens the MUR SST story and says it is related, not identical (the frame is ocean heat content since 1957, the story is last month's surface anomaly).
+- Entry: the landing's main (only brass) button is now "Hear an EIC frame"; the globe is the second button, the old "Press play · hear Fire" preview is the third. Header: Frames first, Explore Earth second (V1).
+- Transition: `withViewTransition` in `player/ui.ts`: element-scoped (`main.startViewTransition`, Chrome 147+) when it exists, else the root transition, else none; skipped under reduced motion. Used for the landing → view jump and for the full player. The Chromium here only has the root version, so the element-scoped branch is written but not exercised.
+- Reduced motion: the sound runs at full rate, but the needle, numerals and colour update about once a second, the numerals never animate, and there are step buttons (◀ ▶, 4 columns each; they play a short probe). High contrast: black ground, signal colour as text and lines only.
+- Small: the periodic "Needle at …" screen-reader announcement is gone (it spoke every 2.5 s while playing; only user seeks announce now).
+
+**Not done (V2 items still open)**
+- "Hear the data behind it" **opens the Jukebox** instead of playing the series under the frame on the same Stage, with a score line. Doing it properly needs the series player hosted in the Stage.
+- **Chart stories do not use the Stage yet** (the Jukebox keeps its own layout, restyled in V1).
+- Side A/B for *series* (A/B compare in the Jukebox) is not on the Stage.
+- Element-scoped view transition not seen working (no browser here supports it).
+- Nothing was listened to: audio was checked as state and cursor only, in headless Chromium.
+
+**Tests**
+- New: `src/__tests__/frameStage.test.ts` (10: axis years at ticks and ends, no year outside the chart, loudness+vividness colour, silent column holds colour, related stories exist and the ocean-heat one is labelled related); `e2e/stage.pw.ts` (9: opens from the landing CTA through a view transition and nothing autoplays; Frames first and the globe second; the needle advances while playing and the year reads from the axis; the signal colour changes along a frame and the field stays ≥ 4.5:1 and is released on leaving; Side A/B both play; Describe and the alt text; the related-data button and its "related" wording; reduced motion; 375 px in বাংলা).
+- Changed on purpose: `redesign.pw.ts` is untouched but the landing keeps exactly one brass button on the first screen (still passes); `signal.test.ts` is unchanged; `signal.ts` now treats chroma below .012 (was .03) as grey, because a downsampled colourful column averages to low chroma and was being sent to the default colour (found by the "colour follows the picture" test failing).
+- A race in my own V1 test (`identity.pw.ts` high contrast read `.vinyl-hero` before the lazy chunk rendered) failed once in the full run; it now waits for the element.
+
+**Checks (real numbers)**: lint clean; `npm test` 336 passed (36 files); build ok; size: index JS **167.6 kB** (limit 175; was 166.6), CSS **27.8 kB** (limit 32; was 27.0), globe chunk 131.8 kB (150). `npx playwright test`: **96 passed, 1 failed** (the race above), then `identity` + `stage` re-run: 15 passed. The full suite was not re-run after that one-line fix. axe (all views, 1400 px and 360 px in বাংলা + high contrast + reduced motion) was in the 96 and is clean.
+**Seen (docs/v5-shots/v2/)**: the Stage at 375 and 1440 px in English (ocean heat, greenhouse and El Niño frames, the greenhouse one playing), Side A/B at 1440 (playing) and 375, বাংলা at 375 and 1440, high contrast and reduced motion at 1440, landing at both sizes. Not seen: Side A/B in বাংলা or high contrast; the Stage on the GEOS rain frame and the GIBS imagery; forced-colors.
+**Reminder:** `src/harmonium/groqPredictor.ts` untouched; its Groq key still needs revoking.
+**Next safe action:** V3 (landing as kinetic scrollytelling, one EIC frame per chapter) on `visual/v3-landing`; or first finish the two open V2 items (series on the Stage, chart stories on the Stage) if you want V2 fully closed.

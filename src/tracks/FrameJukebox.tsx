@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Play, Square, ImagePlus, Loader2, AlertTriangle, Repeat, BookOpen, Link2 } from 'lucide-react';
+import { Play, Square, ImagePlus, Loader2, AlertTriangle, Repeat, BookOpen, Link2, ChevronLeft, ChevronRight, Headphones } from 'lucide-react';
 import { FRAMES, gibsUrl, loadFileCanvases, loadFrameCanvases, type NasaFrame } from '../lib/gibs';
 import { EIC_FRAMES, EIC_STORY } from '../lib/eicFrames';
 import { decodeLocation, encodeShare } from '../lib/shareLink';
@@ -8,6 +8,10 @@ import { AudioContextManager } from '../audio/audioContext';
 import { usePrefs, speak } from '../lib/prefs';
 import { usePlaybackReport } from '../lib/playbackContext';
 import { usePublishNowPlaying } from '../player/nowPlaying';
+import { useReactiveGlow } from '../player/reactive';
+import { applySignal, type RGB } from '../lib/signal';
+import { axisValueAt, columnColor, mixRgb, RELATED_STORY } from '../lib/frameStage';
+import { digits } from '../jukebox/format';
 
 const ALL_FRAMES: NasaFrame[] = [...EIC_FRAMES, ...FRAMES];
 const COLS = 128, ROWS = 12, SWEEP_SEC = 20;
@@ -65,10 +69,16 @@ const PAIRS: { id: string; label: string; a: NasaFrame; b: NasaFrame }[] = [
   { id: 'fire', label: 'Fires: 3 Oct 2025 → 3 Oct 2026', a: { ...FRAMES[1], date: '2025-10-03', title: '3 Oct 2025' }, b: { ...FRAMES[1], title: '3 Oct 2026' } },
 ];
 
-interface JukeboxProps { autoPlay?: boolean; onAutoPlayed?: () => void; onPlay?: () => void }
+interface JukeboxProps { autoPlay?: boolean; onAutoPlayed?: () => void; onPlay?: () => void; onOpenStory?: (id: string) => void }
 
-export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, onPlay }) => {
-  const { t, lang, narration } = usePrefs();
+export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, onPlay, onOpenStory }) => {
+  const { t, lang, narration, reduceMotion } = usePrefs();
+  const rmRef = useRef(reduceMotion);
+  useEffect(() => { rmRef.current = reduceMotion; });
+  const sigRef = useRef<RGB | null>(null); // the signal colour, smoothed
+  const readRef = useRef<HTMLDivElement>(null);
+  const [more, setMore] = useState(false);
+  const [ar, setAr] = useState(2); // width / height of what is on stage, for the frame's size
   // A shared link (#v1&track=frames&...) restores the picture, the comparison and the needle.
   const [share] = useState(() => {
     const s = decodeLocation(window.location.pathname, window.location.search, window.location.hash, { frames: ALL_FRAMES.map((f) => f.id), pairs: [...PAIRS.map((p) => p.id), 'custom'] });
@@ -87,6 +97,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
   const [userFile, setUserFile] = useState<File | null>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [playing, setPlaying] = useState(false);
+  useReactiveGlow(readRef, playing, reduceMotion); // the big numeral's weight and width follow the sound (CSS variables on one element, no re-render)
   const [col, setCol] = useState(0);
   const [readout, setReadout] = useState('');
   const [srText, setSrText] = useState('');
@@ -139,7 +150,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
 
   useEffect(() => {
     let cancelled = false;
-    silence(); colRef.current = 0; regionRef.current = null;
+    silence(); colRef.current = 0; regionRef.current = null; sigRef.current = null; applySignal(null);
     const paint = (target: HTMLCanvasElement | null, src: HTMLCanvasElement) => {
       if (!target) return;
       target.width = src.width; target.height = src.height;
@@ -150,7 +161,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
         if (mode === 'single') {
           const c = userFile ? await loadFileCanvases(userFile) : await loadFrameCanvases(frame);
           if (cancelled) return;
-          paint(viewA.current, c.display);
+          paint(viewA.current, c.display); setAr(c.display.width / c.display.height);
           grids.current = { a: toGrid(c.sound), b: null };
           // Frames with a sound region start on the part that actually has sound, not on the silent margin.
           const live = !userFile && frame.soundRegion ? activeColumns(grids.current.a!.lum, COLS, ROWS) : null;
@@ -158,7 +169,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
         } else {
           const [a, b] = await Promise.all([loadFrameCanvases(pair.a), loadFrameCanvases(pair.b)]);
           if (cancelled) return;
-          paint(viewA.current, a.display); paint(viewB.current, b.display);
+          paint(viewA.current, a.display); paint(viewB.current, b.display); setAr((a.display.width / a.display.height) * 2);
           grids.current = { a: toGrid(a.sound), b: toGrid(b.sound) };
         }
         setStatus('ready');
@@ -172,6 +183,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
   }, [mode, frameId, pairId, userFile, frame, pair, silence]);
 
   useEffect(() => () => stop(), [stop]);
+  useEffect(() => () => applySignal(null), []); // leaving the view gives the interface back its dataset colour
 
   const geo = mode === 'pair' ? !pair.a.src : (!!userFile || !frame.src);
   const where = (c: number, r?: number) => {
@@ -186,7 +198,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
   };
 
   /** Sound one column of the picture (and move the needle there). */
-  const driveCol = (ctx: AudioContext, c: number) => {
+  const driveCol = (ctx: AudioContext, c: number, paint = true) => {
     const ga = grids.current.a, bank = banks.current.a;
     if (!ga || !bank) return;
     const now = ctx.currentTime;
@@ -202,7 +214,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
     };
     drive(bank, ga, mode === 'single');
     if (mode === 'pair' && banks.current.b && grids.current.b) drive(banks.current.b, grids.current.b, false);
-    setCol(c);
+    if (paint) setCol(c);
   };
 
   const describe = (c: number, r?: number) => {
@@ -214,6 +226,8 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
     const line = r === undefined ? `${where(c)} · loudest band ${geo ? fmtLat(latAt(bestR)) : `${bestR + 1} from the top`}` : `${where(c, r)} · brightness ${level}%`;
     setReadout(line);
     const i = row * COLS + c;
+    const cc = columnColor(ga.rgb, ga.lum, c, COLS, ROWS);
+    if (cc) { sigRef.current = mixRgb(sigRef.current, cc, 0.5); applySignal(sigRef.current); } // the signal colour is the colour of what is heard in this column
     setHeard({ note: noteName(rowHz(row)), hz: Math.round(rowHz(row)), level, color: `rgb(${ga.rgb[i * 4]},${ga.rgb[i * 4 + 1]},${ga.rgb[i * 4 + 2]})`, timbre: timbreWord(ga.warm[i], ga.green[i]) });
     return line;
   };
@@ -240,9 +254,10 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
     stepRef.current = () => {
       const [lo, hi] = regionRef.current ?? [0, COLS - 1];
       const c = colRef.current;
-      driveCol(ctx, c);
-      const line = describe(c);
-      if (c % 16 === 0 && line) setSrText(`Needle at ${where(c)}.`);
+      // Reduced motion: the sound runs at full rate, but the needle, numerals and colour only update about once a second.
+      const paint = !rmRef.current || c % 8 === 0;
+      driveCol(ctx, c, paint);
+      if (paint) describe(c);
       const n = nextColumn(c, { lo, hi, loop: loopRef.current });
       if (n === null) { colRef.current = lo; stop(); endRef.current(); return; }
       colRef.current = n;
@@ -319,7 +334,8 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
 
   const fractionIn = (e: React.PointerEvent) => {
     const r = frameBox.current!.getBoundingClientRect();
-    return { fx: (e.clientX - r.left) / r.width, fy: (e.clientY - r.top) / r.height };
+    const fx = (e.clientX - r.left) / r.width;
+    return { fx: mode === 'pair' ? (fx * 2) % 1 : fx, fy: (e.clientY - r.top) / r.height }; // side by side: the column is measured inside one picture
   };
   const onFrameDown = (e: React.PointerEvent) => {
     if (status !== 'ready') return;
@@ -331,7 +347,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
     if (!d.moved && Math.abs(e.clientX - d.x0) < 8) return;
     d.moved = true;
     const r = frameBox.current!.getBoundingClientRect();
-    const a = colAt((d.x0 - r.left) / r.width, COLS), b = colAt(fractionIn(e).fx, COLS);
+    const x0 = (d.x0 - r.left) / r.width, a = colAt(mode === 'pair' ? (x0 * 2) % 1 : x0, COLS), b = colAt(fractionIn(e).fx, COLS);
     setRegion(orderRange(a, b, COLS));
   };
   const onFrameUp = (e: React.PointerEvent) => {
@@ -343,8 +359,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
       if (reg) { colRef.current = reg[0]; seek(reg[0]); }
       return;
     }
-    // In "then and now" the two pictures are stacked, so the row is measured inside one of them.
-    seek(colAt(fx, COLS), rowAt(mode === 'pair' ? (fy * 2) % 1 : fy, ROWS));
+    seek(colAt(fx, COLS), rowAt(fy, ROWS));
   };
 
   const needle = `${((col + 0.5) / COLS) * 100}%`;
@@ -356,193 +371,195 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
     controls: { toggle: () => { if (playing) stop(); else void start(); }, stop, setSpeed },
   });
 
-  return (
-    <section className="h-full overflow-y-auto px-4 sm:px-8 pb-6 pt-[calc(var(--header-h)+1.5rem)]" aria-labelledby="frames-title">
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_300px] gap-6">
-        <div>
-          <h1 id="frames-title" className="font-display text-3xl sm:text-4xl font-extrabold">{t('framesTitle')}</h1>
-          <p className="mt-2 max-w-[68ch] text-[var(--ink-2)]">{t('framesLead')}</p>
+  const frac = (col + 0.5) / COLS;
+  const year = mode === 'single' && !userFile ? axisValueAt(frame.axis, frac) : null;
+  const bigLabel = year !== null ? t('stYear') : geo ? t('stLon') : t('stAcross');
+  const bigValue = year !== null ? digits(year, lang) : geo ? digits(fmtLon(lonAt(col)), lang) : `${digits(Math.round(frac * 100), lang)}%`;
+  const related = mode === 'single' && !userFile ? RELATED_STORY[frame.id] : undefined;
+  const title = meta?.title ?? '';
+  const sides = mode === 'pair' ? [{ ref: viewA, f: pair.a, side: 'A' as const }, { ref: viewB, f: pair.b, side: 'B' as const }] : [{ ref: viewA, f: frame, side: 'A' as const }];
+  const stepBy = (dir: 1 | -1) => { const [lo, hi] = regionRef.current ?? [0, COLS - 1]; void seek(Math.min(hi, Math.max(lo, col + dir * 4))); };
+  const chipOn = (on: boolean) => `stage-chip${on ? ' on' : ''}`;
 
-          <div className="mt-5 flex flex-wrap gap-2" role="group" aria-label={t('frMode')}>
+  return (
+    <section className="stage h-full overflow-y-auto pt-[calc(var(--header-h)+1rem)]" aria-labelledby="frames-title" data-state={playing ? 'playing' : status}>
+      <div className="stage-in">
+        <header className="stage-head">
+          <div className="min-w-0">
+            <p className="readout stage-eyebrow">{mode === 'pair' ? t('stEyebrowOne') : t('stEyebrowOne')}</p>
+            <h1 id="frames-title" className="stage-title font-display">{mode === 'pair' ? `${pair.a.title} → ${pair.b.title}` : title || t('framesTitle')}</h1>
+          </div>
+          <div className="stage-modes" role="group" aria-label={t('frMode')}>
             <button type="button" className="btn" aria-pressed={mode === 'single'} onClick={() => chooseMode('single')}>{t('frOne')}</button>
             <button type="button" className="btn" aria-pressed={mode === 'pair'} onClick={() => chooseMode('pair')}>{t('beforeAfter')}</button>
           </div>
+        </header>
 
+        <div className="stage-strip" role="group" aria-label={t('frChoose')}>
+          {mode === 'single'
+            ? EIC_FRAMES.map((f) => <button key={f.id} type="button" className={chipOn(!userFile && frameId === f.id)} aria-pressed={!userFile && frameId === f.id} onClick={() => pickFrame(f.id)}>{lang === 'bn' ? f.titleBn : f.title}</button>)
+            : PAIRS.map((p) => <button key={p.id} type="button" className={chipOn(pairId === p.id)} aria-pressed={pairId === p.id} onClick={() => setPairId(p.id)}>{p.label}</button>)}
+          <button type="button" className={chipOn(more)} aria-expanded={more} aria-controls="stage-more" onClick={() => setMore(!more)}>{t('stMore')}</button>
+        </div>
+
+        <div className="stage-main">
+        <div className="stage-frame" data-pair={mode === 'pair'} style={{ ['--ar' as string]: ar }} ref={frameBox}
+          onPointerDown={onFrameDown} onPointerMove={onFrameMove} onPointerUp={onFrameUp} onPointerCancel={() => { drag.current = null; }}>
+          {sides.map(({ ref, f, side }) => (
+            <div key={side} className="stage-half">
+              {mode === 'pair' && <span className="stage-side chip">{side === 'A' ? t('stSideA') : t('stSideB')} · {side === 'A' ? t('stLeftEar') : t('stRightEar')} · {f.title}</span>}
+              <canvas ref={ref} className="stage-canvas" role="img" aria-label={mode === 'single' && !userFile ? ((lang === 'bn' ? f.longBn : f.longEn) ?? `${f.title}. ${f.what}`) : mode === 'single' ? `${meta?.title ?? ''}` : f.title} />
+              {status === 'ready' && <>
+                {region && <div className="stage-region" style={{ left: `${(region[0] / COLS) * 100}%`, width: `${((region[1] - region[0] + 1) / COLS) * 100}%` }} />}
+                <div className="stage-glow" style={{ left: `${(col / COLS) * 100}%` }} />
+                <div className="stage-needle" style={{ left: needle }} />
+              </>}
+            </div>
+          ))}
           {legend && status === 'ready' && (
-            <p className="mt-4 -mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--ink-3)]">
-              <span className="chip">{t('frHigh')}</span>{t('frHighNote')}<span className="chip">{t('frLow')}</span>{t('frLowNote')}
-            </p>
-          )}
-          <div ref={frameBox} className="mt-4 relative rounded-xl overflow-hidden border border-[var(--line)] bg-black cursor-crosshair touch-pan-y select-none"
-            onPointerDown={onFrameDown} onPointerMove={onFrameMove} onPointerUp={onFrameUp} onPointerCancel={() => { drag.current = null; }}>
-            {mode === 'pair' && <div className="absolute left-2 top-2 z-10 chip bg-black/70">◀ {pair.a.title}</div>}
-            <canvas ref={viewA} className="w-full aspect-[2/1] block" aria-label={meta ? `${meta.title}. ${meta.what}` : pair.a.title} role="img" />
-            {mode === 'pair' && (
-              <div className="relative border-t border-[var(--line)]">
-                <div className="absolute left-2 top-2 z-10 chip bg-black/70">{pair.b.title} ▶</div>
-                <canvas ref={viewB} className="w-full aspect-[2/1] block" role="img" aria-label={pair.b.title} />
-              </div>
-            )}
-            {legend && status === 'ready' && (
-              <div className="absolute inset-0 pointer-events-none text-2xs leading-none text-white/90" aria-hidden="true">
-                <div className="absolute right-1.5 bottom-1.5 hidden sm:flex flex-wrap gap-1 justify-end max-w-[70%]">
-                  <span className="chip bg-black/70">{t('frBright')}</span>
-                  <span className="chip bg-black/70"><i className="inline-block w-2 h-2 rounded-full mr-1 align-middle" style={{ background: '#ff7a1a' }} />{t('frWarm')}</span>
-                  <span className="chip bg-black/70"><i className="inline-block w-2 h-2 rounded-full mr-1 align-middle" style={{ background: '#2f7fd8' }} />{t('frCool')}</span>
-                </div>
-              </div>
-            )}
-            {region && <div className="absolute top-0 bottom-0 pointer-events-none border-x-2 border-[var(--signal)] bg-[var(--signal)]/10" style={{ left: `${(region[0] / COLS) * 100}%`, width: `${((region[1] - region[0] + 1) / COLS) * 100}%` }} />}
-            <div className="absolute top-0 bottom-0 w-[2px] bg-[var(--signal)] shadow-[0_0_14px_var(--signal)] pointer-events-none" style={{ left: needle, opacity: playing || status === 'ready' ? 1 : 0 }} />
-            {status !== 'ready' && (
-              <div className="absolute inset-0 grid place-items-center bg-black/60 text-sm text-[var(--ink-2)] p-6 text-center">
-                {status === 'loading' ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> {frame.src && !userFile ? 'Loading Earth Information Center image…' : 'Loading NASA imagery from GIBS…'}</span>
-                  : (
-                    <div className="flex flex-col items-center gap-3" role="alert">
-                      <span className="flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-[var(--signal)]" /> {frame.src && !userFile ? 'This picture could not be loaded.' : 'NASA GIBS did not respond. Check the internet connection, or load an image file below.'}</span>
-                      {!(frame.src && !userFile) && <button className="btn btn-brass" onClick={() => { setMode('single'); setUserFile(null); setFrameId(EIC_FRAMES[0].id); }}>{t('tryEic')}</button>}
-                    </div>
-                  )}
-              </div>
-            )}
-          </div>
-
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <button onClick={playing ? (story !== null ? endStory : stop) : start} disabled={status !== 'ready'} className="btn btn-brass min-w-[120px] disabled:opacity-50">
-              {playing ? <><Square className="w-4 h-4" /> {t('stop')}</> : <><Play className="w-4 h-4" /> {t('play')}</>}
-            </button>
-            {mode === 'single' && (
-              <label className="btn cursor-pointer">
-                <ImagePlus className="w-4 h-4" /> {t('loadOwn')}
-                <input type="file" accept="image/*" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; if (f) setUserFile(f); }} />
-              </label>
-            )}
-            <button className="btn" aria-pressed={legend} onClick={() => setLegend(!legend)}>{t('legend')}</button>
-            {mode === 'single' && !userFile && (story === null
-              ? <button className="btn" disabled={status !== 'ready' && story === null} onClick={() => goStory(0)}><BookOpen className="w-4 h-4" /> {t('story')}</button>
-              : <button className="btn" onClick={endStory}>{t('storyStop')}</button>)}
-            <button className="btn" onClick={copyLink}><Link2 className="w-4 h-4" /> {t('shareLink')}</button>
-            <span className="tnum text-sm text-[var(--ink-2)]" aria-hidden="true">{readout}</span>
-            <span className="sr-only" aria-live="polite">{srText}</span>
-          </div>
-
-          {heard && (
-            <div className="mt-3 panel-solid p-3 max-w-[70ch] flex flex-wrap items-center gap-x-5 gap-y-2 text-sm" role="group" aria-label={t('nowHearing')}>
-              <span className="label">{t('nowHearing')}</span>
-              <span><strong className="tnum">{heard.note}</strong> <span className="text-[var(--ink-3)] tnum">{heard.hz} Hz</span></span>
-              <span className="flex items-center gap-2">{t('loudness')}
-                <span className="inline-block w-24 h-2 rounded bg-[var(--line)] overflow-hidden" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={heard.level}>
-                  <span className="block h-full bg-[var(--signal)]" style={{ width: `${heard.level}%` }} />
-                </span>
-                <span className="tnum text-[var(--ink-3)]">{heard.level}%</span>
-              </span>
-              <span className="flex items-center gap-2"><i className="inline-block w-4 h-4 rounded border border-white/30" style={{ background: heard.color }} aria-hidden="true" />{heard.timbre}</span>
+            <div className="stage-legend" aria-hidden="true">
+              <span className="chip">{t('frBright')}</span>
+              <span className="chip"><i style={{ background: 'var(--fire)' }} />{t('frWarm')}</span>
+              <span className="chip"><i style={{ background: 'var(--cold)' }} />{t('frCool')}</span>
             </div>
           )}
-
-          {copied && <p role="status" className="mt-2 text-sm text-[var(--ink-2)] max-w-[70ch] break-all">{copied.startsWith('http') ? <input readOnly value={copied} onFocus={(e) => e.currentTarget.select()} aria-label={t('shareLink')} className="w-full bg-transparent border border-[var(--line)] rounded px-2 py-1" /> : copied}</p>}
-          {story !== null && (
-            <div className="mt-3 panel-solid p-3 max-w-[70ch]" aria-live="polite">
-              <div className="label">{story + 1} / {EIC_STORY.length}</div>
-              <p className="mt-1 text-sm text-[var(--ink)]">{lang === 'bn' ? EIC_STORY[story].bn : EIC_STORY[story].en}</p>
-              <button className="btn mt-2" onClick={() => goStory(story + 1)}>{t('storyNext')}</button>
+          {status !== 'ready' && (
+            <div className="stage-overlay">
+              {status === 'loading' ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> {frame.src && !userFile ? 'Loading Earth Information Center image…' : 'Loading NASA imagery from GIBS…'}</span>
+                : (
+                  <div className="flex flex-col items-center gap-3" role="alert">
+                    <span className="flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-[var(--signal)]" /> {frame.src && !userFile ? 'This picture could not be loaded.' : 'NASA GIBS did not respond. Check the internet connection, or load an image file below.'}</span>
+                    {!(frame.src && !userFile) && <button className="btn btn-brass" onClick={() => { setMode('single'); setUserFile(null); setFrameId(EIC_FRAMES[0].id); }}>{t('tryEic')}</button>}
+                  </div>
+                )}
             </div>
           )}
-          {audioBlocked && <p role="alert" className="mt-3 text-sm text-[var(--signal)] max-w-[70ch]">{t('audioBlocked')}</p>}
+        </div>
 
-          <div className="mt-3 max-w-[70ch]">
-            <label htmlFor="frame-scrub" className="label">{t('scrub')}</label>
+        <div ref={readRef} className="stage-read" role="group" aria-label={t('stHeard')}>
+          <div className="stage-bigwrap">
+            <span className="readout">{bigLabel}</span>
+            <div className="stage-big" aria-hidden="true">{bigValue}</div>
+          </div>
+          <dl className="stage-vals">
+            <div><dt className="readout">{t('stPitch')}</dt><dd className="tnum">{heard ? `${heard.note} · ${digits(heard.hz, lang)} Hz` : '–'}</dd></div>
+            <div><dt className="readout">{t('stLoud')}</dt><dd className="tnum flex items-center gap-2">
+              <span className="stage-meter" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={heard?.level ?? 0} aria-label={t('loudness')}><i style={{ width: `${heard?.level ?? 0}%` }} /></span>{heard ? `${digits(heard.level, lang)}%` : '–'}</dd></div>
+            <div><dt className="readout">{t('stTimbre')}</dt><dd>{heard ? heard.timbre : '–'}</dd></div>
+          </dl>
+          <p className="stage-hint">{playing || heard ? t('stColour') : t('stIdle')}</p>
+        </div>
+
+        </div>
+
+        <div className="stage-ctl">
+          <button onClick={playing ? (story !== null ? endStory : stop) : start} disabled={status !== 'ready'} className="btn btn-brass stage-play disabled:opacity-50">
+            {playing ? <><Square className="w-4 h-4" /> {t('stop')}</> : <><Play className="w-4 h-4" /> {t('play')}</>}
+          </button>
+          <button className="btn btn-icon" disabled={status !== 'ready'} onClick={() => stepBy(-1)} aria-label={t('stBack')} title={t('stBack')}><ChevronLeft className="w-4 h-4" /></button>
+          <button className="btn btn-icon" disabled={status !== 'ready'} onClick={() => stepBy(1)} aria-label={t('stFwd')} title={t('stFwd')}><ChevronRight className="w-4 h-4" /></button>
+          <div className="stage-scrub">
+            <label htmlFor="frame-scrub" className="sr-only">{t('scrub')}</label>
             <input id="frame-scrub" type="range" min={0} max={COLS - 1} value={col} disabled={status !== 'ready'}
               onChange={(e) => seek(+e.target.value)} aria-valuetext={where(col)} aria-describedby="frame-scrub-hint"
               className="w-full accent-[var(--signal)] disabled:opacity-50" />
-            <p id="frame-scrub-hint" className="text-xs text-[var(--ink-3)]">{t('scrubHint')} {t('regionHint')}</p>
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <button className="btn" aria-pressed={loop} onClick={() => setLoop(!loop)}><Repeat className="w-4 h-4" /> {t('loop')}</button>
-              <span className="label" id="frame-speed">{t('speed')}</span>
-              <div role="group" aria-labelledby="frame-speed" className="flex gap-1">
-                {[0.5, 1, 2].map((v) => <button key={v} className="btn" aria-pressed={speed === v} onClick={() => setSpeed(v)}>{v}×</button>)}
-              </div>
-              <button className="btn" disabled={status !== 'ready'} onClick={() => { const [, hi] = regionRef.current ?? [0, COLS - 1]; setRegion(orderRange(col, Math.max(hi, col), COLS)); }}>{t('loopStart')}</button>
-              <button className="btn" disabled={status !== 'ready'} onClick={() => { const [lo] = regionRef.current ?? [0, COLS - 1]; setRegion(orderRange(Math.min(lo, col), col, COLS)); }}>{t('loopEnd')}</button>
-              {region && <button className="btn" onClick={() => setRegion(null)}>{t('clearRegion')}</button>}
-            </div>
           </div>
-          {mode === 'pair' && <p className="mt-2 text-sm text-[var(--ink-3)]">{t('beforeAfterHint')}</p>}
-          {mode === 'single' && !userFile && (
-            <details className="mt-3 max-w-[70ch] text-sm text-[var(--ink-2)]">
-              <summary className="cursor-pointer font-semibold text-[var(--ink)]">{t('describeFrame')}</summary>
-              <p className="mt-2 leading-relaxed">{(lang === 'bn' ? frame.longBn : frame.longEn) ?? `${lang === 'bn' ? frame.titleBn : frame.title}. ${frame.what}`}</p>
-            </details>
-          )}
-          <details className="mt-3 max-w-[70ch] text-sm text-[var(--ink-2)]">
-            <summary className="cursor-pointer font-semibold text-[var(--ink)]">{t('whatHearing')}</summary>
-            <ul className="mt-2 list-disc pl-5 space-y-1">
-              <li>{t('hearNeedle')}</li>
-              <li>{t('hearPitch')}</li>
-              <li>{t('hearLoud')}</li>
-              <li>{t('hearColour')}</li>
-              <li>{t('hearScrub')}</li>
-            </ul>
-          </details>
-          {meta && <p className="mt-3 text-sm text-[var(--ink-2)] max-w-[70ch]"><strong className="text-[var(--ink)]">{meta.title}.</strong> {meta.what} <span className="text-[var(--ink-3)]">{t('srcLine', { c: meta.credit })}</span>{meta.url && <> <a href={meta.url} target="_blank" rel="noreferrer" className="underline text-[var(--signal)]">{t('frSeeEarthGov')}</a></>}</p>}
+          <span className="label" id="frame-speed">{t('speed')}</span>
+          <div role="group" aria-labelledby="frame-speed" className="flex gap-1">
+            {[0.5, 1, 2].map((v) => <button key={v} className="btn" aria-pressed={speed === v} onClick={() => setSpeed(v)}>{v}×</button>)}
+          </div>
+          <button className="btn" aria-pressed={loop} onClick={() => setLoop(!loop)}><Repeat className="w-4 h-4" /> {t('loop')}</button>
         </div>
+        <p id="frame-scrub-hint" className="stage-note">{t('scrubHint')} {t('regionHint')}</p>
+        <span className="sr-only" aria-live="polite">{srText}</span>
+        {audioBlocked && <p role="alert" className="mt-3 text-sm text-[var(--signal)] max-w-[70ch]">{t('audioBlocked')}</p>}
 
-        <section className="space-y-3" aria-label={t('frChoose')}>
-          {mode === 'single' ? (
-            <>
-              <div className="label">{t('eicGroup')}</div>
-              <div className="grid grid-cols-2 lg:grid-cols-1 gap-2">
-                {EIC_FRAMES.map((f) => (
-                  <button key={f.id} onClick={() => pickFrame(f.id)} aria-pressed={!userFile && frameId === f.id}
-                    className={`text-left rounded-lg border p-2 flex gap-3 items-center cursor-pointer transition ${!userFile && frameId === f.id ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>
-                    <img src={f.src} alt="" loading="lazy" className="w-16 h-8 object-cover rounded bg-black shrink-0 hidden lg:block" />
-                    <span className="text-sm leading-snug">{lang === 'bn' ? f.titleBn : f.title}</span>
-                  </button>
-                ))}
-              </div>
-              <div className="label pt-2">{t('frLive')}</div>
-              <div className="grid grid-cols-2 lg:grid-cols-1 gap-2">
-                {FRAMES.map((f) => (
-                  <button key={f.id} onClick={() => pickFrame(f.id)} aria-pressed={!userFile && frameId === f.id}
-                    className={`text-left rounded-lg border p-2 flex gap-3 items-center cursor-pointer transition ${!userFile && frameId === f.id ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>
-                    <img src={gibsUrl(f.overlayOn && f.id !== 'sstanom' ? f.layer : f.layer, f.date, f.format, 128)} alt="" loading="lazy" className="w-16 h-8 object-cover rounded bg-black shrink-0 hidden lg:block" />
-                    <span className="text-sm leading-snug">{lang === 'bn' ? f.titleBn : f.title}</span>
-                  </button>
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="label">{t('frThen')}</div>
-              {PAIRS.map((p) => (
-                <button key={p.id} onClick={() => setPairId(p.id)} aria-pressed={pairId === p.id}
-                  className={`w-full text-left rounded-lg border p-3 text-sm cursor-pointer ${pairId === p.id ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>{p.label}</button>
-              ))}
-              <button onClick={() => setPairId('custom')} aria-pressed={pairId === 'custom'}
-                className={`w-full text-left rounded-lg border p-3 text-sm cursor-pointer ${pairId === 'custom' ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[#3b5a72]'}`}>{t('chooseAny')}</button>
-              {pairId === 'custom' && (
-                <div className="space-y-2">
-                  {([['leftEar', customA, setCustomA], ['rightEar', customB, setCustomB]] as const).map(([k, val, setVal]) => (
-                    <label key={k} className="block text-sm">
-                      <span className="label">{t(k)}</span>
-                      <select value={val} onChange={(e) => setVal(e.target.value)} className="mt-1 w-full rounded-lg border border-[var(--line)] bg-[var(--panel)] p-2 text-[var(--ink)]">
-                        <optgroup label={t('eicGroup')}>{EIC_FRAMES.map((f) => <option key={f.id} value={f.id}>{lang === 'bn' ? f.titleBn : f.title}</option>)}</optgroup>
-                        <optgroup label="NASA GIBS">{FRAMES.map((f) => <option key={f.id} value={f.id}>{lang === 'bn' ? f.titleBn : f.title}</option>)}</optgroup>
-                      </select>
-                    </label>
+        <div className="stage-ctl stage-ctl2">
+          {related && <button className="btn btn-brass" onClick={() => onOpenStory?.(related.story)}><Headphones className="w-4 h-4" /> {lang === 'bn' ? related.bn : related.en}</button>}
+          {mode === 'single' && (
+            <label className="btn cursor-pointer">
+              <ImagePlus className="w-4 h-4" /> {t('loadOwn')}
+              <input type="file" accept="image/*" className="sr-only" onChange={(e) => { const f = e.target.files?.[0]; if (f) setUserFile(f); }} />
+            </label>
+          )}
+          <button className="btn" aria-pressed={legend} onClick={() => setLegend(!legend)}>{t('legend')}</button>
+          {mode === 'single' && !userFile && (story === null
+            ? <button className="btn" disabled={status !== 'ready' && story === null} onClick={() => goStory(0)}><BookOpen className="w-4 h-4" /> {t('story')}</button>
+            : <button className="btn" onClick={endStory}>{t('storyStop')}</button>)}
+          <button className="btn" onClick={copyLink}><Link2 className="w-4 h-4" /> {t('shareLink')}</button>
+          <button className="btn" disabled={status !== 'ready'} onClick={() => { const [, hi] = regionRef.current ?? [0, COLS - 1]; setRegion(orderRange(col, Math.max(hi, col), COLS)); }}>{t('loopStart')}</button>
+          <button className="btn" disabled={status !== 'ready'} onClick={() => { const [lo] = regionRef.current ?? [0, COLS - 1]; setRegion(orderRange(Math.min(lo, col), col, COLS)); }}>{t('loopEnd')}</button>
+          {region && <button className="btn" onClick={() => setRegion(null)}>{t('clearRegion')}</button>}
+        </div>
+        {related?.related && <p className="stage-note">{t('stRelated')} {lang === 'bn' ? related.bn : related.en}</p>}
+
+        {copied && <p role="status" className="mt-2 text-sm text-[var(--ink-2)] max-w-[70ch] break-all">{copied.startsWith('http') ? <input readOnly value={copied} onFocus={(e) => e.currentTarget.select()} aria-label={t('shareLink')} className="w-full bg-transparent border border-[var(--line)] rounded px-2 py-1" /> : copied}</p>}
+        {story !== null && (
+          <div className="mt-3 panel p-3 max-w-[70ch]" aria-live="polite">
+            <div className="label">{story + 1} / {EIC_STORY.length}</div>
+            <p className="mt-1 text-sm text-[var(--ink)]">{lang === 'bn' ? EIC_STORY[story].bn : EIC_STORY[story].en}</p>
+            <button className="btn mt-2" onClick={() => goStory(story + 1)}>{t('storyNext')}</button>
+          </div>
+        )}
+
+        {more && (
+          <section id="stage-more" className="stage-more" aria-label={t('stMore')}>
+            {mode === 'single' ? (
+              <>
+                <div className="label">{t('frLive')}</div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                  {FRAMES.map((f) => (
+                    <button key={f.id} onClick={() => pickFrame(f.id)} aria-pressed={!userFile && frameId === f.id}
+                      className={`text-left rounded-lg border p-2 flex gap-3 items-center cursor-pointer transition ${!userFile && frameId === f.id ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[var(--ink-3)]'}`}>
+                      <img src={gibsUrl(f.layer, f.date, f.format, 128)} alt="" loading="lazy" className="w-16 h-8 object-cover rounded bg-black shrink-0" />
+                      <span className="text-sm leading-snug">{lang === 'bn' ? f.titleBn : f.title}</span>
+                    </button>
                   ))}
                 </div>
-              )}
-            </>
+              </>
+            ) : (
+              <>
+                <div className="label">{t('frThen')}</div>
+                <button onClick={() => setPairId('custom')} aria-pressed={pairId === 'custom'}
+                  className={`w-full sm:w-auto text-left rounded-lg border p-3 text-sm cursor-pointer ${pairId === 'custom' ? 'border-[var(--signal)] bg-[var(--panel-2)]' : 'border-[var(--line)] hover:border-[var(--ink-3)]'}`}>{t('chooseAny')}</button>
+                {pairId === 'custom' && (
+                  <div className="grid sm:grid-cols-2 gap-3 mt-2">
+                    {([['leftEar', customA, setCustomA], ['rightEar', customB, setCustomB]] as const).map(([k, val, setVal]) => (
+                      <label key={k} className="block text-sm">
+                        <span className="label">{t(k)}</span>
+                        <select value={val} onChange={(e) => setVal(e.target.value)} className="mt-1 w-full rounded-lg border border-[var(--line)] bg-[var(--panel)] p-2 text-[var(--ink)]">
+                          <optgroup label={t('eicGroup')}>{EIC_FRAMES.map((f) => <option key={f.id} value={f.id}>{lang === 'bn' ? f.titleBn : f.title}</option>)}</optgroup>
+                          <optgroup label="NASA GIBS">{FRAMES.map((f) => <option key={f.id} value={f.id}>{lang === 'bn' ? f.titleBn : f.title}</option>)}</optgroup>
+                        </select>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </section>
+        )}
+        {mode === 'pair' && <p className="stage-note">{t('beforeAfterHint')}</p>}
+
+        <div className="stage-meta">
+          {mode === 'single' && !userFile && (
+            <details className="stage-details">
+              <summary>{t('describeFrame')}</summary>
+              <p>{(lang === 'bn' ? frame.longBn : frame.longEn) ?? `${lang === 'bn' ? frame.titleBn : frame.title}. ${frame.what}`}</p>
+            </details>
           )}
-          <div className="panel-solid p-3 text-sm text-[var(--ink-2)] leading-relaxed">
-            <div className="font-semibold text-[var(--ink)] mb-1">{t('frHow')}</div>
-            The image is a world map, so the needle travels west to east around the planet. Each of 12 bands is one pitch, north highest.
-            Brighter pixels are louder. Red and orange pixels sound brighter and buzzier; blue and dark ones stay soft.
-            This is sonification of the picture, so it tells you where the image is bright, not a measured value.
-            On Earth Information Center charts, the titles, axis labels and legends are muted so the sound follows the data. Other text inside a picture can still make sound.
-          </div>
-        </section>
+          <details className="stage-details">
+            <summary>{t('whatHearing')}</summary>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>{t('hearNeedle')}</li><li>{t('hearPitch')}</li><li>{t('hearLoud')}</li><li>{t('hearColour')}</li><li>{t('hearScrub')}</li>
+            </ul>
+          </details>
+          <dl className="stage-facts">
+            {meta && <div><dt className="readout">{t('stMeta')}</dt><dd><strong>{meta.title}.</strong> {meta.what}</dd></div>}
+            {meta && <div><dt className="readout">{t('stSource')}</dt><dd>{meta.credit}{meta.url && <> · <a href={meta.url} target="_blank" rel="noreferrer" className="underline">{t('frSeeEarthGov')}</a></>}</dd></div>}
+            <div><dt className="readout">{t('stMethod')}</dt><dd>{t('stMethodText')}</dd></div>
+          </dl>
+        </div>
       </div>
     </section>
   );

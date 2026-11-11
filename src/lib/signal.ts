@@ -50,9 +50,9 @@ export const contrastRatio = (a: RGB | string, b: RGB | string) => {
 /** A frame colour to a signal colour. Near-grey pixels (clouds, black margins) give the default signal, so the interface never goes grey. */
 export function signalFromRgb(rgb: RGB): Signal {
   const { L: L0, C, h } = rgbToOklch(rgb);
-  const hue = C < 0.03 ? DEFAULT_HUE : h;
-  const chroma = C < 0.03 ? 0.2 : Math.min(SIGNAL_C_MAX, Math.max(0.09, C));
-  let L = C < 0.03 ? 0.86 : Math.min(SIGNAL_L_MAX, Math.max(SIGNAL_L_MIN, L0)), out = oklchToRgb(L, chroma, hue);
+  const hue = C < 0.012 ? DEFAULT_HUE : h;
+  const chroma = C < 0.012 ? 0.2 : Math.min(SIGNAL_C_MAX, Math.max(0.09, C));
+  let L = C < 0.012 ? 0.86 : Math.min(SIGNAL_L_MAX, Math.max(SIGNAL_L_MIN, L0)), out = oklchToRgb(L, chroma, hue);
   // The clamp itself guarantees the legibility window; the loop is a safety net for a gamut quirk at the ends.
   while (contrastRatio(out, GROUND) < 4.5 && L < SIGNAL_L_MAX) { L += 0.01; out = oklchToRgb(L, chroma, hue); }
   const onSignal = contrastRatio(out, '#0a0a0a') >= contrastRatio(out, '#ffffff') ? '#0a0a0a' : '#ffffff';

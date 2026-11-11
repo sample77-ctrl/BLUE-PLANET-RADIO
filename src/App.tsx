@@ -25,7 +25,7 @@ import { usePublishNowPlaying } from './player/nowPlaying';
 import { setQueue } from './player/queue';
 import { installMediaSession } from './player/mediaSession';
 import { getNowPlaying } from './player/nowPlaying';
-import { setFullPlayer, toggleFullPlayer } from './player/ui';
+import { setFullPlayer, toggleFullPlayer, withViewTransition } from './player/ui';
 import { CommandPalette, type Command } from './components/CommandPalette';
 import { storiesFor } from './stories/stories';
 import { countryLabel } from './lib/placesBn';
@@ -296,7 +296,7 @@ export function App() {
     <ProfileDataContext.Provider value={profileData}>
     <div className={`${showHero ? 'hero-open ' : ''}flex flex-col h-[100dvh] w-full max-w-[100vw] overflow-hidden`}>
       <a href={showHero ? '#landing' : '#main'} className="sr-only-focusable absolute z-[80] left-2 top-2 btn btn-brass">{t('skip')}</a>
-      {showHero && <Landing fireObs={landingFire} onPick={pickTrack}
+      {showHero && <Landing fireObs={landingFire} onPick={(tr) => withViewTransition(() => { void pickTrack(tr); }, document.querySelector('main'))}
         onTour={startTour} onListen={listenNow} onSilent={() => { setShowHero(false); setTrack('atlas'); }} onAbout={goAbout} onTopic={openJukebox} onOpenHarmonium={() => setHarmoniumOpen(true)} />}
 
       <Header track={track} onLanding={showHero} onTrack={(tr) => { navigate(tr); setShowHero(false); setTourOpen(false); }} lastJukebox={lastJukebox}
@@ -345,7 +345,7 @@ export function App() {
           )}
           {track !== 'atlas' && !showHero && (
             <Suspense fallback={<div className="h-full grid place-items-center text-sm text-[var(--ink-3)]">{t('loadingView')}</div>}>
-              {track === 'frames' && <FrameJukebox autoPlay={autoListen} onAutoPlayed={() => setAutoListen(false)} onPlay={() => { if (!audioReady) soundOn(); }} />}
+              {track === 'frames' && <FrameJukebox autoPlay={autoListen} onAutoPlayed={() => setAutoListen(false)} onPlay={() => { if (!audioReady) soundOn(); }} onOpenStory={(id) => openJukebox(id)} />}
               {track === 'monsoon' && <BangladeshMonsoon />}
               {track === 'pulse' && <VitalSigns />}
               {track === 'about' && <AboutPage onOpenMethod={() => setDataOpen(true)} />}

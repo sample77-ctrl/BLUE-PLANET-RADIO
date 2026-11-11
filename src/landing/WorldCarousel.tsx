@@ -163,11 +163,15 @@ export const WorldCarousel: React.FC<Props> = ({ data, onOpen, onTour, onListen,
         <h2 ref={(el) => { heads.current[0] = el; }} tabIndex={-1} className="hero-title font-display outline-none">{t('heroTitle')}</h2>
         <p className="hero-lead">{label('Line')}</p>
         <div className="hero-actions">
-          <button onClick={togglePreview} aria-pressed={playing} className="btn btn-brass hero-cta">
-            <span className="hero-cta-icon" aria-hidden="true">{playing ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}</span>
-            <span>{playing ? t('ctaStopPreview') : t('heroPlay', { name: name(world) })}</span>
+          <button onClick={() => onOpen('frames')} className="btn btn-brass hero-cta">
+            <span className="hero-cta-icon" aria-hidden="true"><Play className="w-4 h-4" /></span>
+            <span>{t('heroFrame')}</span>
           </button>
           <button onClick={() => onOpen('atlas')} className="btn hero-secondary"><Globe2 className="w-4 h-4" />{t('heroExplore')}</button>
+          <button onClick={togglePreview} aria-pressed={playing} className="btn hero-secondary">
+            {playing ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            <span>{playing ? t('ctaStopPreview') : t('heroPlay', { name: name(world) })}</span>
+          </button>
         </div>
         <div className="hero-links">
           <button onClick={onTour}>{t('startTour')}</button>

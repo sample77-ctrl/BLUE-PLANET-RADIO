@@ -14,6 +14,7 @@ export const EIC_FRAMES: NasaFrame[] = [
     what: 'One bar per year, taller means more warming effect. Red is CO₂, purple methane, blue nitrous oxide, yellow other gases. The ring shows each gas’s share.',
     credit: 'NASA Earth Information Center (earth.gov), Greenhouse Gases theme; data: NOAA Annual Greenhouse Gas Index',
     soundRegion: { x: 0.01, y: 0.09, w: 0.66, h: 0.84 }, soundIgnore: [{ x: 0.02, y: 0.1, w: 0.37, h: 0.1 }],
+    axis: { x0: 70 / 1920, x1: 1240 / 1920, v0: 1980, v1: 2020, lo: 1979, hi: 2021 }, // tick labels 1980 and 2020, measured on the 1920 px picture; one bar per year, 1979 to 2021
     sourceUrl: 'https://earth.gov/themes/greenhouse-gases',
   },
   {
@@ -25,6 +26,7 @@ export const EIC_FRAMES: NasaFrame[] = [
     what: 'The orange line is the cumulative increase in ocean heat from 1957 to 2020, in zettajoules. It climbs from 0 to about 350, fastest since the 1980s.',
     credit: 'NASA Earth Information Center (earth.gov), Sea Level Change theme',
     soundRegion: { x: 0.23, y: 0.29, w: 0.58, h: 0.44 },
+    axis: { x0: 281 / 1024, x1: 775 / 1024, v0: 1960, v1: 2020, lo: 1957, hi: 2021 }, // tick labels 1960 and 2020, measured on the 1024 px picture; the line runs 1957 to 2021
     sourceUrl: 'https://earth.gov/themes/sea-level-change',
   },
   {
