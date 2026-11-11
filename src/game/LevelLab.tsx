@@ -163,7 +163,7 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
           <div className="flex justify-center my-3">
             <button
               onClick={handlePlaySound}
-              className={`btn btn-brass text-base font-semibold px-8 py-5 rounded-full flex items-center gap-3 shadow-lg transform transition active:scale-95 ${
+              className={`btn btn-brass text-base font-semibold px-8 py-5 rounded-full flex items-center gap-3  transform transition active:scale-95 ${
                 isPlaying ? 'ring-4 ring-[var(--signal)] animate-pulse' : 'hover:scale-105'
               }`}
               aria-label={isBn ? 'শব্দটি শোনো' : 'Play Sound'}
@@ -186,11 +186,11 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
                   key={opt.key}
                   disabled={isAnswered}
                   onClick={() => handleOptionSelect(opt.key, opt.correct)}
-                  className={`p-4 rounded-xl border flex flex-col items-center justify-center gap-3 text-center transition-all cursor-pointer min-h-[96px] ${
+                  className={`p-4 rounded-lg border flex flex-col items-center justify-center gap-3 text-center transition-all cursor-pointer min-h-[96px] ${
                     isSuccess
-                      ? 'border-emerald-500 bg-emerald-950/40 text-emerald-200 ring-2 ring-emerald-500 shadow-lg'
+                      ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)] ring-2 ring-[var(--signal)]'
                       : isFail
-                      ? 'border-rose-500 bg-rose-950/40 text-rose-200'
+                      ? 'border-[var(--signal)] bg-[var(--panel-2)] text-[var(--signal)]'
                       : isSelected
                       ? 'border-[var(--signal)] bg-[var(--panel-2)]'
                       : 'border-[var(--glass-border)] bg-[var(--panel)] hover:border-[var(--line)] hover:bg-[var(--panel-2)]'
@@ -209,12 +209,12 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
 
           {/* Feedback & Next Button */}
           {isAnswered && (
-            <div className="p-4 rounded-xl bg-[var(--panel-2)] border border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
+            <div className="p-4 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-4 mt-2">
               <div className="flex items-start gap-3">
                 {selectedOpt === currentQ.options.find((o) => o.correct)?.key ? (
-                  <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-6 h-6 text-[var(--signal)] shrink-0 mt-0.5" />
                 ) : (
-                  <RotateCcw className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
+                  <RotateCcw className="w-6 h-6 text-[var(--signal)] shrink-0 mt-0.5" />
                 )}
                 <div>
                   <h4 className="font-semibold text-sm text-[var(--ink)]">
@@ -271,7 +271,7 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
             </div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-[var(--abyss)] border border-[var(--line)] flex flex-col gap-4">
+          <div className="p-5 rounded-lg bg-[var(--abyss)] border border-[var(--line)] flex flex-col gap-4">
             <div className="flex justify-between items-center text-sm">
               <span className="text-[var(--ink-3)] font-mono">
                 {isBn ? 'আগুনের শক্তি (FRP):' : 'Fire Radiative Power (FRP):'}
@@ -308,8 +308,8 @@ export const LevelLab: React.FC<Props> = ({ onComplete }) => {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-amber-950/20 border border-amber-500/30 text-amber-200 text-xs sm:text-sm leading-relaxed">
-            💡 {isBn
+          <div className="p-4 rounded-lg bg-[var(--panel-2)] border border-[var(--hair)] text-[var(--signal)] text-xs sm:text-sm leading-relaxed">
+            {isBn
               ? 'নাসার স্যাটেলাইটগুলো এভাবেই কাজ করে: যখনই কোথাও বন বা পাহাড়ে বড় আগুন লাগে, স্যাটেলাইটের ডেটা বেশি হয়, আর আমাদের শব্দ তত দ্রুত পটপট করতে থাকে!'
               : 'This is the core concept of Sonic Earth Atlas: Larger wildfires give higher NASA power values, making the crackle bursts fire much faster!'}
           </div>
