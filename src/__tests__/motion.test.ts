@@ -28,14 +28,15 @@ describe('spring easing', () => {
 });
 
 describe('view change wipe', () => {
-  it('floods the group with the signal colour, fades the old view and wipes the new one in, at document level and scoped to <main>', () => {
-    expect(bold).toMatch(/::view-transition-group\(root\), main::view-transition-group\(root\) \{ background: var\(--signal\); \}/);
+  it('wipes the new view in over the dark ground with a signal-colour edge (no full-screen flood), at document level and scoped to <main>', () => {
+    expect(bold).toMatch(/::view-transition-group\(root\), main::view-transition-group\(root\) \{ background: linear-gradient\([^;]*var\(--signal\)[^;]*\) var\(--ground\); animation: vt-edge/);
+    expect(bold).toMatch(/@property --vt-x/);
     expect(bold).toMatch(/::view-transition-old\(root\), main::view-transition-old\(root\) \{ animation: vt-off/);
     expect(bold).toMatch(/::view-transition-new\(root\), main::view-transition-new\(root\) \{ animation: vt-wipe/);
     expect(bold).toMatch(/@keyframes vt-wipe \{ from \{ clip-path: inset\(0 100% 0 0\); \} to \{ clip-path: inset\(0 0 0 0\); \} \}/);
   });
   it('is a plain fade over black in high contrast, and no animation at all under the OS reduced-motion setting', () => {
-    expect(bold).toMatch(/html\.hc::view-transition-group\(root\)[^{]*\{ background: #000; \}/);
+    expect(bold).toMatch(/html\.hc::view-transition-group\(root\)[^{]*\{ background: #000; animation: none; \}/);
     expect(bold).toMatch(/html\.hc::view-transition-new\(root\)[^{]*\{ animation: vt-fade/);
     expect(bold).toMatch(/@media \(prefers-reduced-motion: reduce\) \{ ::view-transition-group\(\*\), ::view-transition-old\(\*\), ::view-transition-new\(\*\) \{ animation: none !important; \} \}/);
   });
