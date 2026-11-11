@@ -30,7 +30,7 @@ import { useCountry } from './countries/useCountry';
 import { CountryPanel } from './countries/CountryPanel';
 import { ProfileDataContext } from './countries/profileContext';
 import { gibsUrl } from './lib/gibs';
-import { Globe, Map as MapIcon, List, Satellite, RotateCw, Layers, AudioLines, MapPinned } from 'lucide-react';
+import { Globe, Map as MapIcon, List, Satellite, RotateCw, Layers, AudioLines, MapPinned, Shuffle, Crosshair, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from 'lucide-react';
 
 const GlobeCanvas = lazy(() => import('./globe/GlobeCanvas').then((m) => ({ default: m.GlobeCanvas })));
 const FrameJukebox = lazy(() => import('./tracks/FrameJukebox').then((m) => ({ default: m.FrameJukebox })));
@@ -42,6 +42,13 @@ const SonicQuest = lazy(() => import('./game/SonicQuest').then((m) => ({ default
 const HarmoniumChatModal = lazy(() => import('./harmonium/HarmoniumChatModal').then((m) => ({ default: m.HarmoniumChatModal })));
 
 type View = '3d-globe' | '2d-map' | 'audio-first';
+const LAYERS: PhenomenonType[] = ['fire', 'precipitation', 'sst'];
+const TUNE_RADIUS = 30; // degrees
+const angleBetween = (la1: number, lo1: number, la2: number, lo2: number) => {
+  const r = Math.PI / 180, c = Math.sin(la1 * r) * Math.sin(la2 * r) + Math.cos(la1 * r) * Math.cos(la2 * r) * Math.cos((lo1 - lo2) * r);
+  return Math.acos(Math.max(-1, Math.min(1, c))) / r;
+};
+
 export function App() {
   const { t, lang, set } = usePrefs();
   const [initialShare] = useState(() => { const d = decodeLocation(window.location.pathname, window.location.search, window.location.hash, { frames: [], pairs: [] }); if (d?.q) setQueue(d.q); return d; });
@@ -64,6 +71,11 @@ export function App() {
   const [data, setData] = useState<AdapterResult | null>(null);
   const [day, setDay] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1); // Atlas day-step speed
+  const [muted, setMuted] = useState<Record<PhenomenonType, boolean>>({ fire: false, precipitation: false, sst: false });
+  const [tune, setTune] = useState(false); // hear only what is near the middle of the globe
+  const [center, setCenter] = useState<{ lat: number; lon: number } | null>(null);
+  const [leftOpen, setLeftOpen] = useState(true), [rightOpen, setRightOpen] = useState(true);
   const [hearChange, setHearChange] = useState(false);
   const [enabled, setEnabled] = useState<Record<PhenomenonType, boolean>>({ fire: true, precipitation: false, sst: false });
   const [selected, setSelected] = useState<EarthObservation | null>(null);
@@ -85,6 +97,9 @@ export function App() {
   const slices: DatasetTimeSlice[] = useMemo(() => data?.slices ?? [], [data]);
   const slice = slices[day] ?? slices[0];
   const observations = useMemo(() => slice?.observations ?? [], [slice]);
+  // What is heard: layers that are on and not muted; in tune mode only sounds within 30° of the middle of the globe.
+  const audibleLayers = useMemo(() => ({ fire: enabled.fire && !muted.fire, precipitation: enabled.precipitation && !muted.precipitation, sst: enabled.sst && !muted.sst }), [enabled, muted]);
+  const audible = useMemo(() => (tune && center && view === '3d-globe' ? observations.filter((o) => angleBetween(o.latitude, o.longitude, center.lat, center.lon) <= TUNE_RADIUS) : observations), [observations, tune, center, view]);
   // The landing carousel draws the first snapshot's fires on its Earth and plays them in the preview.
   const landingFire = useMemo(() => slices[0]?.observations.filter((o) => o.phenomenon === 'fire') ?? [], [slices]);
   const counts = useMemo(() => {
@@ -121,7 +136,7 @@ export function App() {
   usePublishNowPlaying('atlas', track === 'atlas' && !showHero && view !== '2d-map' && slices.length > 0 ? {
     id: 'atlas', dataset: enabled.fire ? 'fire' : enabled.precipitation ? 'rain' : enabled.sst ? 'teal' : undefined, title: t('track1'), subtitle: `${t('npAtlasSub')} · ${formatDay(slices[0].dateLabel, lang)}–${formatDay(slices[slices.length - 1].dateLabel, lang)}`, badge: 'snapshot', state: playing ? 'playing' : 'ready',
     index: day, count: slices.length, label: formatDay(slices[day]?.dateLabel ?? slices[0].dateLabel, lang), valueText: '', spark: [],
-    controls: { toggle: () => setPlaying((p) => !p), stop: () => setPlaying(false), step: (by) => setDay((d) => (d + by + slices.length) % slices.length), seek: setDay },
+    speed, controls: { setSpeed, toggle: () => setPlaying((p) => !p), stop: () => setPlaying(false), step: (by) => setDay((d) => (d + by + slices.length) % slices.length), seek: setDay },
   } : null);
   usePlaybackReport('atlas', t('track1'), playing && track === 'atlas' && !showHero, () => setPlaying(false));
 
@@ -131,9 +146,9 @@ export function App() {
   // The spatial engine only plays while the Atlas track is on screen.
   useEffect(() => {
     const eng = SonificationEngine.getInstance();
-    if (audioReady && track === 'atlas' && !showHero) eng.syncObservations(observations, enabled);
+    if (audioReady && track === 'atlas' && !showHero) eng.syncObservations(audible, audibleLayers);
     else eng.stopAllVoices();
-  }, [audioReady, observations, enabled, track, showHero]);
+  }, [audioReady, audible, audibleLayers, track, showHero]);
 
   const soundOn = useCallback(async () => {
     setSoundState('starting');
@@ -171,6 +186,15 @@ export function App() {
     setTourOpen(true);
   };
 
+  /** Solo: this layer on and heard, every other layer muted (still visible). Solo again clears the mutes. */
+  const solo = (p: PhenomenonType) => setMuted((m) => {
+    const others = LAYERS.filter((x) => x !== p), isSolo = !m[p] && others.every((x) => m[x] || !enabled[x]);
+    return Object.fromEntries(LAYERS.map((x) => [x, isSolo ? false : x !== p])) as Record<PhenomenonType, boolean>;
+  });
+  const surprise = () => {
+    if (cty.list.length) cty.select(cty.list[Math.floor(Math.random() * cty.list.length)]);
+    if (slices.length) setDay(Math.floor(Math.random() * slices.length));
+  };
   // Keyboard shortcuts (ignored while typing in a field).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -187,6 +211,7 @@ export function App() {
       if (e.key === ' ' && tag !== 'BUTTON') { e.preventDefault(); setPlaying((p) => !p); }
       else if (e.key === 'ArrowRight' && view !== '2d-map') setDay((d) => (d + 1) % Math.max(1, slices.length));
       else if (e.key === 'ArrowLeft' && view !== '2d-map') setDay((d) => (d - 1 + slices.length) % Math.max(1, slices.length));
+      else if (e.shiftKey && /^Digit[123]$/.test(e.code)) solo(LAYERS[+e.code.slice(5) - 1]);
       else if (k === '1' || k === '2' || k === '3') { const p = (['fire', 'precipitation', 'sst'] as PhenomenonType[])[+k - 1]; setEnabled((o) => ({ ...o, [p]: !o[p] })); }
       else if (k === 'g') setView('3d-globe');
       else if (k === 'm') setView('2d-map');
@@ -210,7 +235,8 @@ export function App() {
   const imageryUrl = imagery && slice && /^\d{4}-\d{2}-\d{2}$/.test(slice.dateLabel) ? gibsUrl('VIIRS_SNPP_CorrectedReflectance_TrueColor', slice.dateLabel, 'jpeg', 2048) : null;
 
   const layersPanel = (
-    <LayersPanel enabled={enabled} onToggle={(p) => setEnabled((o) => ({ ...o, [p]: !o[p] }))} counts={counts}
+    <LayersPanel enabled={enabled} onToggle={(p) => setEnabled((o) => ({ ...o, [p]: !o[p] }))} counts={counts} muted={muted}
+      onMute={(p) => setMuted((o) => ({ ...o, [p]: !o[p] }))} onSolo={solo}
       statuses={data?.layerStatuses} isFallback={!!data?.isFallback} statusMessage={data?.statusMessage ?? 'Loading NASA data…'}
       audioReady={audioReady} onOpenData={() => setDataOpen(true)} />
   );
@@ -246,7 +272,7 @@ export function App() {
                 <GlobeCanvas observations={observations} enabledPhenomena={enabled} selectedObservation={selected}
                   onSelectObservation={setSelected} autoRotate={autoRotate} targetFocus={focus} imageryUrl={imageryUrl}
                   framing="explore"
-                  countries={cty.list} country={cty.country} countryPoint={cty.point} onSelectCountry={cty.select} />
+                  countries={cty.list} country={cty.country} countryPoint={cty.point} onSelectCountry={cty.select} onCenter={tune ? (lat, lon) => setCenter({ lat, lon }) : undefined} />
               </Suspense>
             </GlobeBoundary>
           )}
@@ -280,15 +306,18 @@ export function App() {
               onApply={(layers, d, change, f) => { setEnabled(layers); setDay(Math.min(d, Math.max(0, slices.length - 1))); setHearChange(change); setFocus(f); if (view !== '3d-globe') setView('3d-globe'); }} />
 
             {/* Desktop side column */}
-            <div className="hidden lg:flex flex-col gap-3 absolute left-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-4">
+            <div className={`${leftOpen ? "hidden lg:flex" : "hidden"} flex-col gap-3 absolute left-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-4`}>
               {view !== 'audio-first' && countryPanel}
               {layersPanel}
             </div>
 
             {/* Desktop right rail: what you are hearing (live waveform, spectrum, stereo position) */}
-            <div className="hidden lg:flex flex-col gap-3 absolute right-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-4" data-ctl="hearing">
+            <div className={`${rightOpen ? "hidden lg:flex" : "hidden"} flex-col gap-3 absolute right-3 top-[calc(var(--header-h)+.75rem)] bottom-[75px] w-[340px] max-h-[calc(100vh-var(--header-h)-5.25rem)] overflow-y-auto scroll-thin z-20 pb-4`} data-ctl="hearing">
               {hearingPanel}
             </div>
+            <button type="button" className="btn btn-icon hidden lg:inline-flex absolute z-30 top-[calc(var(--header-h)+.75rem)] transition-[left] duration-200" style={{ left: leftOpen ? 360 : 12 }} aria-expanded={leftOpen} aria-label={t(leftOpen ? 'collapseLeft' : 'openLeft')} title={t(leftOpen ? 'collapseLeft' : 'openLeft')} onClick={() => setLeftOpen((o) => !o)}>{leftOpen ? <PanelLeftClose className="w-4 h-4" aria-hidden="true" /> : <PanelLeftOpen className="w-4 h-4" aria-hidden="true" />}</button>
+            <button type="button" className="btn btn-icon hidden lg:inline-flex absolute z-30 top-[calc(var(--header-h)+.75rem)] transition-[right] duration-200" style={{ right: rightOpen ? 360 : 12 }} aria-expanded={rightOpen} aria-label={t(rightOpen ? 'collapseRight' : 'openRight')} title={t(rightOpen ? 'collapseRight' : 'openRight')} onClick={() => setRightOpen((o) => !o)}>{rightOpen ? <PanelRightClose className="w-4 h-4" aria-hidden="true" /> : <PanelRightOpen className="w-4 h-4" aria-hidden="true" />}</button>
+            {view === '3d-globe' && tune && <><div className="tune-reticle" aria-hidden="true" /><p className="sr-only" role="status" aria-live="polite">{t('tuneStatus', { n: audible.length })}</p></>}
             {view === '3d-globe' && <div className="globe-hud hud-frame hidden lg:block" aria-hidden="true"><i /></div>}
 
             {/* View switch and globe options */}
@@ -299,6 +328,10 @@ export function App() {
                     <Icon className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline" aria-hidden="true">{t(key)}</span>
                   </button>
                 ))}
+              </div>
+              <div className="panel p-1 flex flex-row gap-1">
+                <button className="btn btn-ghost min-h-[36px] px-2.5" onClick={surprise} title={t('surpriseHint')}><Shuffle className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline">{t('surprise')}</span></button>
+                {view === '3d-globe' && <button className="btn btn-ghost min-h-[36px] px-2.5" aria-pressed={tune} onClick={() => setTune((v) => !v)} title={t('tuneHint')}><Crosshair className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline">{t('tune')}</span></button>}
               </div>
               {view === '3d-globe' && (
                 <div className="panel p-1 flex flex-row gap-1">
@@ -320,10 +353,10 @@ export function App() {
               </MobileSheet>
             )}
 
-            <div data-ctl="timeline" className="absolute bottom-2 sm:bottom-3 left-2 right-2 lg:left-[340px] lg:right-3 z-20">
+            <div data-ctl="timeline" className="absolute bottom-2 sm:bottom-3 left-2 right-2 lg:left-[var(--tl-l)] lg:right-3 z-20" style={{ ['--tl-l' as string]: leftOpen ? '340px' : '12px' }}>
               {globeFailed && view === '3d-globe' && <p role="status" className="panel px-3 py-2 mb-2 text-sm text-[var(--ink-2)] w-fit max-w-full">{t('webglOff')}</p>}
               <TimelineBar slices={slices} index={day} onChange={setDay} playing={playing} onTogglePlay={() => setPlaying(!playing)}
-                hearChange={hearChange} onToggleHearChange={() => setHearChange(!hearChange)} enabled={enabled} />
+                hearChange={hearChange} onToggleHearChange={() => setHearChange(!hearChange)} enabled={enabled} speed={speed} />
             </div>
           </>
         )}

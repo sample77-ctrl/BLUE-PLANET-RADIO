@@ -230,3 +230,9 @@ html.hc .np-bar { background: #000; backdrop-filter: none; }
 @keyframes np-rise { from { opacity: 0; transform: translateY(1rem); } }
 @media (prefers-reduced-motion: reduce) { .np-full { animation: none; } }
 html.rm .np-full { animation: none; }
+
+/* Tune mode reticle over the globe */
+.tune-reticle { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; border: 1.5px solid var(--accent); border-radius: 50%; pointer-events: none; z-index: 10; box-shadow: 0 0 0 1px rgb(0 0 0 / .4); }
+.tune-reticle::before, .tune-reticle::after { content: ''; position: absolute; background: var(--accent); }
+.tune-reticle::before { left: 50%; top: -10px; bottom: -10px; width: 1.5px; margin-left: -.75px; }
+.tune-reticle::after { top: 50%; left: -10px; right: -10px; height: 1.5px; margin-top: -.75px; }

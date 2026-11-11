@@ -14,17 +14,18 @@ interface Props {
   hearChange: boolean;
   onToggleHearChange: () => void;
   enabled: Record<PhenomenonType, boolean>;
+  speed?: number; // playback speed, 1 = one day per 3.2 s
 }
 
-export const TimelineBar: React.FC<Props> = ({ slices, index, onChange, playing, onTogglePlay, hearChange, onToggleHearChange, enabled }) => {
+export const TimelineBar: React.FC<Props> = ({ slices, index, onChange, playing, onTogglePlay, hearChange, onToggleHearChange, enabled, speed = 1 }) => {
   const { t, lang } = usePrefs();
   const n = slices.length;
 
   useEffect(() => {
     if (!playing || n < 2) return;
-    const id = window.setInterval(() => onChange((index + 1) % n), 3200);
+    const id = window.setInterval(() => onChange((index + 1) % n), 3200 / speed);
     return () => clearInterval(id);
-  }, [playing, index, n, onChange]);
+  }, [playing, index, n, onChange, speed]);
 
   // One-line headline computed from the day's data.
   const headline = useMemo(() => {

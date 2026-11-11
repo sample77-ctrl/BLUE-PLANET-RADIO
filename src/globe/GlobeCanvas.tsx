@@ -22,6 +22,7 @@ interface GlobeCanvasProps {
   country?: Country | null; // selected: brass outline
   countryPoint?: { lat: number; lon: number } | null; // fly-to target
   onSelectCountry?: (c: Country) => void;
+  onCenter?: (lat: number, lon: number) => void; // the point facing the viewer, whole degrees, only when it changes (tune mode)
 }
 
 // Selected outline is drawn as stacked rings just above the surface (WebGL lines are 1 px, this reads as one thicker line).
@@ -52,6 +53,7 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
   country = null,
   countryPoint = null,
   onSelectCountry,
+  onCenter,
 }) => {
   const { reduceMotion, calmBackground, lang, t } = usePrefs();
   const flyRef = useRef<{ lat: number; lon: number; until: number } | null>(null);
@@ -87,6 +89,8 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
   const autoRotateRef = useRef(autoRotate);
   const targetFocusRef = useRef(targetFocus);
   const selectedObservationRef = useRef(selectedObservation);
+  const onCenterRef = useRef(onCenter);
+  useEffect(() => { onCenterRef.current = onCenter; });
   const framingRef = useRef(framing);
   const reduceRef = useRef(reduceMotion);
   const calmRef = useRef(calmBackground);
@@ -271,6 +275,7 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
     let animationFrameId: number;
 
     let lastT = performance.now();
+    const lastCenter = { t: 0, lat: NaN, lon: NaN };
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
       const now = performance.now(), dt = Math.min(100, now - lastT);
@@ -283,6 +288,13 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       // Revolving cloud layer rotation (non-essential, off with reduced motion)
       if (cloudMeshRef.current && !calm) {
         cloudMeshRef.current.rotation.y += 0.00045;
+      }
+
+      if (onCenterRef.current && globeGroupRef.current && performance.now() - lastCenter.t > 150) {
+        const gg = globeGroupRef.current;
+        const lat = Math.round(gg.rotation.x * 180 / Math.PI), lon = Math.round((((-gg.rotation.y * 180 / Math.PI - 90) % 360) + 540) % 360 - 180); // inverse of the fly-to mapping
+        if (lat !== lastCenter.lat || lon !== lastCenter.lon) { lastCenter.lat = lat; lastCenter.lon = lon; onCenterRef.current(lat, lon); }
+        lastCenter.t = performance.now();
       }
 
       // Ease the framing toward its target (time-based, so frame-rate independent). Reduced motion jumps.

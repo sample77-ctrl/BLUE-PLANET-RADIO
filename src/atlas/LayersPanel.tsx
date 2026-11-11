@@ -1,5 +1,5 @@
 import React from 'react';
-import { Volume2, Info } from 'lucide-react';
+import { Volume2, VolumeX, Headphones, Info } from 'lucide-react';
 import type { PhenomenonType } from '../types/dataset';
 import type { LayerLoadStatus } from '../datasets/adapter';
 import { SonificationEngine } from '../audio/sonificationEngine';
@@ -16,9 +16,12 @@ interface Props {
   statusMessage: string;
   audioReady: boolean;
   onOpenData: () => void;
+  muted?: Record<PhenomenonType, boolean>; // layer stays on the globe but silent
+  onMute?: (p: PhenomenonType) => void;
+  onSolo?: (p: PhenomenonType) => void;
 }
 
-export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, statuses, isFallback, statusMessage, audioReady, onOpenData }) => {
+export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, statuses, isFallback, statusMessage, audioReady, onOpenData, muted, onMute, onSolo }) => {
   const { t } = usePrefs();
   return (
     <div className="panel p-3 space-y-2" role="group" aria-label={t('layers')}>
@@ -44,6 +47,8 @@ export const LayersPanel: React.FC<Props> = ({ enabled, onToggle, counts, status
                   <span className="block text-xs text-[var(--ink-3)] truncate">{t(m.unit)} → {t(m.sound)}</span>
                 </span>
               </label>
+              {onSolo && <button className="btn btn-ghost btn-icon shrink-0" disabled={!on} aria-label={t('soloLayer', { name: t(m.name) })} title={t('soloLayer', { name: t(m.name) })} onClick={() => onSolo(p)}><Headphones className="w-4 h-4" aria-hidden="true" /></button>}
+              {onMute && <button className="btn btn-ghost btn-icon shrink-0" disabled={!on} aria-pressed={!!muted?.[p]} aria-label={t('muteLayer', { name: t(m.name) })} title={t('muteLayer', { name: t(m.name) })} onClick={() => onMute(p)}>{muted?.[p] ? <VolumeX className="w-4 h-4" aria-hidden="true" /> : <Volume2 className="w-4 h-4" aria-hidden="true" />}</button>}
               <button className="btn btn-ghost btn-icon shrink-0" disabled={!audioReady} title={audioReady ? `${t('hear')}: ${t(m.name)}` : t('soundOn')}
                 aria-label={`${t('hear')} ${t(m.name)} reference sound`} onClick={() => SonificationEngine.getInstance().playIsolatedPreview(p)}>
                 <Volume2 className="w-4 h-4" />
