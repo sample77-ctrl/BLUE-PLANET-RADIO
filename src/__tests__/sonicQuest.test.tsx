@@ -168,10 +168,12 @@ describe('SonicQuest component', () => {
     const badgeBtns = screen.getAllByRole('button', { name: /Badges|Cadet Certificate/i });
     fireEvent.click(badgeBtns[0]);
 
-    expect(screen.getByText(/NASA Junior Sonic Cadet/i)).toBeDefined();
+    expect(screen.getByText(/Sonic Cadet badge/i)).toBeDefined();
+    expect(screen.getByText(/Given by this app, not by NASA/i)).toBeDefined();
+    expect(screen.getByText(/0 \/ 4 missions finished/i)).toBeDefined(); // a fresh visitor has finished none
     const closeBtn = screen.getByRole('button', { name: /Close/i });
     fireEvent.click(closeBtn);
 
-    expect(screen.queryByText(/NASA Junior Sonic Cadet/i)).toBeNull();
+    expect(screen.queryByText(/Sonic Cadet badge/i)).toBeNull();
   });
 });

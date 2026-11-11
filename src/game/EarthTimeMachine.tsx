@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
 import { gameAudio } from './gameAudio';
+import { markMode } from './progress';
 
 interface Props {
   onBack: () => void;
@@ -25,6 +26,10 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
   const isBn = lang === 'bn';
 
   const [records, setRecords] = useState<TempRecord[]>([]);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [meta, setMeta] = useState({ generated: '', baseline: '' });
+  const first = records[0]?.year;
+  const last = records[records.length - 1]?.year;
   const [yearA, setYearA] = useState<number>(1981);
   const [yearB, setYearB] = useState<number>(2025);
   const [scrubberYear, setScrubberYear] = useState<number>(2025);
@@ -38,17 +43,10 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
       .then((data) => {
         if (data && Array.isArray(data.series)) {
           setRecords(data.series);
-        }
+          setMeta({ generated: typeof data.generated === 'string' ? data.generated : '', baseline: typeof data.baseline === 'string' ? data.baseline : '' });
+        } else setLoadFailed(true);
       })
-      .catch(() => {
-        // Fallback series if offline
-        const fallback: TempRecord[] = [];
-        for (let y = 1880; y <= 2025; y++) {
-          const t = (y - 1880) / 145;
-          fallback.push({ year: y, anomaly: Number((-0.2 + t * 1.4).toFixed(2)) });
-        }
-        setRecords(fallback);
-      });
+      .catch(() => setLoadFailed(true)); // no invented series: say the snapshot could not be read
   }, []);
 
   const getRecord = (year: number) => records.find((r) => r.year === year) || { year, anomaly: 0 };
@@ -94,6 +92,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
       // Left ear: Year A, Right ear: Year B (Spatial comparison)
       gameAudio.playTone(freqA, -0.7, 2.0);
       gameAudio.playTone(freqB, 0.7, 2.0);
+      markMode('timemachine');
     } catch {}
     setTimeout(() => setIsPlayingBoth(false), 2000);
   };
@@ -109,6 +108,11 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
 
   return (
     <div className="w-full flex flex-col gap-6 max-w-5xl mx-auto" role="region" aria-label="Earth Time Machine">
+      {loadFailed && (
+        <p role="alert" className="p-3 rounded-lg border border-[var(--signal)] text-xs text-[var(--ink)]">
+          {isBn ? 'GISTEMP স্ন্যাপশট ফাইল পড়া যায়নি, তাই কোনো তাপমাত্রা দেখানো হচ্ছে না। পাতা রিফ্রেশ করে আবার চেষ্টা করো।' : 'The bundled GISTEMP snapshot could not be read, so no temperatures are shown. Reload the page to try again.'}
+        </p>
+      )}
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
@@ -128,7 +132,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
                 {isBn ? 'সেকশন ০৮ · আর্থ টাইম মেশিন' : 'SECTION 08 · EARTH TIME MACHINE'}
               </span>
               <span className="text-xs font-mono text-[var(--ink-3)]">
-                NASA GISTEMP 1880–2025
+                {records.length ? `NASA GISTEMP ${first}–${last}${isBn ? ' · স্ন্যাপশট, লাইভ নয়' : ' · snapshot, not live'}` : 'NASA GISTEMP'}
               </span>
             </div>
             <h2 className="text-lg sm:text-xl font-display font-bold text-[var(--ink)] mt-0.5">
@@ -188,7 +192,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
 
           <button
             onClick={handlePlayA}
-            disabled={isPlayingA}
+            disabled={isPlayingA || !records.length}
             className={`btn border border-[var(--signal)] py-2.5 px-4 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition ${
               isPlayingA ? 'bg-[var(--signal)] animate-pulse text-[var(--on-signal)]' : 'bg-[var(--panel-2)] text-[var(--signal)] hover:bg-[var(--panel-2)]'
             }`}
@@ -236,7 +240,7 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
 
           <button
             onClick={handlePlayB}
-            disabled={isPlayingB}
+            disabled={isPlayingB || !records.length}
             className={`btn border border-[var(--signal)] py-2.5 px-4 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition ${
               isPlayingB ? 'bg-[var(--signal)] animate-pulse text-[var(--on-signal)]' : 'bg-[var(--panel-2)] text-[var(--signal)] hover:bg-[var(--panel-2)]'
             }`}
@@ -268,14 +272,14 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
             <p className="text-xs text-[var(--ink-3)] mt-1">
               {isBn
                 ? 'নাসার গাণিতিক সূত্রে প্রতি ১°C বৃদ্ধিতে পিচ প্রায় ১৪৫ হার্টজ বৃদ্ধি পায়। ফলে কান শুনলেই উষ্ণায়ন বোঝা যায়।'
-                : 'Mapped by NASA GISTEMP: each 1°C increase translates into ~145 Hz higher acoustic pitch.'}
+                : 'This app\'s own mapping, not NASA\'s: pitch = 220 Hz × 2^(anomaly ÷ 1.5), so a warmer year sounds higher.'}
             </p>
           </div>
         </div>
 
         <button
           onClick={handlePlayBoth}
-          disabled={isPlayingBoth}
+          disabled={isPlayingBoth || !records.length}
           className={`btn btn-brass shrink-0 px-6 py-3 rounded-lg text-xs font-semibold flex items-center gap-2 cursor-pointer hover:scale-105 transition ${
             isPlayingBoth ? 'animate-pulse' : ''
           }`}
@@ -338,8 +342,10 @@ export const EarthTimeMachine: React.FC<Props> = ({ onBack, onExploreGlobe }) =>
               : 'Data Source: NASA Goddard Institute for Space Studies (GISS GISTEMP v4), 1951–1980 Baseline.'}
           </span>
         </div>
-        <span className="font-mono text-[var(--signal)]">
-          ✓ AUTHENTIC NASA RECORD
+        <span className="font-mono text-[var(--ink-2)]">
+          {records.length
+            ? (isBn ? `GISTEMP স্ন্যাপশট ${first}–${last}, লাইভ নয়${meta.generated ? `, তৈরি ${meta.generated}` : ''}` : `GISTEMP snapshot ${first}–${last}, not live${meta.generated ? `, generated ${meta.generated}` : ''}`)
+            : (isBn ? 'স্ন্যাপশট পড়া যায়নি' : 'Snapshot not loaded')}
         </span>
       </div>
     </div>

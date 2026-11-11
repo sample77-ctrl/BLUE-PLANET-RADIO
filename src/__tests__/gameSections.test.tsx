@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
 import { PrefsProvider } from '../lib/prefs';
 import { KidsLearningZone } from '../game/KidsLearningZone';
 import { BlindExplorerMode } from '../game/BlindExplorerMode';
@@ -10,7 +11,7 @@ import { InclusiveCoopMode } from '../game/InclusiveCoopMode';
 import { TacticalWildfireMission } from '../game/TacticalWildfireMission';
 import { GameAudioEngine } from '../game/gameAudio';
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 beforeEach(() => {
   localStorage.clear();
@@ -139,13 +140,17 @@ describe('Sonic Earth Adventure: Master Game Sections', () => {
     }
   });
 
-  it('Section 08 – EarthTimeMachine compares 1981 vs 2025 climate anomaly and acoustic frequency delta', () => {
+  it('Section 08 – EarthTimeMachine compares 1981 vs 2025 climate anomaly and acoustic frequency delta', async () => {
     const onBack = vi.fn();
+    // the real bundled snapshot; with no data the view shows an error instead of an invented series
+    const snap = JSON.parse(readFileSync('public/data/gistemp_global.json', 'utf8'));
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => snap })));
     render(
       <PrefsProvider>
         <EarthTimeMachine onBack={onBack} />
       </PrefsProvider>
     );
+    await screen.findByText(/snapshot, not live/i);
 
     expect(screen.getByText(/EARTH TIME MACHINE/i)).toBeDefined();
     expect(screen.getAllByText(/1981/i).length).toBeGreaterThan(0);
@@ -158,22 +163,26 @@ describe('Sonic Earth Adventure: Master Game Sections', () => {
     expect(GameAudioEngine.prototype.playTone).toHaveBeenCalled();
   });
 
-  it('Section 09 – MyEarthPassport displays XP, badges, verified NASA checksum, and certificate modal', () => {
+  it('Section 09 – MyEarthPassport shows honest progress, the data sources used and a certificate that is not NASA\'s', () => {
     const onBack = vi.fn();
     render(
       <PrefsProvider>
-        <MyEarthPassport onBack={onBack} totalStars={12} />
+        <MyEarthPassport onBack={onBack} stars={{ 1: 2, 2: 0, 3: 0, 4: 0 }} />
       </PrefsProvider>
     );
 
     expect(screen.getByText(/MY EARTH PASSPORT/i)).toBeDefined();
-    expect(screen.getByText(/#SEAP-2026-NASA-VALIDATED/i)).toBeDefined();
+    expect(screen.getByText(/Data sources used/i)).toBeDefined();
+    expect(screen.queryByText(/SEAP-2026-NASA-VALIDATED/i)).toBeNull();
+    expect(screen.queryByText(/100% SCIENTIFIC INTEGRITY/i)).toBeNull();
     expect(screen.getByText(/Amazon Forest Sentinel/i)).toBeDefined();
 
-    // Open Certificate Modal
-    const certBtn = screen.getByRole('button', { name: /View Official Certificate/i });
+    // Open the certificate
+    const certBtn = screen.getByRole('button', { name: /View certificate of completion/i });
     fireEvent.click(certBtn);
-    expect(screen.getByText(/CERTIFICATE OF COMPLETION/i)).toBeDefined();
+    expect(screen.getByRole('dialog', { name: /CERTIFICATE OF COMPLETION/i })).toBeDefined();
+    expect(screen.getByText(/not issued or endorsed by NASA/i)).toBeDefined();
+    expect(screen.queryByText(/Research Council/i)).toBeNull();
   });
 
   it('Signature Feature E – InclusiveCoopMode synchronizes Player 1 visual grid with Player 2 audio tuning', () => {

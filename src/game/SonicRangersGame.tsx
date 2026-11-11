@@ -26,6 +26,7 @@ import {
   Home,
 } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
+import { STARS_KEY, markMode } from './progress';
 import './quest.css';
 
 export type ScreenMode =
@@ -66,7 +67,7 @@ export const SonicRangersGame: React.FC<Props> = ({
   // Load saved stars
   const [missionStars, setMissionStars] = useState<Record<number, number>>(() => {
     try {
-      const saved = localStorage.getItem('sonic_rangers_stars');
+      const saved = localStorage.getItem(STARS_KEY);
       return saved ? JSON.parse(saved) : { 1: 0, 2: 0, 3: 0, 4: 0 };
     } catch {
       return { 1: 0, 2: 0, 3: 0, 4: 0 };
@@ -75,7 +76,7 @@ export const SonicRangersGame: React.FC<Props> = ({
 
   useEffect(() => {
     try {
-      localStorage.setItem('sonic_rangers_stars', JSON.stringify(missionStars));
+      localStorage.setItem(STARS_KEY, JSON.stringify(missionStars));
     } catch {}
   }, [missionStars]);
 
@@ -202,7 +203,7 @@ export const SonicRangersGame: React.FC<Props> = ({
         {screen === 'blind' && (
           <BlindExplorerMode
             onBack={() => setScreen('home')}
-            onComplete={() => setScreen('passport')}
+            onComplete={() => { markMode('blind'); setScreen('passport'); }}
           />
         )}
 
@@ -216,7 +217,7 @@ export const SonicRangersGame: React.FC<Props> = ({
         {screen === 'passport' && (
           <MyEarthPassport
             onBack={() => setScreen('home')}
-            totalStars={totalStars}
+            stars={missionStars}
           />
         )}
 
@@ -327,6 +328,7 @@ export const SonicRangersGame: React.FC<Props> = ({
         {/* Cadet Badge & Graduation Certificate Modal */}
         {showBadgeModal && (
           <QuestBadgeModal
+            stars={missionStars}
             onClose={() => setShowBadgeModal(false)}
             onExploreGlobe={onExplore}
             onOpenDJ={() => {
