@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'r
 import { decodeLocation, buildUrl, encodeShare, encodeLegacyShare, type ShareState } from '../lib/shareLink';
 import { SlidersHorizontal, X } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
-import { usePlaybackReport } from '../lib/playbackContext';
+import { usePlayback, usePlaybackReport } from '../lib/playbackContext';
 import { AudioContextManager } from '../audio/audioContext';
 import { countryLabel } from '../lib/placesBn';
 import { JUKEBOX_TRACKS, type Track } from '../lib/nav';
@@ -39,6 +39,8 @@ interface Props {
   initialStory?: string;
   initialT?: string;
   onOpenCollection: (track: Track, frameId?: string) => void;
+  /** `front` = on screen; `back` = another view is in front and the sound may keep playing (hidden + inert); `off` = landing page (paused). See roadmap §3.1 D9. */
+  mode?: 'front' | 'back' | 'off';
 }
 type Tab = 'filters' | 'timeline' | 'story';
 
@@ -49,7 +51,7 @@ type Tab = 'filters' | 'timeline' | 'story';
  */
 const isPictureStory = (st: Story | null) => st?.visual === 'eic';
 
-export function JukeboxView({ countries, initialStory, initialT, onOpenCollection }: Props) {
+export function JukeboxView({ countries, initialStory, initialT, onOpenCollection, mode = 'front' }: Props) {
   const { t, lang, autoplayNext } = usePrefs();
   const queue = useQueue();
   const profile = useContext(ProfileDataContext);
@@ -100,6 +102,7 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
 
   // Story and cursor go into both history replaceState and hash for complete compatibility.
   useEffect(() => {
+    if (mode !== 'front') return; // a hidden Jukebox never writes the URL of the view in front (D9, R4)
     const curShare = decodeLocation(window.location.pathname, window.location.search, window.location.hash, { frames: [], pairs: [] });
     if (curShare?.track && curShare.track !== 'jukebox') return;
     const nextShare: ShareState = { ...curShare, track: 'jukebox', story: s.storyId ?? undefined, t: s.cursor ?? undefined, q: queue.length ? queue : undefined };
@@ -113,7 +116,7 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
       // replaceState only: assigning location.hash would add a history entry per cursor step (Back would walk the timeline).
       if (window.location.pathname + window.location.search + window.location.hash !== nextUrl + nextHash) history.replaceState(null, '', nextUrl + nextHash);
     }
-  }, [s.storyId, s.cursor, queue]);
+  }, [s.storyId, s.cursor, queue, mode]);
 
   // Series player: loads what the chart shows (and period B when comparing); it reports cursor moves with origin 'playback'.
   const [player, pstate] = useSeriesPlayer();
@@ -147,6 +150,12 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
     setAudioErr(!AudioContextManager.isReady() || !player.start(i >= 0 && i < points.length - 1 ? i : 0));
   };
   usePlaybackReport('jukebox', story ? (lang === 'bn' ? story.titleBn : story.title) : t('navJukebox'), pstate === 'playing', () => player.pause());
+  // Kept mounted after the first visit (D9): the landing page pauses it, and another player starting makes it yield, so two cannot mix.
+  const { active: otherActive } = usePlayback();
+  useEffect(() => {
+    if (pstate !== 'playing') return;
+    if (mode === 'off' || (mode === 'back' && otherActive && otherActive.id !== 'jukebox')) player.pause();
+  }, [mode, otherActive, pstate, player]);
 
   // When a story ends, move to the next queued one that exists, then start it once its series has loaded.
   const autoStart = useRef(false);
@@ -183,10 +192,10 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
   // Publish to the shared Now-Playing bar (src/player). The engine stays here; the bar only gets state and controls.
   const npSpark = useMemo(() => points.map((p) => p.v ?? NaN), [points]);
   useEffect(() => {
-    if (!story || isPictureStory(story) || !series || vt.length === 0) { publishNowPlaying(null, 'jukebox'); return; }
+    if (!story || isPictureStory(story) || !series || vt.length === 0 || mode === 'off' || (mode === 'back' && pstate !== 'playing' && pstate !== 'paused')) { publishNowPlaying(null, 'jukebox'); return; }
     const cp = ci >= 0 ? points.find((p) => p.t === s.cursor) : undefined;
     publishNowPlaying({
-      id: 'jukebox', dataset: THEME_OF_TOPIC[story.topic], title: lang === 'bn' ? story.titleBn : story.title,
+      id: 'jukebox', background: mode === 'back', dataset: THEME_OF_TOPIC[story.topic], title: lang === 'bn' ? story.titleBn : story.title,
       subtitle: [series.source, digits(series.period, lang), series.unit].filter(Boolean).join(' · '), badge: series.isSample ? 'sample' : 'snapshot',
       state: pstate === 'playing' ? 'playing' : pstate === 'paused' ? 'paused' : pstate === 'loading' || pstate === 'idle' ? 'busy' : 'ready',
       index: ci, count: vt.length, label: ci >= 0 ? timeLabel(vt[ci], lang) : '', valueText: cp && cp.v != null ? valueLabel(cp.v, series.unit, lang) : '',
@@ -203,7 +212,7 @@ export function JukeboxView({ countries, initialStory, initialT, onOpenCollectio
   useEffect(() => () => publishNowPlaying(null, 'jukebox'), []);
 
   return (
-    <div className="h-full overflow-y-auto overflow-x-hidden scroll-thin pt-[var(--header-h)]">
+    <div className="h-full overflow-y-auto overflow-x-hidden scroll-thin pt-[var(--header-h)]" hidden={mode !== 'front'} inert={mode !== 'front'}>
       <div className="max-w-[1600px] mx-auto px-3 sm:px-5 pt-4 pb-6 space-y-4">
         <header className="flex flex-wrap items-end justify-between gap-2">
           <div>

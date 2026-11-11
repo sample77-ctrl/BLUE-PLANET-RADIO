@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { Play, Pause, SkipBack, SkipForward, TrendingUp } from 'lucide-react';
+import { TrendingUp } from 'lucide-react';
 import type { DatasetTimeSlice, PhenomenonType } from '../types/dataset';
 import { formatDay } from './formatDay';
 import { usePrefs } from '../lib/prefs';
@@ -10,14 +10,14 @@ interface Props {
   index: number;
   onChange: (i: number) => void;
   playing: boolean;
-  onTogglePlay: () => void;
   hearChange: boolean;
   onToggleHearChange: () => void;
   enabled: Record<PhenomenonType, boolean>;
   speed?: number; // playback speed, 1 = one day per 3.2 s
 }
 
-export const TimelineBar: React.FC<Props> = ({ slices, index, onChange, playing, onTogglePlay, hearChange, onToggleHearChange, enabled, speed = 1 }) => {
+/** Day pills and "Hear the change". Play, previous and next live in the Now-Playing bar; the day timer stays here because this is mounted exactly while the Atlas is on screen. */
+export const TimelineBar: React.FC<Props> = ({ slices, index, onChange, playing, hearChange, onToggleHearChange, enabled, speed = 1 }) => {
   const { t, lang } = usePrefs();
   const n = slices.length;
 
@@ -44,12 +44,7 @@ export const TimelineBar: React.FC<Props> = ({ slices, index, onChange, playing,
   return (
     <div className="panel p-2.5 sm:p-3 flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex items-center gap-1">
-          <button className="btn btn-ghost btn-icon" aria-label={t('prevDay')} onClick={() => onChange((index - 1 + n) % n)}><SkipBack className="w-4 h-4" /></button>
-          <button className="btn btn-brass btn-icon" aria-label={playing ? t('pause') : t('play')} onClick={onTogglePlay}>{playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}</button>
-          <button className="btn btn-ghost btn-icon" aria-label={t('nextDay')} onClick={() => onChange((index + 1) % n)}><SkipForward className="w-4 h-4" /></button>
-        </div>
-        <div className="flex-1 min-w-[200px] grid gap-1" style={{ gridTemplateColumns: `repeat(${n}, minmax(0,1fr))` }} role="tablist" aria-label={t('dayLabel')}>
+        <div className="flex-1 min-w-[160px] grid gap-1" style={{ gridTemplateColumns: `repeat(${n}, minmax(0,1fr))` }} role="tablist" aria-label={t('dayLabel')}>
           {slices.map((s, i) => (
             <button key={s.dateLabel} role="tab" aria-selected={i === index} onClick={() => onChange(i)}
               className={`min-h-[40px] rounded-lg text-sm tnum cursor-pointer border transition ${i === index ? 'border-[var(--brass)] text-[var(--brass)] bg-[var(--panel-2)] font-semibold' : 'border-[var(--line)] text-[var(--ink-2)] hover:text-[var(--ink)]'}`}>

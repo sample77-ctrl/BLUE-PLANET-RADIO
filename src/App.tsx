@@ -17,7 +17,7 @@ import { DiagnosticsPanel } from './components/DiagnosticsPanel';
 import { SettingsDialog } from './components/SettingsDialog';
 import { DataMethodDialog } from './components/DataMethodDialog';
 import { LayersPanel } from './atlas/LayersPanel';
-import { HearingPanel } from './atlas/HearingPanel';
+import { HearingPanel, HearingSignal } from './atlas/HearingPanel';
 import { TimelineBar } from './atlas/TimelineBar';
 import { TourBar } from './demo/TourBar';
 import { NowPlayingBar } from './player/NowPlayingBar';
@@ -30,6 +30,7 @@ import { CommandPalette, type Command } from './components/CommandPalette';
 import { storiesFor } from './stories/stories';
 import { countryLabel } from './lib/placesBn';
 import { formatDay } from './atlas/formatDay';
+import { digits } from './jukebox/format';
 import { usePrefs } from './lib/prefs';
 import { useCountry } from './countries/useCountry';
 import { CountryPanel } from './countries/CountryPanel';
@@ -139,10 +140,12 @@ export function App() {
   useEffect(() => { document.documentElement.classList.toggle('landing-open', showHero); return () => document.documentElement.classList.remove('landing-open'); }, [showHero]);
 
   useEffect(() => installMediaSession(), []);
+  // The Atlas scrubber's chart: how many observations each day holds on the layers that are switched on (real counts from the loaded slices).
+  const dayCounts = useMemo(() => slices.map((sl) => sl.observations.filter((o) => enabled[o.phenomenon]).length), [slices, enabled]);
   usePublishNowPlaying('atlas', track === 'atlas' && !showHero && view !== '2d-map' && slices.length > 0 ? {
     id: 'atlas', dataset: enabled.fire ? 'fire' : enabled.precipitation ? 'rain' : enabled.sst ? 'teal' : undefined, title: t('track1'), subtitle: `${t('npAtlasSub')} · ${formatDay(slices[0].dateLabel, lang)}–${formatDay(slices[slices.length - 1].dateLabel, lang)}`, badge: 'snapshot', state: playing ? 'playing' : 'ready',
-    index: day, count: slices.length, label: formatDay(slices[day]?.dateLabel ?? slices[0].dateLabel, lang), valueText: '', spark: [],
-    speed, controls: { setSpeed, toggle: () => setPlaying((p) => !p), stop: () => setPlaying(false), step: (by) => setDay((d) => (d + by + slices.length) % slices.length), seek: setDay },
+    index: day, count: slices.length, label: formatDay(slices[day]?.dateLabel ?? slices[0].dateLabel, lang), valueText: t('npAtlasCount', { n: digits(dayCounts[day] ?? 0, lang) }), spark: dayCounts,
+    speed, signal: <HearingSignal observations={observations} enabled={enabled} audioReady={audioReady} />, controls: { setSpeed, toggle: () => setPlaying((p) => !p), stop: () => setPlaying(false), step: (by) => setDay((d) => (d + by + slices.length) % slices.length), seek: setDay },
   } : null);
   usePlaybackReport('atlas', t('track1'), playing && track === 'atlas' && !showHero, () => setPlaying(false));
 
@@ -273,6 +276,11 @@ export function App() {
     pickTrack(tr);
   };
 
+  const jbFront = track === 'jukebox' && !showHero;
+  const [jbSeen, setJbSeen] = useState(false);
+  if (jbFront && !jbSeen) setJbSeen(true); // derived during render, so the first visit mounts in the same pass
+  const jbOn = jbSeen || jbFront;
+
   const imageryUrl = imagery && slice && /^\d{4}-\d{2}-\d{2}$/.test(slice.dateLabel) ? gibsUrl('VIIRS_SNPP_CorrectedReflectance_TrueColor', slice.dateLabel, 'jpeg', 2048) : null;
 
   const layersPanel = (
@@ -328,13 +336,18 @@ export function App() {
                 countries={{ list: cty.list, country: cty.country, point: cty.point, onSelect: cty.select }} />
             </div>
           )}
+          {/* The Jukebox stays mounted after its first visit so its sound keeps playing in other views (roadmap §3.1 D9). */}
+          {jbOn && (
+            <Suspense fallback={jbFront ? <div className="h-full grid place-items-center text-sm text-[var(--ink-3)]">{t('loadingView')}</div> : null}>
+              <JukeboxView key={jbStart.n} mode={jbFront ? 'front' : showHero ? 'off' : 'back'} initialStory={jbStart.story} initialT={jbStart.t} onOpenCollection={openCollection}
+                countries={{ list: cty.list, country: cty.country, point: cty.point, onSelect: cty.select }} />
+            </Suspense>
+          )}
           {track !== 'atlas' && !showHero && (
             <Suspense fallback={<div className="h-full grid place-items-center text-sm text-[var(--ink-3)]">{t('loadingView')}</div>}>
               {track === 'frames' && <FrameJukebox autoPlay={autoListen} onAutoPlayed={() => setAutoListen(false)} onPlay={() => { if (!audioReady) soundOn(); }} />}
               {track === 'monsoon' && <BangladeshMonsoon />}
               {track === 'pulse' && <VitalSigns />}
-              {track === 'jukebox' && <JukeboxView key={jbStart.n} initialStory={jbStart.story} initialT={jbStart.t} onOpenCollection={openCollection}
-                countries={{ list: cty.list, country: cty.country, point: cty.point, onSelect: cty.select }} />}
               {track === 'about' && <AboutPage onOpenMethod={() => setDataOpen(true)} />}
               {track === 'quest' && <SonicQuest onExplore={() => { setTrack('atlas'); setShowHero(false); }} onSoundOn={soundOn} audioReady={audioReady} />}
             </Suspense>
@@ -362,7 +375,7 @@ export function App() {
             {view === '3d-globe' && <div className="globe-hud hud-frame hidden lg:block" aria-hidden="true"><i /></div>}
 
             {/* View switch and globe options */}
-            <div data-ctl="views" className="absolute right-3 top-[calc(var(--header-h)+3.5rem)] lg:top-[calc(var(--header-h)+.75rem)] lg:right-auto lg:left-1/2 lg:-translate-x-1/2 z-20 flex flex-row items-start lg:items-center gap-2">
+            <div data-ctl="views" className="absolute left-[3.75rem] right-3 justify-end flex-wrap top-[calc(var(--header-h)+3.5rem)] lg:top-[calc(var(--header-h)+.75rem)] lg:left-1/2 lg:right-auto lg:justify-start lg:flex-nowrap lg:-translate-x-1/2 z-20 flex flex-row items-start lg:items-center gap-2">
               <div className="panel p-1 flex gap-1" role="group" aria-label={t('viewGroup')}>
                 {([['3d-globe', Globe, 'globe'], ['2d-map', MapIcon, 'map'], ['audio-first', List, 'list']] as const).map(([v, Icon, key]) => (
                   <button key={v} className="btn btn-ghost min-h-[36px] pointer-coarse:min-h-[44px] px-2.5" aria-pressed={view === v} aria-label={t(key)} onClick={() => setView(v)}>
@@ -396,7 +409,7 @@ export function App() {
 
             <div data-ctl="timeline" className="absolute bottom-2 sm:bottom-3 left-2 right-2 lg:left-[var(--tl-l)] lg:right-3 z-20" style={{ ['--tl-l' as string]: leftOpen ? '340px' : '12px' }}>
               {globeFailed && view === '3d-globe' && <p role="status" className="panel px-3 py-2 mb-2 text-sm text-[var(--ink-2)] w-fit max-w-full">{t('webglOff')}</p>}
-              <TimelineBar slices={slices} index={day} onChange={setDay} playing={playing} onTogglePlay={() => setPlaying(!playing)}
+              <TimelineBar slices={slices} index={day} onChange={setDay} playing={playing}
                 hearChange={hearChange} onToggleHearChange={() => setHearChange(!hearChange)} enabled={enabled} speed={speed} />
             </div>
           </>

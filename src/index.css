@@ -134,7 +134,7 @@ html.calm { --glass-blur: 10px; --glass-blur-strong: 18px; --glass-blur-pop: 28p
 .prose-sea p { line-height: 1.65; color: var(--ink-2); max-width: 72ch; }
 .prose-sea a, a.link { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 }
-:focus-visible { outline: 2px solid var(--brass) !important; outline-offset: 2px; border-radius: 6px; }
+:focus-visible { outline: 2px solid var(--focus-ring, var(--brass)) !important; outline-offset: 2px; border-radius: 6px; }
 
 /* Wide tables become one card per row on phones; each cell shows its column name from data-label */
 @media (max-width: 639px) {
@@ -319,6 +319,8 @@ html[data-dataset='warm'] { --accent: var(--warm); }
 html[data-dataset='cold'] { --accent: var(--cold); }
 html[data-dataset='teal'] { --accent: var(--teal); }
 html[data-dataset='brass'] { --accent: var(--brass); }
+/* The focus ring follows the dataset too, except in high contrast (which keeps its yellow). Every theme is >= 4.5:1 on the dark surfaces (datasetTheme.test.ts), above the 3:1 a focus ring needs. */
+html[data-dataset]:not(.hc) { --focus-ring: var(--accent); }
 /* Glass is the default. These people asked for less see-through (or the browser forces colours): solid surfaces, no blur. Safari and Firefox do not report
    prefers-reduced-transparency, so the in-app high contrast switch below is the fallback for them. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {

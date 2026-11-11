@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { AudioWaveform, ChevronDown, ChevronUp } from 'lucide-react';
 import type { EarthObservation, PhenomenonType } from '../types/dataset';
 import { SonificationEngine } from '../audio/sonificationEngine';
 import { describeVoice } from '../audio/voiceParams';
@@ -7,6 +7,7 @@ import { usePrefs, speak } from '../lib/prefs';
 import { LAYER_META } from './layerMeta';
 import { placeLabel } from '../lib/placesBn';
 import { LiveWaveform } from './LiveWaveform';
+import { setFullPlayer } from '../player/ui';
 
 interface Props {
   observations: EarthObservation[];
@@ -15,12 +16,9 @@ interface Props {
   onSelect: (o: EarthObservation) => void;
 }
 
-/** Live, plain-language account of what each audible voice is and how its data became sound. */
-export const HearingPanel: React.FC<Props> = ({ observations, enabled, audioReady, onSelect }) => {
-  const { t, lang, narration } = usePrefs();
+/** The voices that are sounding now (or, with sound off, the strongest observations on the layers that are switched on). Polled, not per frame. */
+function useHearingRows(observations: EarthObservation[], enabled: Record<PhenomenonType, boolean>, audioReady: boolean) {
   const [live, setLive] = useState<EarthObservation[]>([]);
-  const [open, setOpen] = useState(true);
-
   useEffect(() => {
     const read = () => {
       const m = SonificationEngine.getInstance().getActiveVoiceDetails();
@@ -30,16 +28,51 @@ export const HearingPanel: React.FC<Props> = ({ observations, enabled, audioRead
     const id = window.setInterval(read, 600);
     return () => clearInterval(id);
   }, [observations, enabled, audioReady]);
-
   const fallback = useMemo(() => observations.filter((o) => enabled[o.phenomenon]).sort((a, b) => b.normalizedValue - a.normalizedValue), [observations, enabled]);
-  const rows = (audioReady && live.length ? live : fallback).slice(0, 5);
+  return (audioReady && live.length ? live : fallback).slice(0, 5);
+}
+
+/** Pan as words, shared by the card and the stereo meter. */
+function useWhere() {
+  const { t } = usePrefs();
+  return (pan: number) => (Math.abs(pan) < 0.08 ? t('centre') : `${Math.round(Math.abs(pan) * 100)}% ${pan < 0 ? t('left') : t('right')}`);
+}
+
+/** The live waveform, spectrum and stereo meter. Lives in the full player ("Waveform & stereo" tab), so it only runs while that tab is on screen. */
+export const HearingSignal: React.FC<Omit<Props, 'onSelect'>> = ({ observations, enabled, audioReady }) => {
+  const { t, lang } = usePrefs();
+  const rows = useHearingRows(observations, enabled, audioReady), top = rows[0], where = useWhere();
+  return (
+    <div>
+      <LiveWaveform active={audioReady} />
+      {!audioReady && <p className="text-sm text-[var(--ink-2)] mt-1">{t('nothingPlaying')}</p>}
+      {top && (() => { const pan = describeVoice(top).pan; return (
+        <div className="stereo-meter" role="img" aria-label={`${t('stereoPos')}: ${where(pan)}`}>
+          <div className="flex justify-between text-2xs text-[var(--ink-3)]"><span>{t('left')}</span><span>{t('stereoPos')}</span><span>{t('right')}</span></div>
+          <div className="meter"><i style={{ left: `${(pan + 1) * 50}%` }} /></div>
+        </div>
+      ); })()}
+      <p className="text-2xs text-[var(--ink-3)] mt-2 leading-snug">
+        {lang === 'bn'
+          ? 'অবস্থান = দ্রাঘিমাংশ। মান বাড়লে আগুন দ্রুত ও উজ্জ্বল চটচট করে, বৃষ্টির ফোঁটা ঘন ও উঁচু হয়, গরম সমুদ্রের গুঞ্জন উঁচু সুরে বাজে।'
+          : 'Position follows longitude. Higher values make fire crackle faster and brighter, rain drip denser and higher, and warm-ocean drones rise in pitch.'}
+      </p>
+    </div>
+  );
+};
+
+/** Slim "Now hearing" card: the voices that are sounding, in plain language. The waveform and stereo meter moved to the full player. */
+export const HearingPanel: React.FC<Props> = ({ observations, enabled, audioReady, onSelect }) => {
+  const { t, lang, narration } = usePrefs();
+  const [open, setOpen] = useState(true);
+  const rows = useHearingRows(observations, enabled, audioReady).slice(0, 4);
   const top = rows[0];
 
   useEffect(() => {
     if (narration && audioReady && top) speak(`${t(LAYER_META[top.phenomenon].name)}, ${placeLabel(top.regionName, lang)}, ${Math.round(top.value * 10) / 10} ${top.unit}`, lang);
   }, [top?.id, narration, audioReady]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const where = (pan: number) => (Math.abs(pan) < 0.08 ? t('centre') : `${Math.round(Math.abs(pan) * 100)}% ${pan < 0 ? t('left') : t('right')}`);
+  const where = useWhere();
   const trend = (o: EarthObservation) => {
     if (o.phenomenon === 'sst') return lang === 'bn' ? 'মাসিক গড়' : 'monthly mean';
     const d = o.delta ?? 0;
@@ -58,7 +91,6 @@ export const HearingPanel: React.FC<Props> = ({ observations, enabled, audioRead
       </button>
       {open && (
         <>
-          <LiveWaveform active={audioReady} />
           {!audioReady && <p className="text-sm text-[var(--ink-2)] mt-1">{t('nothingPlaying')}</p>}
           <ol className="mt-2 space-y-1.5" aria-live="off">
             {rows.map((o) => {
@@ -80,17 +112,7 @@ export const HearingPanel: React.FC<Props> = ({ observations, enabled, audioRead
               );
             })}
           </ol>
-          {top && (() => { const pan = describeVoice(top).pan; return (
-            <div className="stereo-meter" role="img" aria-label={`${t('stereoPos')}: ${where(pan)}`}>
-              <div className="flex justify-between text-2xs text-[var(--ink-3)]"><span>{t('left')}</span><span>{t('stereoPos')}</span><span>{t('right')}</span></div>
-              <div className="meter"><i style={{ left: `${(pan + 1) * 50}%` }} /></div>
-            </div>
-          ); })()}
-          <p className="text-2xs text-[var(--ink-3)] mt-2 leading-snug">
-            {lang === 'bn'
-              ? 'অবস্থান = দ্রাঘিমাংশ। মান বাড়লে আগুন দ্রুত ও উজ্জ্বল চটচট করে, বৃষ্টির ফোঁটা ঘন ও উঁচু হয়, গরম সমুদ্রের গুঞ্জন উঁচু সুরে বাজে।'
-              : 'Position follows longitude. Higher values make fire crackle faster and brighter, rain drip denser and higher, and warm-ocean drones rise in pitch.'}
-          </p>
+          <button type="button" className="btn btn-ghost mt-2 w-full" onClick={() => setFullPlayer(true, 'signal')}><AudioWaveform className="w-4 h-4" aria-hidden="true" />{t('npTabSignal')}</button>
         </>
       )}
     </section>

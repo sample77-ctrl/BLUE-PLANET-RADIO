@@ -105,6 +105,28 @@ The current set already matches v3's palette: deep navy, restrained cyan (`--rai
 | D7 | Long time series per country | Read the **monthly** POWER values that `fetchPlaceClimate` already downloads (it currently keeps only the annual value). This gives real monthly T2M and precipitation for 1981–2025 at the country's representative point. | It's real, timestamped data for the Jukebox timeline without a new source |
 | D8 | One primary sonification mode first | A new **series sonifier** for the Jukebox. The existing A1/A2/B1/B2 engines are left alone, and B2 moves to the new sonifier only after parity tests. | Preserves working audio |
 
+### 3.1 D9 · Audio that keeps playing across views (v4 design; Jukebox only)
+
+**Problem.** Every track owns its player and `App.tsx` mounts only the track on screen, so leaving the Jukebox runs `useSeriesPlayer`'s cleanup (`player.dispose()`): the sound stops and the Now-Playing bar (published from inside `JukeboxView`) disappears.
+
+**Options considered.**
+1. *Hoist the `SeriesPlayer` and its bar adapter into a module singleton or a headless component above the view switch.* Rejected. The adapter needs the story list (which depends on the chosen country and its coverage), the loaded series, the cursor and the sound settings. Moving them out means a second copy of that state next to `useJukebox`, and R4 says there must be one reducer. Queue autoplay would need its own story and series loading too.
+2. *Keep the whole `JukeboxView` instance mounted after its first visit, and hide it (`hidden` + `inert`) while another view is in front.* **Chosen.** One reducer, one player and one adapter stay exactly as they are, so there is no new state to keep in sync. The cost is hidden DOM and the effects that keep running (series loads, sparklines); both are small and the first visit is still lazy (R9).
+3. *A "headless player" for audio only plus a re-created UI.* Rejected: same duplicated state as option 1.
+
+**Design.**
+- `App.tsx` keeps a `jbSeen` flag. After the first visit `JukeboxView` stays mounted and receives `mode`: `front` (visible), `back` (another view is in front) or `off` (landing page). The other tracks keep their own engines and still unmount on leave (D8).
+- `back` mode: the view is `hidden` and `inert`. A playing or paused Jukebox publishes to the bar as a *background* record. `off` mode pauses it (the landing page has its own preview sound and no bar).
+- `nowPlaying.ts` gets two slots: the foreground record (the view on screen, last writer wins, as today) and the background record. The bar shows the background record while it is **playing**, otherwise the foreground one, otherwise a paused background one. One bar, one player: whoever is playing holds the bar.
+- Exclusivity: while in `back` mode, if any other player reports playing through `usePlaybackReport`, the Jukebox pauses. Two tracks cannot mix by starting one in-page.
+- Re-visiting the Jukebox from the nav does not remount it. A landing-page topic link (`openJukebox`) still bumps `key`, so the old player is disposed (every node disconnected) before a new one is built.
+
+**Against the risks.**
+- **R4** (feedback loops): unchanged, because there is still one `useJukebox` reducer and playback keeps the origin `playback`. While hidden, `TimelineView` cannot scroll (display none), and its own scroll sync only runs for user scrolls, so scroll cannot write the cursor. The hash effect already refuses to write when the share state names another track, so a background step cannot overwrite the URL of the view in front.
+- **R5** (node leaks): exactly one `SeriesPlayer` exists for the life of the view; hiding or re-showing it creates and destroys nothing. Unmount (key bump or page close) still calls `dispose()`. Test: play, hide, show, then unmount; `seriesDiagnostics().nodes` must be 0 at the end and unchanged by hiding and showing.
+- **R10** (reachability): no route changes; every track is still reachable from the nav. The only visible change is that sound from the Jukebox continues until paused.
+- **Not covered:** the Atlas spatial sound (header "Sound" toggle) is a separate engine and can still be switched on over a background Jukebox; the other tracks (Frames, Monsoon, Vital Signs) still stop on leave.
+
 ---
 
 ## 4. Phases and file-by-file plan
@@ -252,6 +274,10 @@ Plan in [`landing-carousel-plan.md`](landing-carousel-plan.md). Steps 9A worlds 
 | Empty, loading, stale and API-error states usable | 3 | ✅ (`DataState`; profile empty state, POWER error + retry, offline sample) |
 | No fabricated data presented as official | all | ✅ today (offline sample is labelled) |
 | Production build and automated tests pass | each | ✅ lint 0 warnings · 184 unit/component tests · build · 13 browser smoke tests · 14 axe scans |
+| v4: one transport on the Atlas; the Now-Playing bar owns play, previous and next | v4 | ✅ `TimelineBar` keeps day pills and "Hear the change" only (unit test, e2e) |
+| v4: "Now hearing" is a slim card; waveform and stereo meter are in the full player | v4 | ✅ `HearingPanel` (card, same polling, same narration) + `HearingSignal` (tab "Waveform & stereo"); the tab exists only for a player that offers it |
+| v4: Jukebox sound survives leaving the view, with no leaked nodes | v4 | ✅ design in §3.1 D9; unit test (4 leave/re-enter rounds, nodes bounded, 0 after unmount) and a Chromium test that plays, switches views and keeps the bar. Other tracks still stop on leave |
+| v4: Chromium e2e and axe on the v4 UI | v4 | ✅ 82 Playwright tests (smoke, no-webgl, carousel, a11y ×16, layout, dialogs, redesign, fonts, a11y-quest) |
 
 ---
 
@@ -415,3 +441,28 @@ Not done: the right "Now hearing" rail is still a full rail (waveform and meter 
 ### P5 Shortcuts, command palette, audio-reactive edge — done (see notes)
 Global transport shortcuts act on whatever is published to the bar: Space or K play/pause, Shift+←/→ jump 10 steps, N next (queued story, else step), P previous, Shift+M mute, E / Q open the full player (Q on the queue tab). Existing keys unchanged (`L` and `M` stay Atlas list/map views, so the plan's J/L and M were replaced by Shift+arrows and Shift+M). `?` and `,` open Settings, which holds the shortcut list. **Single-key shortcuts can be turned off** in Settings (`keyShortcuts`, WCAG 2.1.4); ⌘K / Ctrl+K stays on. Command palette (⌘K, Ctrl+K or `/`): views, countries, Jukebox stories and actions; combobox + listbox in a modal dialog. Audio-reactive top edge of the bar reads the existing master analyser (no new node), 4 bands, ≤30 Hz, CSS variables only, transform and opacity only, paused when hidden, idle or under reduced motion. One polite live region says "Now playing …".
 Not done: a separate shortcut sheet for `?` (it opens Settings, which lists them); globe shader uniforms from the bands; no check of the glow by ear/eye (needs real audio; the preview pane's animations don't advance). Palette checked in the dev preview: Ctrl+K opens, filtering and Enter jump to the Arctic sea ice story and the accent changes to the cold theme.
+
+### P6 Verification, Atlas merge, persistent Jukebox audio, polish — done (see notes)
+Branch `redesign/next-gen-player`. Checks at the end: lint 0 warnings, 299 unit/component tests pass, build ok, size ok (main JS **166.5 kB** of 175, CSS 27.2 kB of 32), **82 Playwright tests pass** in Chromium (`npx playwright test`: the three scripted suites plus layout, dialogs, redesign, fonts, quest a11y and the new tests). `npx playwright install chromium` was run, so e2e and axe have now actually run on this branch.
+
+**1 · Verification.** First full run: 19/20 e2e and 15/17 axe. Real failures, all fixed in code:
+- axe `landmark-unique` on the Jukebox: the Now-Playing bar and the vinyl hero were both named "Now playing". The hero is now named by its story title.
+- Layout test: on the mobile Atlas the view switch (now three groups wide after Surprise/Tune) overlapped the Reset-view button. The row now starts to the right of the Reset button and wraps; the Reset label shows from the `lg` breakpoint only.
+- Found in the preview and then covered by an e2e test that fails without the fix: the Jukebox timeline used `scrollIntoView`, which also scrolled the whole page to the timeline on load and on every step. It now scrolls its own rail.
+- Updated on purpose: the Jukebox play/pause test now reads the transport from the Now-Playing bar (the header chip is gone). New tests: EN/বাংলা header button.
+- Bar on phones was ~250 px tall. Now: two compact rows from 600 px, three rows below that (the scrubber gets its own row), Stop is dropped on phones because Pause already stops the sound. Full player: 95% opaque base (the 56% glass let the page show through), accent underline on the selected tab.
+- Looked at in the dev preview: Atlas at 375, 768 and 1440; Jukebox at 375 and 1440; Frames, Monsoon at 375; Pulse at 375 in বাংলা + high contrast + reduced motion; Jukebox at 375 in বাংলা + high contrast with the full player open on "How it sounds"; Atlas full player on "Waveform & stereo" at 1440. **Not looked at in a browser:** Frames, Monsoon and Pulse at 1440; Atlas in বাংলা or high contrast; Frames and Monsoon in বাংলা.
+
+**2 · One Atlas transport.** `TimelineBar` lost play/prev/next (the day timer stays in it because it is mounted exactly while the Atlas is on screen). The bar owns them; the Atlas bar's step buttons stop at the first and last day, while autoplay still wraps.
+
+**3 · Slim "Now hearing".** The right card keeps the voice list, its `aria-live="off"` list and the spoken narration unchanged, and has a "Waveform & stereo" button. The `LiveWaveform` canvas, stereo meter and explainer moved into `HearingSignal`, shown as a fourth tab in the full player (`np.signal`), so the 60 fps canvas only runs while that tab is open.
+
+**4 · Persistent Jukebox audio.** Design in §3.1 D9: the Jukebox view stays mounted after the first visit (`mode` front / back / off) instead of hoisting the player alone. `nowPlaying.ts` has a foreground and a background slot. The Jukebox pauses on the landing page and yields when another player starts. A hidden Jukebox never writes the URL. Not covered: the Atlas spatial "Sound" toggle can still be switched on over a paused or playing Jukebox; Frames, Monsoon and Vital Signs still stop on leave. Not verified by ear: audio was checked with a fake AudioContext (unit) and a real one in headless Chromium (state and cursor only, not sound).
+
+**5 · Polish.**
+- View Transition: opening or closing the full player runs `document.startViewTransition` (feature-detected, skipped under reduced motion in the app or the OS). The bar's title morphs into the full player's head (`view-transition-name: np-title`, only on one element at a time). `main canvas { view-transition-name: none }`, so the globe is never its own capture group. The page root is still one snapshot, so the globe is frozen for the ~0.2 s the transition runs. Verified: Chromium counts one transition when it should and none under reduced motion. **Not seen by eye:** the preview pane does not advance CSS animations, so how the morph looks is unchecked. Safari and Firefox fall back to opening with no morph.
+- Full-player backdrop: a blurred gradient of the dataset accent (not a globe snapshot); hidden in high contrast, forced-colors and reduced-transparency.
+- Atlas scrubber: sparkline of real per-day observation counts on the layers that are switched on (`npAtlasCount`, EN and বাংলা). With four days the line is short, and flat when the layers have equal counts.
+- Theming: the focus ring follows the dataset accent (not in high contrast). The contrast test now also asserts every accent has ≥3:1 on abyss, panel and panel-2 (4.5:1 was already asserted). The globe's horizon halo and the loading-poster glow lean toward the dataset colour (60% mix; plain blue in high contrast and with no dataset). Not seen with a real dataset playing in the 3D view except the fire accent on the Atlas.
+
+**Next safe action:** push the branch when asked and open the PR; then check Frames, Monsoon and Pulse at 1440, and listen to the persistent Jukebox on a real device. **Reminder: the Groq key in `src/harmonium/groqPredictor.ts` is still in the code and in git history and must be revoked at Groq.**

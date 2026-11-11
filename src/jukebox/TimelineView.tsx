@@ -34,7 +34,8 @@ export function TimelineView({ points, cursor, origin, seq, unit, label, onCurso
     const r = el.getBoundingClientRect(), b = box.getBoundingClientRect();
     if (r.top >= b.top && r.bottom <= b.bottom) return;
     programmatic.current = now();
-    el.scrollIntoView?.({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+    // Scroll the rail only. scrollIntoView would also scroll the whole Jukebox page to the timeline on every step.
+    box.scrollTo?.({ top: box.scrollTop + (r.top - b.top) - (box.clientHeight - r.height) / 2, behavior: reduceMotion ? 'auto' : 'smooth' });
   }, [cursor, seq]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Scroll sync: only while the user is scrolling the rail (wheel, touch, scrollbar drag), never right after a programmatic scroll or a pick.

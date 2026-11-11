@@ -131,7 +131,7 @@ html.hc .qh-card, html.hc .qh-mascot, html.hc .qh-pad { box-shadow: none; }
 .world-stage[data-gl='true'] .world-sphere[data-pos='active'] .earth { visibility: visible; opacity: 1; transition: opacity 700ms var(--ease-in-out), visibility 0s linear 700ms; pointer-events: none; }
 .world-stage[data-gl='true'][data-ready='true'] .world-sphere .earth { opacity: 0; visibility: hidden; }
 .world-stage[data-gl='true'] .world-sphere:not([data-pos='active']) .earth { display: none; }
-.globe-poster { position: absolute; left: 50%; top: 50%; width: min(69vh, 46vw); aspect-ratio: 1; translate: -50% -48%; border-radius: 50%; pointer-events: none; z-index: 1; background: radial-gradient(circle at 32% 30%, rgb(255 255 255 / .14), transparent 40%), radial-gradient(circle, transparent 55%, rgb(2 6 14 / .75) 100%), url('/textures/earth_atmos_1024.jpg') 40% 50% / 200% 100% repeat-x; box-shadow: 0 0 0 1px rgb(255 255 255 / .06), 0 0 70px 6px rgb(76 195 255 / .28), inset -30px -16px 60px rgb(2 6 14 / .7); opacity: 1; transition: opacity 700ms var(--ease-in-out), visibility 0s linear 700ms; }
+.globe-poster { position: absolute; left: 50%; top: 50%; width: min(69vh, 46vw); aspect-ratio: 1; translate: -50% -48%; border-radius: 50%; pointer-events: none; z-index: 1; background: radial-gradient(circle at 32% 30%, rgb(255 255 255 / .14), transparent 40%), radial-gradient(circle, transparent 55%, rgb(2 6 14 / .75) 100%), url('/textures/earth_atmos_1024.jpg') 40% 50% / 200% 100% repeat-x; box-shadow: 0 0 0 1px rgb(255 255 255 / .06), 0 0 70px 6px color-mix(in srgb, var(--accent) 28%, transparent), inset -30px -16px 60px rgb(2 6 14 / .7); opacity: 1; transition: opacity 700ms var(--ease-in-out), visibility 0s linear 700ms; }
 .globe-poster[data-ready='true'] { opacity: 0; visibility: hidden; }
 @media (max-width: 1023px) { .globe-poster { width: min(86vw, 52vh); translate: -50% -42%; } }
 
@@ -217,7 +217,7 @@ html.rm .sound-btn svg { animation: none !important; }
 .np-spark-bg { stroke: var(--line); }
 .np-spark-fg { stroke: var(--accent, var(--brass)); clip-path: inset(0 calc(100% - var(--np-pct)) 0 0); }
 .np-scrub input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: .01; cursor: pointer; }
-.np-scrub input:focus-visible { opacity: 1; background: transparent; outline: 2px solid var(--brass); outline-offset: 2px; }
+.np-scrub input:focus-visible { opacity: 1; background: transparent; outline: 2px solid var(--focus-ring, var(--brass)); outline-offset: 2px; }
 @media (min-width: 900px) { .np-bar { grid-template-columns: minmax(12rem, 18rem) minmax(0, 1fr) auto; align-items: center; gap: 1rem; padding-inline: 1.25rem; } }
 html.hc .np-bar { background: #000; backdrop-filter: none; }
 
@@ -225,8 +225,26 @@ html.hc .np-bar { background: #000; backdrop-filter: none; }
 .np-scrub::after { content: ''; position: absolute; inset: calc(50% - 1px) calc(100% - var(--np-pct, 0%)) auto 0; height: 2px; background: var(--accent, var(--brass)); border-radius: 1px; }
 
 .np-expand { position: absolute; top: .25rem; right: .5rem; }
-.np-full { position: absolute; left: 0; right: 0; bottom: 100%; padding: .75rem 1rem; border-radius: 0; border-inline: 0; display: grid; gap: .5rem; max-height: 45vh; animation: np-rise var(--dur-med, .3s) var(--ease-out, ease-out); }
-.np-panel { overflow-y: auto; max-height: calc(45vh - 4rem); }
+/* Phones and small tablets: two compact rows (title · readout · expand / controls · scrubber · mute+speed) instead of a stack of five */
+@media (max-width: 899.98px) {
+  .np-bar { grid-template-columns: auto minmax(4rem, 1fr) auto auto; align-items: center; gap: .25rem .5rem; padding-block: .35rem; }
+  .np-main { display: contents; }
+  .np-meta { grid-column: 1 / 3; grid-row: 1; }
+  .np-read { grid-column: 3; grid-row: 1; justify-self: end; max-width: 9rem; overflow: hidden; text-overflow: ellipsis; }
+  .np-expand { position: static; grid-column: 4; grid-row: 1; }
+  .np-ctl { grid-column: 1; grid-row: 2; }
+  .np-scrub { grid-column: 2; grid-row: 2; min-width: 0; }
+  .np-side { grid-column: 3 / 5; grid-row: 2; justify-self: end; }
+  .np-vol { display: none; }
+}
+/* Phones: the scrubber gets a row of its own, otherwise it is squeezed to a stub next to the buttons */
+@media (max-width: 599.98px) {
+  .np-ctl { grid-column: 1 / 3; }
+  .np-side { grid-column: 3 / 5; }
+  .np-scrub { grid-column: 1 / 5; grid-row: 3; height: 1.75rem; }
+}
+.np-full { --glass-bg-strong: color-mix(in srgb, var(--panel) 95%, transparent); isolation: isolate; position: absolute; left: 0; right: 0; bottom: 100%; padding: .75rem 1rem; border-radius: 0; border-inline: 0; display: grid; gap: .5rem; max-height: 45vh; animation: np-rise var(--dur-med, .3s) var(--ease-out, ease-out); }
+.np-panel { overflow-y: auto; max-height: calc(45vh - 7rem); }
 @keyframes np-rise { from { opacity: 0; transform: translateY(1rem); } }
 @media (prefers-reduced-motion: reduce) { .np-full { animation: none; } }
 html.rm .np-full { animation: none; }
@@ -239,3 +257,18 @@ html.rm .np-full { animation: none; }
 
 /* Audio-reactive edge: transform and opacity only, driven by --np-* set from a ref (src/player/reactive.ts) */
 .np-bar::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--accent, var(--brass)); transform-origin: 50% 50%; transform: scaleX(calc(.15 + var(--np-amp, 0) * .85)); opacity: calc(.3 + var(--np-amp, 0) * .7); pointer-events: none; }
+
+/* Full player: a dataset-tinted, blurred backdrop (a gradient of the accent, not a snapshot of the globe), and the title/readout head that the bar's title morphs into */
+.np-full::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(90% 120% at 12% 0%, color-mix(in oklch, var(--accent) 24%, transparent), transparent 70%), radial-gradient(70% 90% at 100% 100%, color-mix(in oklch, var(--accent) 12%, transparent), transparent 70%); filter: blur(12px); }
+html.hc .np-full::before { display: none; }
+@media (forced-colors: active), (prefers-contrast: more), (prefers-reduced-transparency: reduce) { .np-full::before { display: none; } }
+.np-full-head { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; min-width: 0; }
+.np-full-head .np-title { font-size: var(--fs-lg, 1.125rem); }
+.np-full-read { font-size: 1.05rem; color: var(--ink-2); white-space: nowrap; }
+.np-full-read strong { color: var(--accent); }
+/* View Transitions: the page is captured as one root layer, and the WebGL canvas is never given a name (so it is not a capture group of its own) */
+main canvas { view-transition-name: none; }
+::view-transition-group(np-title) { animation-duration: .28s; animation-timing-function: var(--ease-out, ease-out); }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .2s; }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
+.np-full [role='tab'][aria-selected='true'] { color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }

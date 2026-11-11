@@ -16,20 +16,26 @@ type Tab = FullTab;
 function FullPlayer({ np }: { np: NowPlaying }) {
   const { t } = usePrefs();
   const { tab } = useFullPlayer(), setTab = setFullTab;
-  const tabs: { id: Tab; key: 'npTabUpNext' | 'npTabNarration' | 'npTabHow' }[] = [{ id: 'next', key: 'npTabUpNext' }, { id: 'narration', key: 'npTabNarration' }, { id: 'how', key: 'npTabHow' }];
+  const tabs: { id: Tab; key: 'npTabUpNext' | 'npTabNarration' | 'npTabHow' | 'npTabSignal' }[] = [{ id: 'next', key: 'npTabUpNext' }, { id: 'narration', key: 'npTabNarration' }, { id: 'how', key: 'npTabHow' }, ...(np.signal ? [{ id: 'signal' as Tab, key: 'npTabSignal' as const }] : [])];
+  const cur: Tab = tab === 'signal' && !np.signal ? 'next' : tab; // another player is on: the Atlas-only tab is gone
   return (
     <div id="np-full" className="np-full glass-strong" role="region" aria-label={t('npExpand')}>
-      <div role="tablist" aria-label={np.title} className="flex gap-1">
-        {tabs.map((x) => <button key={x.id} id={`np-tab-${x.id}`} role="tab" type="button" aria-selected={tab === x.id} aria-controls="np-panel" className="btn btn-ghost" onClick={() => setTab(x.id)}>{t(x.key)}</button>)}
+      <div className="np-full-head" style={{ viewTransitionName: 'np-title' }}>{/* the bar's title morphs into this one */}
+        <p className="np-title truncate">{np.title}</p>
+        {np.label && <p className="np-full-read tnum"><strong>{np.label}</strong>{np.valueText && <> · {np.valueText}</>}</p>}
       </div>
-      <div id="np-panel" role="tabpanel" aria-labelledby={`np-tab-${tab}`} className="np-panel scroll-thin">
-        {tab === 'next' && (np.upNext?.length ? <>
+      <div role="tablist" aria-label={np.title} className="flex gap-1">
+        {tabs.map((x) => <button key={x.id} id={`np-tab-${x.id}`} role="tab" type="button" aria-selected={cur === x.id} aria-controls="np-panel" className="btn btn-ghost" onClick={() => setTab(x.id)}>{t(x.key)}</button>)}
+      </div>
+      <div id="np-panel" role="tabpanel" aria-labelledby={`np-tab-${cur}`} className="np-panel scroll-thin">
+        {cur === 'next' && (np.upNext?.length ? <>
           <ol className="space-y-1">{np.upNext.map((u) => (
             <li key={u.id} className="flex items-center justify-between gap-2 text-sm"><span className="truncate">{u.title}</span>
               <button type="button" className="btn btn-icon !min-h-[32px]" aria-label={t('jbQueueRemove', { title: u.title })} onClick={() => np.controls.dequeue?.(u.id)}><X className="w-3.5 h-3.5" aria-hidden="true" /></button></li>))}</ol>
           <button type="button" className="btn btn-ghost mt-2" onClick={np.controls.clearQueue}>{t('npClearQueue')}</button></> : <p className="text-sm text-[var(--ink-3)]">{t('npQueueEmpty')}</p>)}
-        {tab === 'narration' && <p className="text-sm text-[var(--ink-2)] leading-relaxed">{np.details?.narration || t('npNoNarration')}</p>}
-        {tab === 'how' && (np.details?.mapping.length ? <ul className="text-sm text-[var(--ink-2)] space-y-1 list-disc pl-4">{np.details.mapping.map((m) => <li key={m}>{m}</li>)}</ul> : <p className="text-sm text-[var(--ink-3)]">{t('npNoMapping')}</p>)}
+        {cur === 'narration' && <p className="text-sm text-[var(--ink-2)] leading-relaxed">{np.details?.narration || t('npNoNarration')}</p>}
+        {cur === 'signal' && np.signal}
+        {cur === 'how' && (np.details?.mapping.length ? <ul className="text-sm text-[var(--ink-2)] space-y-1 list-disc pl-4">{np.details.mapping.map((m) => <li key={m}>{m}</li>)}</ul> : <p className="text-sm text-[var(--ink-3)]">{t('npNoMapping')}</p>)}
       </div>
     </div>
   );
@@ -54,18 +60,18 @@ export function NowPlayingBar({ hidden }: { hidden?: boolean }) {
   const toggleKey = playing ? (np.pauses === false ? 'plStop' : 'plPause') : np.state === 'paused' ? 'plResume' : 'plPlay';
   return (
     <section ref={barRef} className="np-bar glass-strong safe-pb" aria-label={t('npLabel')} data-player-state={np.state}>
-      <div className="np-meta min-w-0">
+      <div className="np-meta min-w-0" style={{ viewTransitionName: open ? undefined : 'np-title' }}>
         <p className="np-title truncate">{np.title}</p>
         <p className="np-sub truncate">
           <span className="chip np-badge">{t(np.badge === 'sample' ? 'npSample' : 'npSnapshot')}</span> {np.subtitle}
         </p>
       </div>
       <div className="np-main">
-        <div className="flex items-center gap-1">
+        <div className="np-ctl flex items-center gap-1">
           {c.step && <button type="button" className="btn btn-icon" onClick={() => c.step!(-1)} disabled={np.index <= 0} aria-label={t('jbPrev')}><ChevronLeft className="w-4 h-4" /></button>}
           <button type="button" className="btn btn-brass" onClick={c.toggle} disabled={busy} aria-label={t(toggleKey)}>
             {playing ? <Pause className="w-4 h-4" aria-hidden="true" /> : <Play className="w-4 h-4" aria-hidden="true" />}<span className="hidden sm:inline">{t(toggleKey)}</span></button>
-          {np.pauses !== false && <button type="button" className="btn btn-icon" onClick={c.stop} disabled={!(playing || np.state === 'paused')} aria-label={t('plStop')}><Square className="w-4 h-4" /></button>}
+          {np.pauses !== false && <button type="button" className="btn btn-icon max-[599px]:hidden" onClick={c.stop} disabled={!(playing || np.state === 'paused')} aria-label={t('plStop')}><Square className="w-4 h-4" /></button>}
           {c.nextStory && !!np.upNext?.length && <button type="button" className="btn btn-icon" onClick={c.nextStory} aria-label={t('npNextStory')}><SkipForward className="w-4 h-4" aria-hidden="true" /></button>}
           {c.step && <button type="button" className="btn btn-icon" onClick={() => c.step!(1)} disabled={np.index >= np.count - 1} aria-label={t('jbNext')}><ChevronRight className="w-4 h-4" /></button>}
         </div>

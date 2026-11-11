@@ -233,11 +233,13 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
       `,
+      uniforms: { uTint: { value: new THREE.Color(0.25, 0.6, 1.0) } },
       fragmentShader: `
         varying vec3 vNormal;
+        uniform vec3 uTint;
         void main() {
           float intensity = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
-          gl_FragColor = vec4(0.25, 0.6, 1.0, 1.0) * intensity * 1.1;
+          gl_FragColor = vec4(uTint, 1.0) * intensity * 1.1;
         }
       `,
       blending: THREE.AdditiveBlending,
@@ -246,6 +248,17 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
     });
     const atmosphereMesh = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
     globeGroup.add(atmosphereMesh);
+    // The horizon halo leans toward the playing dataset's colour (html[data-dataset], set by the Now-Playing bar). Plain blue in high contrast or with no dataset.
+    const baseHalo = new THREE.Color(0.25, 0.6, 1.0);
+    const tintHalo = () => {
+      const root = document.documentElement, name = root.dataset.dataset;
+      const css = name && !root.classList.contains('hc') ? getComputedStyle(root).getPropertyValue(`--${name}`).trim() : '';
+      atmosphereMaterial.uniforms.uTint.value.copy(baseHalo);
+      if (css) atmosphereMaterial.uniforms.uTint.value.lerp(new THREE.Color(css), 0.6);
+    };
+    tintHalo();
+    const haloObserver = new MutationObserver(tintHalo);
+    haloObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-dataset', 'class'] });
 
     // Markers & Sound Waves Groups
     const markersGroup = new THREE.Group();
@@ -387,6 +400,7 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       cloudGeometry.dispose();
       cloudMaterial.dispose();
       cloudTexture.dispose();
+      haloObserver.disconnect();
       atmosphereGeometry.dispose();
       atmosphereMaterial.dispose();
       starGeometry.dispose();
@@ -658,7 +672,7 @@ export const GlobeCanvas: React.FC<GlobeCanvasProps> = ({
       <div className="globe-poster" data-ready={texReady} aria-hidden="true" />
       {onSelectCountry && (
         <button type="button" data-ctl="reset" aria-label={t('resetView')} className="btn panel absolute z-20 left-3 top-[calc(var(--header-h)+3.5rem)] lg:left-1/2 lg:-translate-x-1/2 lg:top-[calc(var(--header-h)+4rem)] min-h-[40px]" onPointerDown={(e) => e.stopPropagation()} onClick={(e) => { e.stopPropagation(); flyRef.current = { lat: 0, lon: 0, until: performance.now() + 12000 }; frameRef.current = framingTarget(framingRef.current, (containerRef.current?.clientWidth ?? 1) / (containerRef.current?.clientHeight || 1)); }}>
-          <RotateCcw className="w-4 h-4" aria-hidden="true" /><span className="hidden sm:inline">{t('resetView')}</span>
+          <RotateCcw className="w-4 h-4" aria-hidden="true" /><span className="hidden lg:inline">{t('resetView')}</span>
         </button>
       )}
       {hoverCountry && !hoveredObs && (

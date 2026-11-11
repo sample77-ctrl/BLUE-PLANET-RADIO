@@ -12,7 +12,7 @@ export function VinylHero({ title, unit, point, mapped, playing, onToggle, posit
   const { t, lang } = usePrefs();
   const note = mapped?.kind === 'note' && point?.v != null ? mapped : null;
   return (
-    <section className="vinyl-hero" aria-label={t('jbNowPlaying')}>
+    <section className="vinyl-hero" aria-labelledby="vinyl-title"> {/* named by the story: the Now-Playing bar owns the "Now playing" landmark name (axe landmark-unique) */}
       <div className="vinyl-wrap">
         <div className="vinyl" data-spin={playing} aria-hidden="true">
           <div className="vinyl-label" />
@@ -23,7 +23,7 @@ export function VinylHero({ title, unit, point, mapped, playing, onToggle, posit
       </div>
       <div className="vinyl-info">
         <p className="hero-eyebrow">{t('jbNowPlaying')} · {position}</p>
-        <h2 className="vinyl-title font-display">{title}</h2>
+        <h2 id="vinyl-title" className="vinyl-title font-display">{title}</h2>
         <dl className="vinyl-read">
           <div><dt>{t('jbRdWhen')}</dt><dd className="big">{point ? timeLabel(point.t, lang) : '–'}</dd></div>
           <div><dt>{t('jbRdValue')}</dt><dd>{point && point.v !== null ? valueLabel(point.v, unit, lang) : '–'}</dd></div>

@@ -18,6 +18,11 @@ describe('dataset themes', () => {
   it('every theme is defined in the CSS as an accent override', () => {
     for (const th of DATASET_THEMES) expect(css).toContain(`html[data-dataset='${th}'] { --accent: var(--${th}); }`);
   });
+  it('the focus ring follows the accent, but never in high contrast, and every accent clears the 3:1 a focus ring needs on the surfaces', () => {
+    expect(css).toContain('outline: 2px solid var(--focus-ring, var(--brass))');
+    expect(css).toContain("html[data-dataset]:not(.hc) { --focus-ring: var(--accent); }");
+    for (const th of DATASET_THEMES) for (const bg of ['abyss', 'panel', 'panel-2']) expect(ratio(token(th), token(bg)), `${th} on ${bg}`).toBeGreaterThanOrEqual(3);
+  });
   it('every topic maps to a defined theme', () => {
     for (const th of Object.values(THEME_OF_TOPIC)) expect(DATASET_THEMES).toContain(th);
   });
