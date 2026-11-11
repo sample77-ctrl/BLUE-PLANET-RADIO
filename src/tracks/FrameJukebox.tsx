@@ -623,7 +623,7 @@ export const FrameJukebox: React.FC<JukeboxProps> = ({ autoPlay, onAutoPlayed, o
           </details>
           <dl className="stage-facts">
             {meta && <div><dt className="readout">{t('stMeta')}</dt><dd><strong>{meta.title}.</strong> {meta.what}</dd></div>}
-            {meta && <div><dt className="readout">{t('stSource')}</dt><dd>{meta.credit}{meta.url && <> · <a href={meta.url} target="_blank" rel="noreferrer" className="underline">{t('frSeeEarthGov')}</a></>}</dd></div>}
+            {meta && <div><dt className="readout">{t('stSource')}</dt><dd>{meta.credit}{meta.url && <> · <a href={meta.url} target="_blank" rel="noreferrer" className="underline inline-flex items-center min-h-[24px] pointer-coarse:min-h-[44px]">{t('frSeeEarthGov')}</a></>}</dd></div>}
             <div><dt className="readout">{t('stMethod')}</dt><dd>{t('stMethodText')}</dd></div>
           </dl>
         </div>
