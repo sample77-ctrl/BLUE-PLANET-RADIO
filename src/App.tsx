@@ -330,7 +330,7 @@ export function App() {
                 countries={cty.list} country={cty.country} onSelectCountry={cty.select} />
           )}
           {track === 'atlas' && !showHero && view === 'audio-first' && (
-            <div className="w-full h-full overflow-y-auto pb-6 pt-[calc(var(--header-h)+1.5rem)] lg:pl-[340px]">
+            <div className={`w-full h-full overflow-y-auto pb-6 pt-[calc(var(--header-h)+1.5rem)] ${leftOpen ? 'lg:pl-[372px]' : ''} ${rightOpen ? 'lg:pr-[372px]' : ''}`}>
               <AudioFirstMode observations={observations.filter((o) => enabled[o.phenomenon])} currentDateLabel={slice?.dateLabel ?? ''} selectedObservation={selected}
                 onSelectObservation={setSelected} onExitAudioFirst={() => setView('3d-globe')}
                 countries={{ list: cty.list, country: cty.country, point: cty.point, onSelect: cty.select }} />
