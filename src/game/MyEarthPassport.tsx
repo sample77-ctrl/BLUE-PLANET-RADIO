@@ -221,7 +221,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, stars }) => {
               key={b.id}
               data-badge={b.id}
               data-unlocked={b.unlocked ? 'true' : 'false'}
-              className={`p-4 rounded-lg border border-[var(--hair)] flex items-start gap-3.5 ${b.unlocked ? 'bg-[var(--panel-2)]' : 'bg-[var(--panel)] opacity-80'}`}
+              className={`p-4 rounded-lg border border-[var(--hair)] flex items-start gap-3.5 ${b.unlocked ? 'bg-[var(--panel-2)]' : 'bg-[var(--panel)]'}`}
             >
               <div className="p-2.5 rounded-lg bg-[var(--ground)]/40 border border-[var(--hair)] shrink-0">
                 {b.icon}
@@ -237,7 +237,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, stars }) => {
                       {isBn ? 'অর্জিত' : 'UNLOCKED'}
                     </span>
                   ) : (
-                    <span className="text-2xs font-mono text-[var(--ink-3)] font-semibold flex items-center gap-1">
+                    <span className="text-2xs font-mono text-[var(--ink-2)] font-semibold flex items-center gap-1">
                       <Lock className="w-3 h-3" aria-hidden="true" />
                       {isBn ? 'লক করা' : 'LOCKED'}
                     </span>
