@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Award, Sparkles, X, Globe, Music, CheckCircle2 } from 'lucide-react';
 import { usePrefs } from '../lib/prefs';
+import { Overlay } from '../components/Overlay';
+import { useDialog } from '../lib/useDialog';
 
 interface Props {
   onClose: () => void;
@@ -13,9 +15,12 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
   const isBn = lang === 'bn';
   const [cadetName, setCadetName] = useState(isBn ? 'ক্যাডেট অভিযাত্রী' : 'Cadet Explorer');
 
+  const ref = useRef<HTMLDivElement>(null);
+  useDialog(true, onClose, ref);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 scrim backdrop-blur-md animate-fade-in">
-      <div className="glass-pop max-w-lg w-full p-6 sm:p-8 flex flex-col items-center gap-5 relative border-2 border-[var(--signal)] shadow-2xl">
+    <Overlay><div className="fixed inset-0 z-[70] flex items-center justify-center p-4 scrim backdrop-blur-md animate-fade-in" onClick={onClose}>
+      <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="quest-badge-title" onClick={(e) => e.stopPropagation()} className="glass-pop max-w-lg w-full p-6 sm:p-8 flex flex-col items-center gap-5 relative border-2 border-[var(--signal)] shadow-2xl">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 text-[var(--ink-3)] hover:text-[var(--ink)] cursor-pointer"
@@ -41,7 +46,7 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
           <span className="text-xs uppercase tracking-widest text-[var(--signal)] font-semibold font-mono">
             NASA SPACE APPS CHALLENGE 2026
           </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold font-display text-[var(--ink)] mt-1">
+          <h2 id="quest-badge-title" className="text-2xl sm:text-3xl font-extrabold font-display text-[var(--ink)] mt-1">
             {isBn ? 'নাসা জুনিয়র সাউন্ড ক্যাডেট' : 'NASA Junior Sonic Cadet'}
           </h2>
           <p className="text-xs sm:text-sm text-[var(--ink-2)] mt-1">
@@ -123,6 +128,6 @@ export const QuestBadgeModal: React.FC<Props> = ({ onClose, onExploreGlobe, onOp
           </button>
         </div>
       </div>
-    </div>
+    </div></Overlay>
   );
 };
