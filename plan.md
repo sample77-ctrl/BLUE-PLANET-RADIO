@@ -1,7 +1,7 @@
 # Blue Planet Radio — Master Project Plan & Execution Roadmap
 
 > **NASA Space Apps Challenge 2026** · *The Earth Information Jukebox*  
-> **Repository:** [github.com/morsad01/SONIC-EARTH-ATLAS](https://github.com/morsad01/SONIC-EARTH-ATLAS)  
+> **Repository:** [github.com/sample77-ctrl/BLUE-PLANET-RADIO](https://github.com/sample77-ctrl/BLUE-PLANET-RADIO)  
 > **Live Production:** [blue-planet-radio.vercel.app](https://blue-planet-radio.vercel.app)
 
 ---

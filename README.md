@@ -157,8 +157,8 @@ Testing & Quality Infrastructure
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/morsad01/SONIC-EARTH-ATLAS.git
-cd SONIC-EARTH-ATLAS
+git clone https://github.com/sample77-ctrl/BLUE-PLANET-RADIO.git
+cd BLUE-PLANET-RADIO
 
 # 2. Install dependencies cleanly
 npm ci
