@@ -153,7 +153,7 @@ The site is hosted on Vercel; the production branch is set in the Vercel project
 | `public/data`, `public/eic`, `public/textures` | bundled snapshots, the four EIC frames, globe textures |
 | `scripts/` | snapshot fetchers and the size check |
 | `e2e/`, `src/__tests__/` | browser tests and unit tests |
-| `docs/` | roadmaps, audits and fix reports, the submission text ([`docs/submission.md`](docs/submission.md)), user-testing kit |
+| `docs/` | the submission text ([`docs/submission.md`](docs/submission.md)), the user-testing kit and results template, and the screenshots in `docs/v5-shots` |
 
 Working rules for contributors and AI assistants are in [`CLAUDE.md`](CLAUDE.md). Other documents: [`JUDGE_QA.md`](JUDGE_QA.md), [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md), [`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md).
 

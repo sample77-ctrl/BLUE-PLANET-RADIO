@@ -7,7 +7,7 @@ Written 13 Nov 2026 for the NASA Space Apps Challenge 2026 submission (The Earth
 | Area | AI used? | Which tool | Detail |
 |---|---|---|---|
 | Writing the app's code, tests and docs | **Yes, substantially** | Claude (Anthropic) through Claude Code, including Claude Sonnet 5.5 and Claude Opus 5.5 | See "Building the software" |
-| Planning, audits and fix reports | **Yes** | Claude | The roadmap, UI audit and fix reports in `docs/` were written by AI agents |
+| Planning, audits and fix reports | **Yes** | Claude | The roadmap, UI audit and fix reports were written by AI agents; they were removed from the repository for submission and stay in the git history |
 | The data and the sound | **No** | none | Deterministic code on bundled NASA data; no machine-learning model |
 | Harmonium chat and "AI Future Predict" | **Only if a key is set** | Groq, model `openai/gpt-oss-120b` | Off on the deployed site (see "Inside the product") |
 | The 240 s submission video | **Yes** | Claude (script, tooling); ElevenLabs (voice) | See "The submission video" |
@@ -15,11 +15,11 @@ Written 13 Nov 2026 for the NASA Space Apps Challenge 2026 submission (The Earth
 
 ## Building the software
 
-- Most of the code, unit tests and documentation in this repository was written with Claude Code (Anthropic), working from briefs the team wrote (for example [`docs/roadmap-v3-brief.md`](docs/roadmap-v3-brief.md)). The working rules the AI follows are in [`CLAUDE.md`](CLAUDE.md): one phase per branch, run lint, tests and build before every commit, no fabricated data, every UI string in English and বাংলা.
-- The planning and review documents `docs/roadmap-v3.md`, `docs/ui-audit-2026-11.md` and `docs/fix-report-a.md`, `-b.md`, `-c.md` are first-person records written by AI agents (the audit names the `claude/…` branch it ran on). They say what was checked, what was measured and what was not done. Who wrote the other files in `docs/` is not recorded.
+- Most of the code, unit tests and documentation in this repository was written with Claude Code (Anthropic), working from briefs the team wrote (for example the roadmap brief, now in the git history). The working rules the AI follows are in [`CLAUDE.md`](CLAUDE.md): one phase per branch, run lint, tests and build before every commit, no fabricated data, every UI string in English and বাংলা.
+- The planning and review documents (the roadmaps, the UI audit and fix reports A, B and C) were first-person records written by AI agents; the audit named the `claude/…` branch it ran on. They said what was checked, what was measured and what was not done. They are no longer in the repository: list them with `git log --diff-filter=D --name-only -- docs`. Who wrote the files that remain in `docs/` is not recorded.
 - **The commit history understates this.** The project rule in `CLAUDE.md` removes "Co-Authored-By" lines naming the AI, so commits do not show which ones were AI-assisted. Treat this file as the disclosure, not the git log.
 - What the team did: set the goal and the challenge brief, chose the product direction, decided what to cut or keep, ran the app, reviewed the output, and answered the questions the AI raised. The AI was never given authority to publish or deploy on its own: changes reach `main` through pull requests.
-- Checks that guard AI-written code: `npm run lint` (no warnings), `npm test` (50 files, 436 tests) and `npm run build`, plus 24 browser smoke tests and 20 axe scans. All were run on 13 Nov 2026 and passed. The AI-written audits found real faults (they are listed in the fix reports), so the code was not accepted unreviewed.
+- Checks that guard AI-written code: `npm run lint` (no warnings), `npm test` (50 files, 436 tests) and `npm run build`, plus 24 browser smoke tests and 20 axe scans. All were run on 13 Nov 2026 and passed. The AI-written audits found real faults (recorded in the fix reports, now in the git history), so the code was not accepted unreviewed.
 - Known limit of this process: AI-written code can be wrong in ways tests do not cover. No independent human code review of the whole codebase has been recorded.
 
 ## What the AI did not do
@@ -55,7 +55,7 @@ The repository does not record where these came from. **The team needs to confir
 | `public/images/ninja_cadet_*.png`, `ninja_*_frame*.png`, `ninja_run_sheet_clean.png` | Sonic Quest characters | No | [ ] tool / author: |
 | `public/images/game/nasa_satellite_drone_mesh*.jpg`, `wildfire_tactical_command*.jpg` | Sonic Quest hub | No | [ ] tool / author: |
 | `public/images/game/amazon_aerial_scout.jpg`, `public/images/harmonium.png` | **Not referenced by the app** | No | [ ] delete, or say what they are |
-| `public/images/sonic_earth_hero.jpg` | **Not used.** The roadmap notes it shows a NASA logo, a "LIVE" label and charts with invented numbers, so it breaks the no-fabricated-data rule | No | [ ] delete it, or say what it is |
+| `public/images/sonic_earth_hero.jpg` | **Not used.** A project note (since removed, in the git history) said it shows a NASA logo, a "LIVE" label and charts with invented numbers, so it breaks the no-fabricated-data rule | No | [ ] delete it, or say what it is |
 | `public/images/space-apps-logo.png` | Landing | Space Apps programme logo | [ ] confirm usage terms |
 
 Not AI, for the record: the four EIC frames (NASA Earth Information Center, earth.gov), GIBS imagery (NASA), country shapes (Natural Earth), fonts (Mona Sans, IBM Plex Mono, Noto Sans Bengali, SIL OFL) and the globe texture maps (taken from the three.js examples; the project docs describe them as Blue Marble imagery; confirm their licence terms before reuse).
@@ -66,7 +66,7 @@ Not AI, for the record: the four EIC frames (NASA Earth Information Center, eart
 grep -rn "api.groq.com\|VITE_GROQ_API_KEY" src          # the only AI call in the app
 npm run build && grep -rl "gsk_" dist || echo "no Groq key in the build"
 npm run lint && npm test                                 # the checks run before every commit
-ls docs                                                  # the AI-written plans, audits and reports
+git log --diff-filter=D --name-only -- docs               # the removed AI-written plans, audits and reports
 ```
 
 If something here is out of date or wrong, fix it in the same pull request as the change that made it wrong.
