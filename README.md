@@ -155,7 +155,7 @@ The site is hosted on Vercel; the production branch is set in the Vercel project
 | `e2e/`, `src/__tests__/` | browser tests and unit tests |
 | `docs/` | the submission text ([`docs/submission.md`](docs/submission.md)), the user-testing kit and results template, and the screenshots in `docs/v5-shots` |
 
-Working rules for contributors and AI assistants are in [`CLAUDE.md`](CLAUDE.md). Other documents: [`JUDGE_QA.md`](JUDGE_QA.md), [`DEMO_SCRIPT.md`](DEMO_SCRIPT.md), [`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md).
+Other documents: [`PROJECT_SUMMARY.md`](PROJECT_SUMMARY.md) (the short submission text) and [`AIUse.md`](AIUse.md) (how AI was used). The working rules, the judges' Q&A and the demo script were removed for submission and stay in the git history.
 
 ---
 
