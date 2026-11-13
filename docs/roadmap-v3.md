@@ -1,7 +1,7 @@
 # Blue Planet Radio — Roadmap v3 (implementation plan)
 
 **Source:** the team's brief in [`roadmap-v3-brief.md`](roadmap-v3-brief.md) ("EarthSound" master prompt), applied to the existing Blue Planet Radio codebase.
-**Status:** Phases 0 (audit and plan), 1 (design foundation), 2 (country selection), 3 (data registry and country profile), 4 (Data Jukebox), 5 (series sonification), 6 (polish, accessibility and performance) and 7 (testing and submission readiness, in-repo part) done. **Phase 8 (UI audit and fixes, [`ui-fix-plan.md`](ui-fix-plan.md)) done: steps A–D implemented, step E verified.** **Phase 9 (landing carousel, [`landing-carousel-plan.md`](landing-carousel-plan.md)) done: the landing globe is replaced by a three-level carousel of four 3D Earths.** Remaining: team-owned release steps (§7 Phase 7 notes, §9).
+**Status:** Phases 0 (audit and plan), 1 (design foundation), 2 (country selection), 3 (data registry and country profile), 4 (Data Jukebox), 5 (series sonification), 6 (polish, accessibility and performance) and 7 (testing and submission readiness, in-repo part) done. **Phase 8 (UI audit and fixes, `ui-fix-plan.md`, since removed) done: steps A–D implemented, step E verified.** **Phase 9 (landing carousel, `landing-carousel-plan.md`, since removed) done: the landing globe is replaced by a three-level carousel of four 3D Earths.** Remaining: team-owned release steps (§7 Phase 7 notes, §9).
 **Scope:** the whole asked roadmap, Features A–G, Phases 0–7. Where I adapt something to the codebase, the reason is in §3.
 
 ---
@@ -240,14 +240,14 @@ Selected state is shown with outline + label + text in the panel, never colour a
 
 ### Phase 8 — UI audit and fixes · branch `fix/ui-polish` ✅ (built on the session branch `claude/stoic-albattani-moia8b`)
 
-The full findings and the step-by-step plan are in [`ui-fix-plan.md`](ui-fix-plan.md). Steps: A dialogs and Settings (P0), B landing globe performance (P0), C glass system, header and layout (P1), D fonts and type scale (P1), E verify.
+The full findings and the step-by-step plan were in `ui-fix-plan.md`, removed from the repository for submission (it stays in the git history). Steps: A dialogs and Settings (P0), B landing globe performance (P0), C glass system, header and layout (P1), D fonts and type scale (P1), E verify.
 
 **Gate:** Settings and Data open from every view, including the landing page; the landing scroll holds ≥ 55 fps on a desktop; no overlapping controls at 320 px; no text under 12 px (EN) / 13 px (বাংলা); all existing checks green.
 
 ---
 ### Phase 9 — Landing carousel · branch `feat/landing-carousel` ✅ (built on the session branch `claude/nice-curie-pdxbh4`)
 
-Plan in [`landing-carousel-plan.md`](landing-carousel-plan.md). Steps 9A worlds + CSS sphere, 9B carousel L1, 9C levels 2–3, 9D clean-up of the landing WebGL path, 9E verify.
+The plan was in `landing-carousel-plan.md`, removed from the repository for submission (it stays in the git history). Steps 9A worlds + CSS sphere, 9B carousel L1, 9C levels 2–3, 9D clean-up of the landing WebGL path, 9E verify.
 
 **Gate:** the landing no longer loads the Atlas globe (`GlobeCanvas` is Atlas-only). Since 9F it does create WebGL on purpose: the carousel's `WorldScene` (three.js, one renderer) draws the four 3D planets, behind a one-off `hasWebGL()` probe canvas, so a capable browser makes 2 contexts (measured on the production build) and a browser without WebGL makes none and shows the CSS Earths. L1–L3 work by mouse, touch and keyboard; all existing checks green.
 
