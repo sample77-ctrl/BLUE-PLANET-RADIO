@@ -146,7 +146,7 @@ export const Landing: React.FC<Props> = ({ fireObs, onPick, onListen, onTour, on
                 onClick={() => onPick('quest')}
                 className="btn btn-brass shrink-0 text-base font-semibold px-7 py-3.5 rounded-full flex items-center gap-2 shadow-lg cursor-pointer"
               >
-                <span>{lang === 'bn' ? 'গেম শুরু করুন (Start Game)' : 'Start Game (Sonic Quest)'}</span>
+                <span>{lang === 'bn' ? 'গেম শুরু করুন (Start Game)' : 'Start Game (Blue Planet Radio)'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
