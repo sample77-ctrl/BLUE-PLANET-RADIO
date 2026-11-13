@@ -1,6 +1,6 @@
-# Sonic Earth Atlas — Roadmap v3 (implementation plan)
+# Blue Planet Radio — Roadmap v3 (implementation plan)
 
-**Source:** the team's brief in [`roadmap-v3-brief.md`](roadmap-v3-brief.md) ("EarthSound" master prompt), applied to the existing Sonic Earth Atlas codebase.
+**Source:** the team's brief in [`roadmap-v3-brief.md`](roadmap-v3-brief.md) ("EarthSound" master prompt), applied to the existing Blue Planet Radio codebase.
 **Status:** Phases 0 (audit and plan), 1 (design foundation), 2 (country selection), 3 (data registry and country profile), 4 (Data Jukebox), 5 (series sonification), 6 (polish, accessibility and performance) and 7 (testing and submission readiness, in-repo part) done. **Phase 8 (UI audit and fixes, [`ui-fix-plan.md`](ui-fix-plan.md)) done: steps A–D implemented, step E verified.** **Phase 9 (landing carousel, [`landing-carousel-plan.md`](landing-carousel-plan.md)) done: the landing globe is replaced by a three-level carousel of four 3D Earths.** Remaining: team-owned release steps (§7 Phase 7 notes, §9).
 **Scope:** the whole asked roadmap, Features A–G, Phases 0–7. Where I adapt something to the codebase, the reason is in §3.
 
@@ -96,7 +96,7 @@ The current set already matches v3's palette: deep navy, restrained cyan (`--rai
 
 | # | v3 says | Decision for this codebase | Why |
 |---|---|---|---|
-| D1 | Working name "EarthSound" | Keep **Sonic Earth Atlas**. Use "Hear our changing planet" as the hero headline. | v3 §2: preserve the existing brand |
+| D1 | Working name "EarthSound" | Keep **Blue Planet Radio**. Use "Hear our changing planet" as the hero headline. | v3 §2: preserve the existing brand |
 | D2 | Global navigation with Explore Earth / Data Jukebox / About the Science | Nav becomes **Explore Earth** (A1) · **Data Jukebox** (new, contains A2/B1/B2 as collections) · **About the Science** (new). A "Listen now" CTA stays in the header. | Every existing feature is kept and mapped to a v3 section |
 | D3 | Suggested `src/features/` tree | Keep the existing domain folders, and add `src/jukebox/`, `src/stories/`, `src/sonification/series/`, `src/datasets/adapters/`, `src/countries/`. | v3 §9: "adapt names to the current codebase" |
 | D4 | Router / multiple pages | Keep hash state (no router dependency). Add the views `jukebox` and `about` to the existing `Track` union, with deep links via the share hash. | Works with Vercel's static hosting, no rewrite rules |
@@ -396,7 +396,7 @@ Results are reported as actually run. Failures are listed, not suppressed.
 
 ## 8. Demo narrative (v3 §15)
 
-1. Landing: "Sonic Earth Atlas turns NASA Earth data into sound you can explore." Scroll once: the globe moves from the hero into the split view.
+1. Landing: "Blue Planet Radio turns NASA Earth data into sound you can explore." Scroll once: the globe moves from the hero into the split view.
 2. **Explore the globe** → type "Myanmar" in the picker (keyboard). The globe flies there and the border is outlined.
 3. The profile lists what we really have: fire detections inside the border (snapshot 2–5 Oct), monthly temperature and rain at a labelled point (NASA POWER 1981–2025), and EIC frames as global context. Each has a source card.
 4. **Explore its sound** → the Jukebox opens on Myanmar temperature. Pick 1981–1990 and 2016–2025 and compare them: the same mapping, one in each ear, and the second sits higher.

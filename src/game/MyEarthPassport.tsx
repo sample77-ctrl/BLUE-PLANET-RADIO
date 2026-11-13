@@ -177,8 +177,8 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, stars }) => {
 
             <p className="text-xs text-[var(--ink-2)] mt-1 font-medium">
               {isBn
-                ? 'সনিক আর্থ অ্যাটলাসের ক্যাডেট। এই অ্যাপই এই সনদ দেয়; নাসা দেয় না।'
-                : 'Sonic Earth Atlas cadet. Progress and certificate come from this app, not from NASA.'}
+                ? 'ব্লু প্ল্যানেট রেডিওর ক্যাডেট। এই অ্যাপই এই সনদ দেয়; নাসা দেয় না।'
+                : 'Blue Planet Radio cadet. Progress and certificate come from this app, not from NASA.'}
             </p>
 
             <div className="flex items-center gap-3 mt-3 text-xs font-mono">
@@ -296,13 +296,13 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, stars }) => {
             <div className="flex flex-col items-center gap-2">
               <div className="w-16 h-16 rounded-full border border-[var(--signal)] flex items-center justify-center"><Globe className="w-8 h-8 text-[var(--signal)]" aria-hidden="true" /></div>
               <span className="text-2xs font-mono uppercase tracking-widest text-[var(--signal)] font-semibold">
-                {isBn ? 'সনিক আর্থ অ্যাটলাস' : 'SONIC EARTH ATLAS'}
+                {isBn ? 'ব্লু প্ল্যানেট রেডিও' : 'BLUE PLANET RADIO'}
               </span>
               <h2 id="certificate-title" className="text-2xl sm:text-3xl font-display font-bold text-[var(--ink)] tracking-tight">
                 {isBn ? 'সম্পন্নের সনদ' : 'CERTIFICATE OF COMPLETION'}
               </h2>
               <p className="text-xs text-[var(--ink-2)] max-w-md">
-                {isBn ? 'এই সনদ সনিক আর্থ অ্যাটলাস অ্যাপ প্রদান করেছে। নাসা এটি প্রদান বা অনুমোদন করেনি। এটি দেওয়া হলো:' : 'Issued by the Sonic Earth Atlas app for the progress below. It is not issued or endorsed by NASA. Presented to:'}
+                {isBn ? 'এই সনদ ব্লু প্ল্যানেট রেডিও অ্যাপ প্রদান করেছে। নাসা এটি প্রদান বা অনুমোদন করেনি। এটি দেওয়া হলো:' : 'Issued by the Blue Planet Radio app for the progress below. It is not issued or endorsed by NASA. Presented to:'}
               </p>
             </div>
 
@@ -346,7 +346,7 @@ export const MyEarthPassport: React.FC<Props> = ({ onBack, stars }) => {
             <div className="flex items-center justify-between border-t border-[var(--line)] pt-4 text-2xs font-mono text-[var(--ink-3)]">
               <div className="flex flex-col items-start">
                 <span>{isBn ? 'প্রদানকারী:' : 'ISSUED BY:'}</span>
-                <span className="font-semibold text-[var(--ink)]">{isBn ? 'সনিক আর্থ অ্যাটলাস অ্যাপ (নাসা নয়)' : 'the Sonic Earth Atlas app (not NASA)'}</span>
+                <span className="font-semibold text-[var(--ink)]">{isBn ? 'ব্লু প্ল্যানেট রেডিও অ্যাপ (নাসা নয়)' : 'the Blue Planet Radio app (not NASA)'}</span>
               </div>
               <div className="flex flex-col items-end">
                 <span>{isBn ? 'প্রদানের তারিখ:' : 'DATE ISSUED:'}</span>

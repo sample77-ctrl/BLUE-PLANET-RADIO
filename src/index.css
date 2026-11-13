@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ===================== Sonic Earth Atlas design tokens: v5 "Instrument" (the only set) =====================
+/* ===================== Blue Planet Radio design tokens: v5 "Instrument" (the only set) =====================
    Near-black neutral ground, 1 px hairlines, ONE loud signal colour that comes from what is being heard (a dataset colour, or a colour sampled from the
    frame under the needle). Neutrals and the data colours below are oklch values written as hex, so contrast.test.ts can read them:
    neutrals L .145 / .19 / .23 / .32 and ink L .96 / .81 / .66 at chroma 0 to .008; every data colour is oklch L .77 (equal lightness), chroma .12 to .20 clamped to sRGB. */

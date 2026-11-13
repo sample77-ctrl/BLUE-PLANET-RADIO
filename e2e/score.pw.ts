@@ -132,7 +132,7 @@ test('the share card: made on this device, 1080 x 1350, with the source and the 
   expect(stats.lit / stats.px).toBeGreaterThan(0.1);
   // save: a real PNG with a safe name
   const [dl] = await Promise.all([page.waitForEvent('download'), card.getByRole('link', { name: 'Save PNG' }).click()]);
-  expect(dl.suggestedFilename()).toBe('sonic-earth-eic-ghg.png');
+  expect(dl.suggestedFilename()).toBe('blue-planet-radio-eic-ghg.png');
   const buf = readFileSync(await dl.path());
   expect([...buf.subarray(0, 8)]).toEqual([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
   expect(buf.length).toBeGreaterThan(20000);
@@ -156,7 +156,7 @@ test('Share hands the PNG, the title and the link to the browser share sheet whe
   await card.getByRole('button', { name: 'Share', exact: true }).click();
   await expect(card.getByRole('status')).toHaveText('Shared.');
   const shared = await page.evaluate(() => (window as unknown as { __shared: { n: number; name: string; type: string; size: number; title: string; url: string; text: string } }).__shared);
-  expect(shared).toMatchObject({ n: 1, name: 'sonic-earth-eic-ocean-heat.png', type: 'image/png', title: 'Ocean heat content since 1957' });
+  expect(shared).toMatchObject({ n: 1, name: 'blue-planet-radio-eic-ocean-heat.png', type: 'image/png', title: 'Ocean heat content since 1957' });
   expect(shared.size).toBeGreaterThan(20000);
   expect(shared.url).toContain('frame=eic-ocean-heat');
   expect(errors).toEqual([]);

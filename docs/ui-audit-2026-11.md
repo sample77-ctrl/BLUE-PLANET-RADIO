@@ -4,7 +4,7 @@
 
 **Baseline:** `npm run lint` clean · `npm test` 377/377 · `npm run build` passes. No uncaught page errors and no React warnings on any view in dev or prod; the only console errors were `Failed to load resource` for outbound NASA/Groq calls that the sandbox blocks. No 4xx responses on the production build.
 
-**Not reachable from here:** the production site (`sonic-earth-atlas.vercel.app` is blocked by the sandbox network policy, 403) and every live NASA API (POWER, GIBS). The POWER failure state was exercised instead, and it behaves well (message + "Try again").
+**Not reachable from here:** the production site (`blue-planet-radio.vercel.app` is blocked by the sandbox network policy, 403) and every live NASA API (POWER, GIBS). The POWER failure state was exercised instead, and it behaves well (message + "Try again").
 
 ---
 
@@ -72,7 +72,7 @@ Severity: **High** blocks a user or breaks a stated guarantee · **Medium** degr
 - Atlas: the profile panel is hard-clipped at the bottom of the left column with no scroll cue; in Map view the left column runs under the timeline.
 - Landing headline: word gap measures 0.19 em at −0.025 em tracking. Readable, but tight.
 - Emoji in button labels ("🎯 Sylhet Only", "🌐 All 8 Divisions") are announced by screen readers.
-- To confirm: the footer and About "Source code on GitHub" link points to `morsad01/SONIC-EARTH-ATLAS`; this checkout's remote is `sample77-ctrl/sonic-earth-atlas`.
+- To confirm: the footer and About "Source code on GitHub" link points to `morsad01/SONIC-EARTH-ATLAS`; this checkout's remote is `sample77-ctrl/blue-planet-radio`.
 
 ---
 

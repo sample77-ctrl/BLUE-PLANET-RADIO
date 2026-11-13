@@ -9,7 +9,7 @@ export function installMediaSession(): () => void {
   const apply = () => {
     const np = getNowPlaying();
     if (!np) { ms.metadata = null; ms.playbackState = 'none'; return; }
-    ms.metadata = new MediaMetadata({ title: np.title, artist: np.subtitle, album: 'Sonic Earth Atlas' });
+    ms.metadata = new MediaMetadata({ title: np.title, artist: np.subtitle, album: 'Blue Planet Radio' });
     ms.playbackState = np.state === 'playing' ? 'playing' : 'paused';
     const c = np.controls;
     act('play', () => { if (getNowPlaying()?.state !== 'playing') c.toggle(); });

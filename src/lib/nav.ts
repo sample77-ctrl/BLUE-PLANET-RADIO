@@ -12,7 +12,7 @@ export const TRACKS: { id: Exclude<Track, 'about' | 'jukebox' | 'quest'>; key: T
 export const JUKEBOX_TRACKS = TRACKS.filter((t) => t.id !== 'atlas' && t.id !== 'frames');
 export const sectionOf = (t: Track): Section => (t === 'frames' ? 'frames' : t === 'atlas' ? 'explore' : t === 'about' ? 'about' : t === 'quest' ? 'quest' : 'jukebox');
 
-export const REPO_URL = 'https://github.com/morsad01/SONIC-EARTH-ATLAS';
+export const REPO_URL = 'https://github.com/sample77-ctrl/BLUE-PLANET-RADIO';
 export const SOURCE_LINKS: { name: string; url: string }[] = [
   { name: 'NASA FIRMS', url: 'https://firms.modaps.eosdis.nasa.gov/' },
   { name: 'NASA POWER', url: 'https://power.larc.nasa.gov/' },

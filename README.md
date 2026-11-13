@@ -1,11 +1,11 @@
 <div align="center">
 
-# 🌍 Sonic Earth Atlas: an Earth Information Jukebox
+# 🌍 Blue Planet Radio: an Earth Information Jukebox
 
 **A NASA Space Apps Challenge 2026 Project · The Earth Information Jukebox**  
 *Turning authentic NASA satellite observations and Earth imagery into live spatial sound.*
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-sonic--earth--atlas.vercel.app-06b6d4?style=for-the-badge&logo=vercel)](https://sonic-earth-atlas.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-sonic--earth--atlas.vercel.app-06b6d4?style=for-the-badge&logo=vercel)](https://blue-planet-radio.vercel.app)
 [![NASA Space Apps](https://img.shields.io/badge/NASA%20Space%20Apps-2026%20Challenge-blue?style=for-the-badge&logo=nasa)](https://www.spaceappschallenge.org/)
 [![Vitest](https://img.shields.io/badge/Unit%20Tests-220%20Passed-emerald?style=for-the-badge&logo=vitest)](package.json)
 [![Playwright](https://img.shields.io/badge/E2E%20Tests-19%20Passed-blueviolet?style=for-the-badge&logo=playwright)](playwright.config.ts)
@@ -18,7 +18,7 @@
 <p align="center">
   <b>Explore Earth by ear, by touch, and by eye.</b><br/>
   NASA’s Earth Information Center makes striking pictures of a changing planet, but pictures only reach people who can see them.<br/>
-  <b>Sonic Earth Atlas</b> plays real NASA Earth observations and imagery as live spatial sound generated in the browser,<br/>
+  <b>Blue Planet Radio</b> plays real NASA Earth observations and imagery as live spatial sound generated in the browser,<br/>
   allowing scientists, students, visually impaired explorers, and kids to experience planetary science together.
 </p>
 
@@ -41,7 +41,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                    SONIC EARTH ATLAS SUITE                                      │
+│                                    BLUE PLANET RADIO SUITE                                      │
 ├───────────────────────────────┬────────────────────────────────┬────────────────────────────────┤
 │ 🌐 EXPLORE EARTH              │ 🎵 DATA JUKEBOX                │ 🎮 SONIC QUEST                 │
 │ • Interactive 3D Three.js Globe│ • Multi-decade synchronized UI │ • 3D Animated Eco-Ninja Cadet  │
@@ -82,7 +82,7 @@
 
 ## 🔊 The Science of the Sound (Sonification Logic)
 
-Every audible sound in Sonic Earth Atlas is calculated deterministically from real scientific measurements:
+Every audible sound in Blue Planet Radio is calculated deterministically from real scientific measurements:
 
 | Environmental Layer | Scientific Normalization Formula | Acoustic Sonification Mapping |
 |:---|:---|:---|
@@ -157,8 +157,8 @@ Testing & Quality Infrastructure
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/morsad01/SONIC-EARTH-ATLAS.git
-cd SONIC-EARTH-ATLAS
+git clone https://github.com/sample77-ctrl/BLUE-PLANET-RADIO.git
+cd BLUE-PLANET-RADIO
 
 # 2. Install dependencies cleanly
 npm ci
@@ -207,7 +207,7 @@ npm run build:data    # Bundles normalized json snapshots into public/data/
 
 ## 🌐 Deployment & SPA Routing
 
-Sonic Earth Atlas is continuously deployed to **Vercel** with GitHub Actions CI integration.
+Blue Planet Radio is continuously deployed to **Vercel** with GitHub Actions CI integration.
 
 Single Page Application (SPA) deep linking is supported via [`vercel.json`](vercel.json):
 ```json
@@ -246,7 +246,7 @@ Single Page Application (SPA) deep linking is supported via [`vercel.json`](verc
 ---
 
 <div align="center">
-  <b>Sonic Earth Atlas · NASA Space Apps Challenge 2026</b><br/>
+  <b>Blue Planet Radio · NASA Space Apps Challenge 2026</b><br/>
   <i>Independent team submission. Not an official product of NASA or NOAA.</i><br/>
   Made with ❤️ for science, accessibility, and universal climate education.
 </div>

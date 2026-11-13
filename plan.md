@@ -1,16 +1,16 @@
-# Sonic Earth Atlas — Master Project Plan & Execution Roadmap
+# Blue Planet Radio — Master Project Plan & Execution Roadmap
 
 > **NASA Space Apps Challenge 2026** · *The Earth Information Jukebox*  
-> **Repository:** [github.com/morsad01/SONIC-EARTH-ATLAS](https://github.com/morsad01/SONIC-EARTH-ATLAS)  
-> **Live Production:** [sonic-earth-atlas.vercel.app](https://sonic-earth-atlas.vercel.app)
+> **Repository:** [github.com/sample77-ctrl/BLUE-PLANET-RADIO](https://github.com/sample77-ctrl/BLUE-PLANET-RADIO)  
+> **Live Production:** [blue-planet-radio.vercel.app](https://blue-planet-radio.vercel.app)
 
 ---
 
 ## 1. Executive Summary & Vision
 
-**Sonic Earth Atlas** is a pioneering, web-native scientific sonification and exploration platform that translates authentic NASA Earth science observations and satellite imagery into live spatial sound. 
+**Blue Planet Radio** is a pioneering, web-native scientific sonification and exploration platform that translates authentic NASA Earth science observations and satellite imagery into live spatial sound. 
 
-While NASA's Earth Information Center produces stunning visual representations of our planet, visual-only interfaces inherently exclude the visually impaired and often fail to convey the dynamic, multifaceted nature of climate data to younger generations and the general public. Sonic Earth Atlas bridges this divide by allowing users to **hear the pulse of the Earth** through deterministic mathematical sonification, interactive 3D globes, educational storytelling, and gamified adventures.
+While NASA's Earth Information Center produces stunning visual representations of our planet, visual-only interfaces inherently exclude the visually impaired and often fail to convey the dynamic, multifaceted nature of climate data to younger generations and the general public. Blue Planet Radio bridges this divide by allowing users to **hear the pulse of the Earth** through deterministic mathematical sonification, interactive 3D globes, educational storytelling, and gamified adventures.
 
 ---
 
@@ -18,7 +18,7 @@ While NASA's Earth Information Center produces stunning visual representations o
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        Sonic Earth Atlas Core                          │
+│                        Blue Planet Radio Core                          │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
     ┌───────────────────────────────┼──────────────────────────────┐

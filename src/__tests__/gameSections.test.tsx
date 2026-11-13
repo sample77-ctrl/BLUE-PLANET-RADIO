@@ -87,7 +87,7 @@ beforeEach(() => {
   } as unknown as SpeechSynthesis;
 });
 
-describe('Sonic Earth Adventure: Master Game Sections', () => {
+describe('Sonic Quest: Master Game Sections', () => {
   it('Section 05 – BlindExplorerMode handles keyboard navigation, sonar ping, and visual spectrum', () => {
     const onBack = vi.fn();
     render(

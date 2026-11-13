@@ -89,7 +89,7 @@ describe('share card layout', () => {
     expect(scoreCell({ col: 0, row: 0 }, 128, 12, 1280, 120)).toEqual({ x: 0, y: 0, w: 10, h: 10 });
     expect(scoreCell({ col: 127, row: 11 }, 128, 12, 1280, 120)).toEqual({ x: 1270, y: 110, w: 10, h: 10 });
   });
-  it('names the file safely', () => { expect(cardFileName('eic-ocean-heat')).toBe('sonic-earth-eic-ocean-heat.png'); expect(cardFileName('a/b c')).toBe('sonic-earth-a-b-c.png'); });
+  it('names the file safely', () => { expect(cardFileName('eic-ocean-heat')).toBe('blue-planet-radio-eic-ocean-heat.png'); expect(cardFileName('a/b c')).toBe('blue-planet-radio-a-b-c.png'); });
 });
 
 describe('drawShareCard', () => {
@@ -104,7 +104,7 @@ describe('drawShareCard', () => {
   };
   const input = (over: Partial<CardInput> = {}): CardInput => {
     const g = grid([[1, 1], [2, 2, 0.5]]);
-    return { frame: {} as CanvasImageSource, frameW: 1920, frameH: 800, kicker: 'Sonic Earth Atlas', title: 'Greenhouse gas warming index, 1979 to 2021', notes: frameScore(g.lum, g.rgb, COLS, ROWS), cols: COLS, rows: ROWS, col: 3,
+    return { frame: {} as CanvasImageSource, frameW: 1920, frameH: 800, kicker: 'Blue Planet Radio', title: 'Greenhouse gas warming index, 1979 to 2021', notes: frameScore(g.lum, g.rgb, COLS, ROWS), cols: COLS, rows: ROWS, col: 3,
       bigLabel: 'Year', bigValue: '1998', pitch: 'C4 · 262 Hz', source: 'Source: NASA Earth Information Center (earth.gov), Greenhouse Gases theme; data: NOAA Annual Greenhouse Gas Index', method: 'Sound made from this picture’s pixels.', url: 'https://example.org/#v1&track=frames&frame=eic-ghg&col=40',
       signal: '#baed3f', onSignal: '#0a0a0a', fonts: { display: 'sans-serif', body: 'sans-serif', mono: 'monospace' }, ...over };
   };

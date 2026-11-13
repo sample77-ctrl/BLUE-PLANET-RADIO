@@ -1,10 +1,10 @@
 # User testing kit (Task C)
 
-Live URL: https://sonic-earth-atlas.vercel.app/ · Headphones required · 15 minutes per person.
+Live URL: https://blue-planet-radio.vercel.app/ · Headphones required · 15 minutes per person.
 
 ## 1. Outreach message (send tonight, 3–6 people)
 
-> Hi! We built **Sonic Earth Atlas** for NASA Space Apps: it turns NASA Earth data (fires, rain, ocean heat, climate) into sound. Could you give us 15 minutes tomorrow morning to try it and tell us what is confusing? You need a laptop and headphones. If you use a screen reader (NVDA, VoiceOver), even better. We will not use your name unless you say yes.
+> Hi! We built **Blue Planet Radio** for NASA Space Apps: it turns NASA Earth data (fires, rain, ocean heat, climate) into sound. Could you give us 15 minutes tomorrow morning to try it and tell us what is confusing? You need a laptop and headphones. If you use a screen reader (NVDA, VoiceOver), even better. We will not use your name unless you say yes.
 
 Priority: 1–2 blind or low-vision users (local organisation for the visually impaired, university disability office, a friend of a friend). Fill the rest with classmates.
 

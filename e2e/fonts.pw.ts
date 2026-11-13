@@ -8,9 +8,9 @@ test('the self-hosted fonts load offline, with real weights and a real width axi
   const r = await page.evaluate(async () => {
     const faces = ['400 16px "Mona Sans"', '700 16px "Mona Sans"', '400 16px "IBM Plex Mono"', '400 16px "Noto Sans Bengali"'];
     for (const f of faces) await document.fonts.load(f, f.includes('Bengali') ? 'বাংলা' : 'Abc');
-    const w = (font: string) => { const c = document.createElement('canvas').getContext('2d')!; c.font = font; return c.measureText('Sonic Earth Atlas, listen to the planet').width; };
+    const w = (font: string) => { const c = document.createElement('canvas').getContext('2d')!; c.font = font; return c.measureText('Blue Planet Radio, listen to the planet').width; };
     // The width axis: the same text at 75% and at 125% font-stretch (DOM, because canvas has no numeric font-stretch)
-    const span = (stretch: string) => { const e = document.createElement('span'); e.style.cssText = `font:700 24px "Mona Sans";font-stretch:${stretch};white-space:nowrap;position:absolute;left:0;top:0`; e.textContent = 'Sonic Earth Atlas'; document.body.appendChild(e); const wd = e.getBoundingClientRect().width; e.remove(); return wd; };
+    const span = (stretch: string) => { const e = document.createElement('span'); e.style.cssText = `font:700 24px "Mona Sans";font-stretch:${stretch};white-space:nowrap;position:absolute;left:0;top:0`; e.textContent = 'Blue Planet Radio'; document.body.appendChild(e); const wd = e.getBoundingClientRect().width; e.remove(); return wd; };
     return { ok: faces.map((f) => document.fonts.check(f, f.includes('Bengali') ? 'বাংলা' : 'Abc')), w400: w('400 16px "Mona Sans"'), w700: w('700 16px "Mona Sans"'), narrow: span('75%'), wide: span('125%'), body: getComputedStyle(document.body).fontFamily };
   });
   expect(r.ok).toEqual([true, true, true, true]);

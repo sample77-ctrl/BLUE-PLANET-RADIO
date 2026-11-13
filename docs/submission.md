@@ -1,4 +1,4 @@
-# Submission pack — Sonic Earth Atlas (NASA Space Apps 2026, Earth Information Jukebox)
+# Submission pack — Blue Planet Radio (NASA Space Apps 2026, Earth Information Jukebox)
 
 Draft for the project page (the only thing global judges see). It leads with the challenge, in the order the roadmap sets (§V6). Everything below is true of the build on `visual/v6-polish`; anything the team still has to do is in "Before you submit" at the end. Numbers and dates come from the bundled files, not from memory.
 
