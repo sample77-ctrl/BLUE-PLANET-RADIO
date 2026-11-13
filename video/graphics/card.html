@@ -1,0 +1,99 @@
+<!doctype html>
+<!-- Title / fact / source card in Blue Planet Radio's own look. Everything comes from the URL query, so one file makes every card:
+       node render-frames.mjs card 5 --out title --q "kicker=NASA Space Apps 2026 · The Earth Information Jukebox" --q "title=Blue Planet|Radio" --q "sub=Team Loser's"
+       node render-frames.mjs card 6 --out fact-gistemp --q layout=fact --q num=+1.19 --q "unit=°C" --q "title=Warmer than 1951–1980" --q "src=NASA GISS GISTEMP v4 · annual mean · 2025"
+     Keys: kicker, title (| = line break), sub, num, unit, src (source · period · method line), note (e.g. "Sample data" / "Prototype"),
+           layout = title | fact | lower (lower third over footage: render, then overlay in the edit), lang = bn, accent (hex without #),
+           cap = 1 keeps the bottom free for captions, wave = 0 to hide the needle waveform, stars = 1 for the starfield, dur = seconds (for the fade out; default 5).
+     Preview in a browser: open card.html?title=...&go=1 (go=1 starts the animation without render-frames). Time 0 = body.go. -->
+<html lang="en"><head><meta charset="utf-8"><title>card</title>
+<style>
+@font-face { font-family: 'Mona Sans'; font-weight: 200 900; font-stretch: 75% 125%; src: url('fonts/mona-sans-vf.woff2') format('woff2'); }
+@font-face { font-family: 'Noto Sans Bengali'; font-weight: 100 900; font-stretch: 62.5% 100%; src: url('fonts/noto-sans-bengali-vf.woff2') format('woff2'); }
+@font-face { font-family: 'IBM Plex Mono'; font-weight: 400; src: url('fonts/ibm-plex-mono-latin-400.woff2') format('woff2'); }
+@font-face { font-family: 'IBM Plex Mono'; font-weight: 500; src: url('fonts/ibm-plex-mono-latin-500.woff2') format('woff2'); }
+:root { --ground: #0a0a0a; --panel: #121212; --hair: #2e2e2e; --ink: #f3f2ec; --ink-2: #bfbeb8; --ink-3: #93928d; --signal: #baed3f; --on-signal: #0a0a0a;
+  --ease-out: cubic-bezier(.22, 1, .36, 1); --dur: 5s; --disp: 'Mona Sans', 'Noto Sans Bengali', Arial, sans-serif; --mono: 'IBM Plex Mono', 'Courier New', monospace }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--ground); color: var(--ink); font-family: var(--disp); font-synthesis: none; -webkit-font-smoothing: antialiased }
+body[data-lang=bn] { --disp: 'Noto Sans Bengali', 'Mona Sans', sans-serif }
+[hidden] { display: none !important }
+canvas { position: absolute; inset: 0; width: 1920px; height: 1080px }
+.grid { position: absolute; inset: 0; background-image: linear-gradient(var(--hair) 1px, transparent 1px), linear-gradient(90deg, var(--hair) 1px, transparent 1px); background-size: 120px 120px; opacity: .22; mask-image: radial-gradient(ellipse at 30% 50%, #000 20%, transparent 75%) }
+.wrap { position: absolute; left: 140px; right: 140px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 28px }
+.kicker { font: 500 26px/1.2 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--signal); display: flex; align-items: center; gap: 18px }
+.kicker::before { content: ''; width: 14px; height: 14px; background: var(--signal) }
+.title { font-weight: 860; font-stretch: 125%; font-size: 168px; line-height: .9; letter-spacing: -.01em; text-transform: uppercase; margin: 0 }
+body[data-lang=bn] .title { text-transform: none; font-stretch: 100%; font-size: 132px; line-height: 1.15 }
+.title span { display: block }
+.sub { font-weight: 450; font-size: 44px; line-height: 1.3; color: var(--ink-2); max-width: 1300px }
+.num { font-weight: 880; font-stretch: 125%; font-size: 300px; line-height: .85; color: var(--signal); display: flex; align-items: baseline; gap: 24px; font-variant-numeric: tabular-nums }
+.num small { font-size: 96px; font-weight: 700; color: var(--ink) }
+body[data-layout=fact] .wrap { bottom: 260px }
+body[data-lang=bn] .kicker, body[data-lang=bn] .note { font-family: var(--disp); letter-spacing: 0; text-transform: none; font-size: 30px }
+body[data-layout=fact] .title { font-size: 92px; text-transform: none; font-stretch: 110%; line-height: 1.02 }
+.src { position: absolute; left: 140px; right: 140px; bottom: 84px; font: 400 24px/1.4 var(--mono); color: var(--ink-3); border-top: 1px solid var(--hair); padding-top: 22px; display: flex; justify-content: space-between; gap: 40px }
+.note { font: 500 22px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--on-signal); background: var(--signal); padding: 10px 14px; align-self: flex-start }
+/* cap=1: leave the bottom 220 px free for the burned-in captions */
+body[data-cap] .src { bottom: 230px }
+body[data-cap] .wrap { bottom: 250px }
+/* lower third: transparent-looking band at the bottom (the card is rendered on black; overlay it with a screen/lighten blend or crop) */
+body[data-layout=lower] .wrap { justify-content: flex-end; bottom: 120px; gap: 14px }
+body[data-layout=lower] .title { font-size: 72px; font-stretch: 110% }
+body[data-layout=lower] .sub { font-size: 32px }
+body[data-layout=lower] .grid { display: none }
+/* motion: everything waits for body.go (render-frames.mjs steps these to each frame's time) */
+.in { opacity: 0; transform: translateY(26px) }
+.go .in { animation: up .9s var(--ease-out) forwards; animation-delay: calc(var(--d, 0) * 1s) }
+.go .title span { animation-delay: calc((var(--d, 0) + var(--i, 0) * .12) * 1s) }
+.wipe { position: absolute; inset: 0; background: var(--signal); transform-origin: left; transform: scaleX(0) }
+.go .wipe { animation: wipe .7s var(--ease-out) forwards, wipeout .45s cubic-bezier(.65, 0, .35, 1) .55s forwards }
+.go .stage { animation: out .5s ease-in forwards; animation-delay: calc(var(--dur) - .5s) }
+@keyframes up { to { opacity: 1; transform: none } }
+@keyframes wipe { to { transform: scaleX(1) } }
+@keyframes wipeout { from { transform-origin: right; transform: scaleX(1) } to { transform-origin: right; transform: scaleX(0) } }
+@keyframes out { to { opacity: 0 } }
+</style></head>
+<body>
+<div class="stage" style="position:absolute;inset:0">
+  <canvas class="stars" hidden></canvas>
+  <div class="grid"></div>
+  <canvas class="wave"></canvas>
+  <div class="wrap">
+    <div class="kicker in" style="--d:.55" hidden></div>
+    <div class="num in" style="--d:.6" hidden></div>
+    <h1 class="title" hidden></h1>
+    <div class="sub in" style="--d:1.15" hidden></div>
+    <div class="note in" style="--d:1.35" hidden></div>
+  </div>
+  <div class="src in" style="--d:1.4" hidden></div>
+</div>
+<div class="wipe"></div>
+<script>
+const q = new URLSearchParams(location.search), $ = (s) => document.querySelector(s), b = document.body
+const set = (sel, v) => { if (!v) return; const e = $(sel); e.hidden = false; e.textContent = v; return e }
+if (q.get('cap') === '1') b.dataset.cap = '1'
+b.dataset.layout = q.get('layout') || 'title'; b.dataset.lang = q.get('lang') || 'en'; document.documentElement.lang = b.dataset.lang
+if (q.get('accent')) document.documentElement.style.setProperty('--signal', '#' + q.get('accent').replace('#', ''))
+document.documentElement.style.setProperty('--dur', (Number(q.get('dur')) || 5) + 's')
+set('.kicker', q.get('kicker')); set('.sub', q.get('sub')); set('.note', q.get('note'))
+if (q.get('src')) { const e = set('.src', ' '); e.textContent = ''; q.get('src').split('|').forEach((p) => { const s = document.createElement('span'); s.textContent = p; e.append(s) }) }
+if (q.get('num')) { const e = set('.num', q.get('num')); if (q.get('unit')) { const u = document.createElement('small'); u.textContent = q.get('unit'); e.append(u) } }
+if (q.get('title')) { const h = $('.title'); h.hidden = false; const d = b.dataset.layout === 'fact' ? 1.0 : .7
+  q.get('title').split('|').forEach((line, i) => { const s = document.createElement('span'); s.className = 'in'; s.style.setProperty('--d', d); s.style.setProperty('--i', i); s.textContent = line; h.append(s) }) }
+if (b.dataset.layout === 'lower') $('.wipe').remove()
+if (q.get('stars') === '1') { $('canvas.stars').hidden = false; const s = document.createElement('script'); s.src = 'stars.js'; document.head.append(s) }
+/* the needle waveform: a pentatonic-ish line the needle sweeps across, as in the app's Frame Stage. Driven by window.__t (render-frames.mjs) */
+const wave = $('canvas.wave'); if (q.get('wave') === '0' || b.dataset.layout === 'lower') wave.remove(); else {
+  wave.width = 1920; wave.height = 1080; const x = wave.getContext('2d'), sig = getComputedStyle(document.documentElement).getPropertyValue('--signal').trim()
+  const y0 = b.dataset.cap ? 800 : b.dataset.layout === 'fact' ? 900 : 930, N = 96, bars = Array.from({ length: N }, (_, i) => 0.25 + 0.75 * Math.abs(Math.sin(i * 0.37) * Math.cos(i * 0.11 + 1.3)))
+  const t0 = performance.now()
+  const draw = (now) => { const t = window.__t != null ? window.__t : b.classList.contains('go') ? (now - t0) / 1000 : 0
+    x.clearRect(0, 0, 1920, 1080); const p = Math.min(1, Math.max(0, (t - 0.8) / 3.6)), e = 1 - Math.pow(1 - p, 3), nx = 140 + e * 1640
+    for (let i = 0; i < N; i++) { const bx = 140 + i * (1640 / N), on = bx < nx, h = bars[i] * (on ? 70 : 22) * Math.min(1, t / 0.8)
+      x.fillStyle = on ? sig : '#2e2e2e'; x.globalAlpha = on ? 0.9 : 0.8; x.fillRect(bx, y0 - h, 1640 / N - 6, h) }
+    x.globalAlpha = 1; if (t > 0.8) { x.fillStyle = sig; x.fillRect(nx, y0 - 110, 3, 130) }
+    requestAnimationFrame(draw) }
+  requestAnimationFrame(draw) }
+if (q.get('go') === '1') requestAnimationFrame(() => b.classList.add('go'))
+</script>
+</body></html>

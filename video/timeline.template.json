@@ -1,0 +1,10 @@
+{"size":[1920,1080],"fps":25,"duration":240,"out":"out/video.mp4",
+ "shots":[
+  {"file":"out/graphics/card.mp4","ss":0,"t":5},
+  {"file":"out/clips/landing.mp4","ss":1.0,"t":8,"sound":-6},
+  {"file":"out/clips/landing.mp4","ss":12,"t":5,"speed":1.25},
+  {"file":"footage/photo.jpg","t":3}
+ ],
+ "voice":[{"file":"out/audio/01-hook.mp3","at":0.3}],
+ "music":{"file":"footage/music.mp3","gain":-18,"duck":true},
+ "_notes":"shots play back to back; t = seconds in the film; source used = t*speed; ss = source in-point; images (.png/.jpg) are held for t. sound = dB gain for the shot's own audio (the app's sound from record.mjs); omit it to keep the shot silent; keep speed 1 on shots with sound. voice 'at' = film seconds. Everything runs at 25 fps: the screen recorder and render-frames.mjs both make 25 fps, never convert to 30."}

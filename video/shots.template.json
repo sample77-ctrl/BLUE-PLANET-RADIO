@@ -1,0 +1,32 @@
+{"_about": "Shots for record.mjs (copy to shots.json). Each shot = one clip in out/clips/<id>.mp4, 1920x1080, 25 fps, with the app's own sound. Times in steps are seconds after the clip's first frame.",
+ "base": "http://localhost:4173",
+ "viewport": [1920, 1080],
+ "colorScheme": "dark",
+ "audioShift": 0,
+ "init": {"localStorage": {}},
+ "shots": {
+  "landing": {"url": "/", "seconds": 10, "note": "landing page, press the sound preview",
+   "ready": {"role": "button", "name": "Play a short preview", "settle": 1.5},
+   "steps": [
+    {"at": 1.0, "do": "move", "x": 960, "y": 700},
+    {"at": 1.5, "do": "click", "role": "button", "name": "Play a short preview"}
+   ]},
+  "_every-step-kind": {"url": "/", "seconds": 20, "note": "reference only (ids starting with _ are fine to keep; record them by name only if you mean to)",
+   "ready": {"selector": "main", "gone": "loading", "timeout": 60, "settle": 1.0},
+   "setup": [{"do": "css", "value": ".tiny-control{transform:scale(2)}"}],
+   "steps": [
+    {"at": 1, "do": "click", "role": "link", "name": "/explore/i"},
+    {"at": 2, "do": "hover", "text": "Data Jukebox", "exact": true},
+    {"at": 3, "do": "type", "role": "combobox", "value": "Bangladesh", "delay": 90},
+    {"at": 5, "do": "press", "key": "Enter"},
+    {"at": 6, "do": "fill", "label": "Search", "value": "rain"},
+    {"at": 7, "do": "scroll", "y": 900, "ms": 1800},
+    {"at": 9, "do": "scroll", "selector": "#science"},
+    {"at": 10, "do": "wheel", "dy": 100},
+    {"at": 11, "do": "waitFor", "text": "Now hearing", "timeout": 8000},
+    {"at": 12, "do": "goto", "url": "/about"},
+    {"at": 14, "do": "js", "value": "window.scrollTo(0, 0)"},
+    {"at": 15, "do": "click", "selector": ".chip", "nth": 2}
+   ]}
+ },
+ "_notes": "Locators: role+name (name may be a /regex/flags string), label, text, placeholder or selector; nth picks the n-th match, exact for exact text. ready = wait for this before the clip starts (the loading is cut off); setup steps run before time zero, so they are not in the clip. Per shot: localStorage {}, reducedMotion true, audioShift (overrides the global). Run  node record.mjs --sync-test  once and put its audioShift here."}
