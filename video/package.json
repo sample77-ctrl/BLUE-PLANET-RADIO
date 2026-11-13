@@ -1,0 +1,1 @@
+{"name":"pitch-kit","private":true,"type":"module","scripts":{"doctor":"node doctor.mjs","narrate":"node narrate.mjs","assemble":"node assemble.mjs","check":"node check.mjs"},"dependencies":{"playwright-core":"^1.65.0"}}

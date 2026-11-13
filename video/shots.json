@@ -1,0 +1,380 @@
+{
+ "_about": "Blue Planet Radio shots for record.mjs. Start the production build first (npm run build && npm run preview, port 4173).",
+ "base": "http://localhost:4173",
+ "viewport": [
+  1920,
+  1080
+ ],
+ "colorScheme": "dark",
+ "audioShift": -0.085,
+ "init": {
+  "localStorage": {}
+ },
+ "shots": {
+  "landing": {
+   "url": "/",
+   "seconds": 12,
+   "note": "landing hero: Press play, hear 1880-2025 warming",
+   "ready": {
+    "text": "/Press play · hear 1880/",
+    "settle": 1.5
+   },
+   "steps": [
+    {
+     "at": 1.0,
+     "do": "move",
+     "x": 420,
+     "y": 640
+    },
+    {
+     "at": 1.5,
+     "do": "click",
+     "text": "/Press play · hear 1880/"
+    }
+   ]
+  },
+  "hook-frame": {
+   "url": "/frames?frame=eic-ocean-heat",
+   "seconds": 16,
+   "note": "01 hook: ocean-heat EIC frame sweeping, with its sound",
+   "ready": {
+    "role": "button",
+    "name": "Play",
+    "exact": true,
+    "settle": 1.5
+   },
+   "steps": [
+    {
+     "at": 0.8,
+     "do": "click",
+     "role": "button",
+     "name": "Play",
+     "exact": true
+    }
+   ]
+  },
+  "frames-sweep": {
+   "url": "/frames?frame=eic-ocean-heat",
+   "seconds": 30,
+   "note": "05 frames: sweep, year numeral, colour under needle, then the score",
+   "ready": {
+    "role": "button",
+    "name": "Play",
+    "exact": true,
+    "settle": 1.5
+   },
+   "steps": [
+    {
+     "at": 0.8,
+     "do": "click",
+     "role": "button",
+     "name": "Play",
+     "exact": true
+    },
+    {
+     "at": 19,
+     "do": "click",
+     "role": "button",
+     "name": "Score",
+     "exact": true
+    }
+   ]
+  },
+  "jukebox-ab": {
+   "url": "/jukebox?story=gistemp&t=1951",
+   "seconds": 13,
+   "note": "06 data: A 1951-1980 left ear vs B 1996-2025 right ear, half speed; shows the controls then the chart",
+   "ready": {
+    "text": "/Global temperature since 1880/",
+    "settle": 1.5
+   },
+   "setup": [
+    {
+     "do": "click",
+     "role": "button",
+     "name": "Filters",
+     "exact": true
+    },
+    {
+     "do": "select",
+     "selector": "select",
+     "nth": 0,
+     "value": "1951"
+    },
+    {
+     "do": "select",
+     "selector": "select",
+     "nth": 1,
+     "value": "1980"
+    },
+    {
+     "do": "press",
+     "key": "Escape"
+    },
+    {
+     "do": "check",
+     "label": "/Compare two periods/"
+    },
+    {
+     "do": "select",
+     "label": "Period B",
+     "value": "1996"
+    },
+    {
+     "do": "select",
+     "label": "Speed",
+     "value": "0.5×"
+    },
+    {
+     "do": "js",
+     "value": "(()=>{const c=[...document.querySelectorAll('label')].find(l=>/Compare two periods/.test(l.innerText));c.scrollIntoView({block:'center'})})()"
+    }
+   ],
+   "steps": [
+    {
+     "at": 0.8,
+     "do": "click",
+     "role": "button",
+     "name": "Play",
+     "exact": true
+    },
+    {
+     "at": 3.0,
+     "do": "js",
+     "value": "window.scrollTo({top:0,behavior:'smooth'})"
+    }
+   ]
+  },
+  "jukebox-1998": {
+   "url": "/jukebox?story=gistemp&t=1998",
+   "seconds": 9,
+   "note": "06b data: the 1998 note (0.61 C = A4, 4 pulses), played from 1998 at half speed",
+   "ready": {
+    "text": "/Global temperature since 1880/",
+    "settle": 1.5
+   },
+   "setup": [
+    {
+     "do": "select",
+     "label": "Speed",
+     "value": "0.5×"
+    },
+    {
+     "do": "js",
+     "value": "(()=>{const h=[...document.querySelectorAll('h2,h3')].find(e=>/What you hear/.test(e.innerText));window.scrollTo({top:h.getBoundingClientRect().top+scrollY-430,behavior:'smooth'})})()"
+    }
+   ],
+   "steps": [
+    {
+     "at": 1.0,
+     "do": "click",
+     "role": "button",
+     "name": "Play",
+     "exact": true
+    }
+   ]
+  },
+  "globe-sound": {
+   "url": "/explore",
+   "seconds": 14,
+   "note": "07 globe: fire, rain, ocean voices; sound on, spin the globe",
+   "ready": {
+    "role": "button",
+    "name": "Reset view",
+    "settle": 3
+   },
+   "steps": [
+    {
+     "at": 0.8,
+     "do": "click",
+     "role": "button",
+     "name": "Sound off",
+     "exact": true
+    },
+    {
+     "at": 3.0,
+     "do": "click",
+     "role": "button",
+     "name": "Spin the globe",
+     "exact": true
+    }
+   ]
+  },
+  "globe-bd": {
+   "url": "/explore",
+   "seconds": 20,
+   "note": "07 globe: type Bangladesh, Enter, the country profile; sound on",
+   "ready": {
+    "role": "button",
+    "name": "Reset view",
+    "settle": 3
+   },
+   "steps": [
+    {
+     "at": 0.8,
+     "do": "type",
+     "placeholder": "/Type a country name/",
+     "value": "Bangladesh",
+     "delay": 110
+    },
+    {
+     "at": 3.0,
+     "do": "press",
+     "key": "Enter"
+    },
+    {
+     "at": 5.5,
+     "do": "click",
+     "role": "button",
+     "name": "Sound off",
+     "exact": true
+    }
+   ]
+  },
+  "access": {
+   "url": "/explore",
+   "seconds": 24,
+   "note": "08 everyone: List view as text, Settings (high contrast, reduce motion), switch to Bangla",
+   "ready": {
+    "role": "button",
+    "name": "Reset view",
+    "settle": 3
+   },
+   "steps": [
+    {
+     "at": 1.0,
+     "do": "click",
+     "role": "button",
+     "name": "List",
+     "exact": true
+    },
+    {
+     "at": 6.0,
+     "do": "click",
+     "role": "button",
+     "name": "Settings",
+     "exact": true
+    },
+    {
+     "at": 8.0,
+     "do": "click",
+     "role": "switch",
+     "name": "High contrast"
+    },
+    {
+     "at": 11.0,
+     "do": "click",
+     "role": "switch",
+     "name": "Reduce motion"
+    },
+    {
+     "at": 14.0,
+     "do": "click",
+     "role": "switch",
+     "name": "High contrast"
+    },
+    {
+     "at": 15.5,
+     "do": "click",
+     "role": "button",
+     "name": "/^Close/"
+    },
+    {
+     "at": 17.0,
+     "do": "click",
+     "role": "button",
+     "name": "Switch to বাংলা"
+    },
+    {
+     "at": 21.0,
+     "do": "click",
+     "role": "button",
+     "name": "/Globe|গ্লোব/"
+    }
+   ]
+  },
+  "quest": {
+   "url": "/quest",
+   "seconds": 12,
+   "note": "08 everyone: Sonic Quest missions for kids",
+   "ready": {
+    "selector": "main",
+    "settle": 3
+   },
+   "steps": []
+  },
+  "about": {
+   "url": "/about",
+   "seconds": 16,
+   "note": "09 science: About the Science, sources and limits",
+   "ready": {
+    "selector": "main",
+    "settle": 2
+   },
+   "steps": [
+    {
+     "at": 3,
+     "do": "js",
+     "value": "(()=>{const e=[...document.querySelectorAll('*')].find(e=>e.scrollHeight>e.clientHeight+300&&/auto|scroll/.test(getComputedStyle(e).overflowY));(e||document.scrollingElement).scrollTo({top:(e||document.scrollingElement).scrollTop+650,behavior:'smooth'})})()"
+    },
+    {
+     "at": 7,
+     "do": "js",
+     "value": "(()=>{const e=[...document.querySelectorAll('*')].find(e=>e.scrollHeight>e.clientHeight+300&&/auto|scroll/.test(getComputedStyle(e).overflowY));(e||document.scrollingElement).scrollTo({top:(e||document.scrollingElement).scrollTop+650,behavior:'smooth'})})()"
+    },
+    {
+     "at": 11,
+     "do": "js",
+     "value": "(()=>{const e=[...document.querySelectorAll('*')].find(e=>e.scrollHeight>e.clientHeight+300&&/auto|scroll/.test(getComputedStyle(e).overflowY));(e||document.scrollingElement).scrollTo({top:(e||document.scrollingElement).scrollTop+650,behavior:'smooth'})})()"
+    }
+   ]
+  },
+  "harmonium": {
+   "url": "/explore",
+   "seconds": 22,
+   "note": "07b Harmonium: hold Sa, Ga, Pa (392 Hz), Explore Sound in NASA Data -> closest NASA year 2024 (+1.29 C); built-in text, no AI key",
+   "ready": {
+    "role": "button",
+    "name": "Reset view",
+    "settle": 3
+   },
+   "steps": [
+    {
+     "at": 0.6,
+     "do": "click",
+     "role": "button",
+     "name": "/Harmonium/"
+    },
+    {
+     "at": 3.0,
+     "do": "hold",
+     "key": "a",
+     "ms": 1200
+    },
+    {
+     "at": 4.7,
+     "do": "hold",
+     "key": "d",
+     "ms": 1200
+    },
+    {
+     "at": 6.4,
+     "do": "hold",
+     "key": "g",
+     "ms": 1800
+    },
+    {
+     "at": 9.5,
+     "do": "click",
+     "role": "button",
+     "name": "Explore Sound in NASA Data"
+    },
+    {
+     "at": 11.5,
+     "do": "js",
+     "value": "(()=>{const d=document.querySelector('[role=dialog]');d.scrollTo({top:d.scrollHeight,behavior:'smooth'})})()"
+    }
+   ]
+  }
+ }
+}

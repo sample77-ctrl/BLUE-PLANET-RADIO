@@ -1,0 +1,15 @@
+{"title":"<Project name> 240 s pitch: narration, one beat per section (copy to story.json)",
+ "wordsPerSecond": 2.5,
+ "beats":[
+  {"id":"01-hook",    "budget":17,  "text":"One concrete, human moment or number that makes the problem real. Question at the end."},
+  {"id":"02-who",     "budget":14,  "text":"We are <team>, from <place>. <One sentence: why you care.> Our answer: <ProjectName>, <six-word promise>."},
+  {"id":"03-why",     "budget":14,  "text":"The problem in the challenge's own words, with one real NASA fact or number and why it matters now."},
+  {"id":"04-solution","budget":12,  "text":"What it is, in one breath, and who uses it."},
+  {"id":"05-demo-a",  "budget":30,  "text":"Walk through the main flow, one action per sentence, each sentence matches what is on screen."},
+  {"id":"06-demo-b",  "budget":30,  "text":"Second feature. Show the result, not the menu."},
+  {"id":"07-demo-c",  "budget":30,  "text":"Third feature or the wow moment (live data, 3D, simulation, hardware working)."},
+  {"id":"08-tech",    "budget":22,  "text":"How it works: the data or NASA source, the method or model, what runs where. One sentence each."},
+  {"id":"09-science", "budget":20,  "text":"Proof it is grounded: which NASA datasets, papers or missions it uses, and what you measured or validated."},
+  {"id":"10-impact",  "budget":14,  "text":"Honest limits (prototype, what is synthetic) and what you need to go further."},
+  {"id":"11-close",   "budget":8,   "text":"<ProjectName>. <Tagline>."}
+ ]}

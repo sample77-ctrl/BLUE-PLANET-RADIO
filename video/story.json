@@ -1,0 +1,81 @@
+{
+ "title": "Blue Planet Radio 240 s pitch: narration, one beat per section",
+ "wordsPerSecond": 2.5,
+ "beats": [
+  {
+   "id": "01-hook",
+   "budget": 14,
+   "text": "This is the heat stored in the world's oceans, from 1957 until today. You are not looking at it. You are hearing it."
+  },
+  {
+   "id": "02-who",
+   "budget": 12,
+   "text": "We are Team Loser's, from Bangladesh. We live where the monsoon and the heat decide everything. Our answer to this challenge: Blue Planet Radio."
+  },
+  {
+   "id": "03-problem",
+   "budget": 15,
+   "text": "NASA's Earth Information Center makes striking pictures of a changing planet. But a picture only reaches people who can see it. What if the same picture could be heard?"
+  },
+  {
+   "id": "04-answer",
+   "budget": 10,
+   "text": "Blue Planet Radio plays real NASA Earth data as sound. Every note is made live, in your browser. Nothing is pre-recorded."
+  },
+  {
+   "id": "05-frames",
+   "budget": 35,
+   "text": "Here is an Earth Information Center frame. A needle sweeps it from west to east. Higher in the picture means higher pitch. Brighter means louder. Colour changes the timbre. Listen."
+  },
+  {
+   "id": "05b-frames",
+   "budget": 12,
+   "text": "The whole screen takes its colour from the pixels under the needle. That colour comes from the picture. It is not a measurement."
+  },
+  {
+   "id": "06-data",
+   "budget": 30,
+   "text": "Behind each frame is real data. Here, NASA's global temperature record, one note per year. On the left, 1951 to 1980. On the right, the last thirty years. Listen to the difference."
+  },
+  {
+   "id": "06b-data",
+   "budget": 12,
+   "text": "Nothing is a black box. In 1998 the anomaly was point six one degrees. That is the note A4, with four pulses, in a warm tone."
+  },
+  {
+   "id": "07-globe",
+   "budget": 30,
+   "text": "Now the whole planet. Fires crackle. Rain falls. Warm oceans hum. Each voice comes from a NASA dataset, and each sits where it is on Earth. Pick any country, and the profile lists only the data that really exists there."
+  },
+  {
+   "id": "07b-harmonium",
+   "budget": 4,
+   "text": "Or play a melody yourself, on a Harmonium."
+  },
+  {
+   "id": "07c-harmonium",
+   "budget": 14,
+   "text": "Its pitch is matched to a year in NASA's record. These notes land near 2024, 1.29 degrees above the 1951 to 1980 average. It is an illustration, not a forecast."
+  },
+  {
+   "id": "08-everyone",
+   "budget": 25,
+   "text": "Sound is another way into Earth data. So everything works by keyboard and screen reader, with reduced motion and high contrast. It speaks Bangla too. And Sonic Quest turns it into missions for kids."
+  },
+  {
+   "id": "09-science",
+   "budget": 20,
+   "text": "Every source, unit, period and method is written down. Fires from FIRMS. Rain from POWER. Ocean heat from MUR. Temperature from GISTEMP. These are snapshots, never live data."
+  },
+  {
+   "id": "10-impact",
+   "budget": 18,
+   "text": "For students, for blind and low-vision explorers, for anyone who learns by ear. It is a prototype. Next, more frames, more countries, and tests with the people it is for."
+  },
+  {
+   "id": "11-close",
+   "budget": 10,
+   "text": "Blue Planet Radio. Hear Earth change."
+  }
+ ]
+}
